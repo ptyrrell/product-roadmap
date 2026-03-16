@@ -5,6 +5,19 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.2.0 — 2026-03-16
+
+### Added
+- Personal roadmap: Alfred — Google Sheets integration (SDR + Sales stats)
+- Personal roadmap: Alfred — Fathom / Zoom recording access + summarisation
+- Personal roadmap: Alfred WhatsApp marked as Live ✓ (deployed to Mac Studio)
+- Personal roadmap: Apple Notes sync marked as live with Alfred WhatsApp confirmed
+
+### Changed
+- Version bump to v0.2.0
+
+---
+
 ## v0.1.0 — 2026-03-16
 
 ### Added
