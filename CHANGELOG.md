@@ -5,6 +5,23 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.3.0 — 2026-03-16
+
+### Added
+- Category filter system: 🎨 Design, 🏗 Product, 🎩 Alfred, 📊 Sales Ops, 👔 CEO, ⚙️ Infra
+- Every card tagged with one or more categories — filter shows only relevant items
+- Colour-coded left border stripe per category on each card
+- Personal roadmap: Alfred Morning CEO Briefing
+- Personal roadmap: Cloudflare Tunnel permanent URL
+- Personal roadmap: Alfred → HubSpot Deal Intelligence
+- Personal roadmap: SDR + AE Dashboard HTML
+- Done column: Mac Studio Deployment
+
+### Changed
+- Version bump to v0.3.0
+
+---
+
 ## v0.2.0 — 2026-03-16
 
 ### Added

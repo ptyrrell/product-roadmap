@@ -19,91 +19,68 @@
       --med: #ffa94d;
       --low: #a9d7ff;
       --accent: #7c6bf0;
+      /* Category colours */
+      --cat-design:   #f472b6;
+      --cat-alfred:   #00e5b0;
+      --cat-salesops: #ffa94d;
+      --cat-ceo:      #818cf8;
+      --cat-infra:    #60a5fa;
+      --cat-product:  #a78bfa;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* Nav */
+    /* ── Nav ── */
     nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 2rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.85rem 2rem;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100; flex-wrap: wrap;
     }
-    nav .logo {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--now);
-      letter-spacing: -0.5px;
-    }
-    nav .version {
-      font-size: 0.7rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-    nav .spacer { flex: 1; }
+    .logo { font-size: 1.1rem; font-weight: 800; color: var(--now); letter-spacing: -0.5px; }
+    .version { font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 2px 8px; border-radius: 20px; }
+    .spacer { flex: 1; }
     .tab-bar { display: flex; gap: 4px; }
-    .tab {
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      transition: all 0.15s;
-    }
+    .tab { padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
     .tab:hover { color: var(--text); background: var(--surface2); }
     .tab.active { background: var(--accent); color: #fff; }
 
-    /* Hero */
-    .hero {
-      padding: 3rem 2rem 1.5rem;
-      max-width: 1100px;
-      margin: 0 auto;
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0.75rem 2rem;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 57px; z-index: 99;
     }
-    .hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
-    .hero p { color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem; }
-    .updated { font-size: 0.75rem; color: var(--muted); margin-top: 0.5rem; }
+    .filter-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-right: 0.25rem; }
+    .filter-chip {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.3px;
+      padding: 4px 12px; border-radius: 20px; cursor: pointer;
+      border: 1px solid transparent; transition: all 0.15s;
+      background: var(--surface2); color: var(--muted); border-color: var(--border);
+    }
+    .filter-chip:hover { color: var(--text); }
+    .filter-chip.active { color: #fff; }
+    .filter-chip[data-cat="all"].active    { background: var(--accent); border-color: var(--accent); }
+    .filter-chip[data-cat="design"].active { background: rgba(244,114,182,0.25); color: var(--cat-design); border-color: var(--cat-design); }
+    .filter-chip[data-cat="alfred"].active { background: rgba(0,229,176,0.2); color: var(--cat-alfred); border-color: var(--cat-alfred); }
+    .filter-chip[data-cat="salesops"].active { background: rgba(255,169,77,0.2); color: var(--cat-salesops); border-color: var(--cat-salesops); }
+    .filter-chip[data-cat="ceo"].active    { background: rgba(129,140,248,0.2); color: var(--cat-ceo); border-color: var(--cat-ceo); }
+    .filter-chip[data-cat="infra"].active  { background: rgba(96,165,250,0.2); color: var(--cat-infra); border-color: var(--cat-infra); }
+    .filter-chip[data-cat="product"].active{ background: rgba(167,139,250,0.2); color: var(--cat-product); border-color: var(--cat-product); }
 
-    /* Columns */
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      max-width: 1200px;
-      margin: 1.5rem auto 3rem;
-      padding: 0 2rem;
-      align-items: start;
-    }
+    /* ── Hero ── */
+    .hero { padding: 2.5rem 2rem 1rem; max-width: 1200px; margin: 0 auto; }
+    .hero h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -1px; }
+    .hero p { color: var(--muted); margin-top: 0.4rem; font-size: 0.9rem; }
+    .updated { font-size: 0.73rem; color: var(--muted); margin-top: 0.4rem; }
+
+    /* ── Board ── */
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 1.25rem auto 3rem; padding: 0 2rem; align-items: start; }
     @media (max-width: 960px) { .board { grid-template-columns: 1fr; } }
 
-    .col-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .col-header .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
+    .col-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .col-header .dot { width: 8px; height: 8px; border-radius: 50%; }
     .col-now .dot { background: var(--now); }
     .col-next .dot { background: var(--next); }
     .col-done .dot { background: var(--done); }
@@ -111,115 +88,109 @@
     .col-next .col-label { color: var(--next); }
     .col-done .col-label { color: var(--done); }
 
-    /* Cards */
+    /* ── Cards ── */
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.1rem 1.25rem;
-      margin-bottom: 1rem;
-      transition: transform 0.15s, border-color 0.15s;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.2rem; margin-bottom: 0.85rem;
+      transition: transform 0.15s, border-color 0.15s, opacity 0.2s;
+      position: relative; overflow: hidden;
     }
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
+    .card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; border-radius: 3px 0 0 3px;
     }
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      line-height: 1.35;
-      margin-bottom: 0.5rem;
-    }
-    .card-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 0.75rem;
-    }
-    .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-    .badge {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 20px;
-    }
-    .badge-high { background: rgba(255,107,107,0.15); color: var(--high); border: 1px solid rgba(255,107,107,0.3); }
-    .badge-med { background: rgba(255,169,77,0.15); color: var(--med); border: 1px solid rgba(255,169,77,0.3); }
-    .badge-low { background: rgba(169,215,255,0.15); color: var(--low); border: 1px solid rgba(169,215,255,0.3); }
-    .badge-tag { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-    .badge-indev { background: rgba(0,229,176,0.15); color: var(--now); border: 1px solid rgba(0,229,176,0.3); }
+    .card[data-cat~="design"]::before  { background: var(--cat-design); }
+    .card[data-cat~="alfred"]::before  { background: var(--cat-alfred); }
+    .card[data-cat~="salesops"]::before{ background: var(--cat-salesops); }
+    .card[data-cat~="ceo"]::before     { background: var(--cat-ceo); }
+    .card[data-cat~="infra"]::before   { background: var(--cat-infra); }
+    .card[data-cat~="product"]::before { background: var(--cat-product); }
+    .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .card.hidden { display: none; }
 
-    /* Outcomes */
-    .outcomes {
-      margin-top: 0.6rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid var(--border);
-    }
-    .outcomes ul {
-      list-style: none;
-      font-size: 0.75rem;
-      color: var(--muted);
-      line-height: 1.8;
-    }
+    .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.35; margin-bottom: 0.45rem; padding-left: 6px; }
+    .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.65rem; padding-left: 6px; }
+    .card-meta { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; padding-left: 6px; }
+
+    .badge { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; }
+    .badge-high    { background: rgba(255,107,107,0.15); color: var(--high); border: 1px solid rgba(255,107,107,0.3); }
+    .badge-med     { background: rgba(255,169,77,0.15);  color: var(--med);  border: 1px solid rgba(255,169,77,0.3); }
+    .badge-low     { background: rgba(169,215,255,0.15); color: var(--low);  border: 1px solid rgba(169,215,255,0.3); }
+    .badge-live    { background: rgba(0,229,176,0.15);   color: var(--now);  border: 1px solid rgba(0,229,176,0.3); }
+    .badge-indev   { background: rgba(108,143,255,0.15); color: var(--next); border: 1px solid rgba(108,143,255,0.3); }
+    .badge-version { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+    /* Category badges */
+    .badge-design  { background: rgba(244,114,182,0.15); color: var(--cat-design);  border: 1px solid rgba(244,114,182,0.35); }
+    .badge-alfred  { background: rgba(0,229,176,0.12);   color: var(--cat-alfred);  border: 1px solid rgba(0,229,176,0.35); }
+    .badge-salesops{ background: rgba(255,169,77,0.15);  color: var(--cat-salesops);border: 1px solid rgba(255,169,77,0.35); }
+    .badge-ceo     { background: rgba(129,140,248,0.15); color: var(--cat-ceo);     border: 1px solid rgba(129,140,248,0.35); }
+    .badge-infra   { background: rgba(96,165,250,0.15);  color: var(--cat-infra);   border: 1px solid rgba(96,165,250,0.35); }
+    .badge-product { background: rgba(167,139,250,0.15); color: var(--cat-product); border: 1px solid rgba(167,139,250,0.35); }
+
+    .outcomes { margin-top: 0.55rem; padding-top: 0.55rem; border-top: 1px solid var(--border); padding-left: 6px; }
+    .outcomes ul { list-style: none; font-size: 0.73rem; color: var(--muted); line-height: 1.9; }
     .outcomes ul li::before { content: "→ "; color: var(--accent); }
 
-    /* View toggle */
+    /* ── View ── */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
+    /* ── Footer ── */
+    footer { text-align: center; padding: 2rem; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
   </style>
 </head>
 <body>
 
+<!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.2.0</span>
+  <span class="version">v0.3.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
-    <button class="tab active" onclick="switchView('fieldinisght')">FieldInsight</button>
-    <button class="tab" onclick="switchView('personal')">Personal</button>
+    <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
+    <button class="tab" onclick="switchView('personal', event)">Personal</button>
   </div>
 </nav>
 
-<!-- ── FieldInsight Roadmap ──────────────────────────────────────────────── -->
-<div id="view-fieldinisght" class="view active">
+<!-- ── Filter bar ── -->
+<div class="filter-bar">
+  <span class="filter-label">Filter</span>
+  <button class="filter-chip active" data-cat="all"     onclick="filterCards('all',     this)">All</button>
+  <button class="filter-chip"        data-cat="design"  onclick="filterCards('design',  this)">🎨 Design</button>
+  <button class="filter-chip"        data-cat="product" onclick="filterCards('product', this)">🏗 Product</button>
+  <button class="filter-chip"        data-cat="alfred"  onclick="filterCards('alfred',  this)">🎩 Alfred</button>
+  <button class="filter-chip"        data-cat="salesops"onclick="filterCards('salesops',this)">📊 Sales Ops</button>
+  <button class="filter-chip"        data-cat="ceo"     onclick="filterCards('ceo',     this)">👔 CEO</button>
+  <button class="filter-chip"        data-cat="infra"   onclick="filterCards('infra',   this)">⚙️ Infra</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     FIELDINISGHT ROADMAP
+     ════════════════════════════════════════════════════════════ -->
+<div id="view-fi" class="view active">
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.2.0</div>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.3.0</div>
   </div>
 
   <div class="board">
 
     <!-- NOW -->
     <div class="col-now">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Now</span>
-      </div>
+      <div class="col-header"><span class="dot"></span><span class="col-label">Now</span></div>
 
-      <div class="card">
+      <div class="card" data-cat="salesops product">
         <div class="card-title">Upgrade Link — Sales Team Tool</div>
         <div class="card-desc">Smart upsell page for the sales team. Pre-fills customer context, tracks click + conversion per rep.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-indev">In Development</span>
-          <span class="badge badge-tag">Sales</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
           <li>One-click upgrade flow</li>
@@ -228,12 +199,13 @@
         </ul></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">PO Multi-Supplier Price Books</div>
         <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
-          <span class="badge badge-tag">Operations</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
           <li>Multiple suppliers per trade</li>
@@ -242,12 +214,13 @@
         </ul></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Two-Way Chat via Email Threads</div>
         <div class="card-desc">Send and receive emails as threaded conversations inside FieldInsight. Gmail and Outlook via OAuth — all context in one place.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
-          <span class="badge badge-tag">Comms</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
           <li>Reply to customers from within FieldInsight</li>
@@ -256,12 +229,13 @@
         </ul></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Onboarding Support Workflows — AI</div>
         <div class="card-desc">Guided onboarding flows powered by AI. Triggered by usage signals — reduces support load and accelerates activation.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
-          <span class="badge badge-tag">Growth</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
           <li>Step-by-step in-app checklists</li>
@@ -271,13 +245,14 @@
         </ul></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product ceo">
         <div class="card-title">Business Insights via Data Ontologies</div>
         <div class="card-desc">Actionable business intelligence from customer operational data — jobs, technicians, invoices, assets — structured via ontologies.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
-          <span class="badge badge-tag">AI</span>
-          <span class="badge badge-tag">Analytics</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-ceo">👔 CEO</span>
         </div>
         <div class="outcomes"><ul>
           <li>Business health score per account</li>
@@ -287,72 +262,90 @@
         </ul></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="salesops ceo">
         <div class="card-title">Sales Metrics — SDR + AE Daily Tracker</div>
         <div class="card-desc">Unified daily scorecard covering both SDR pipeline metrics and AE deal-stage tracking. Flags stale deals and missing next actions.</div>
         <div class="card-meta">
           <span class="badge badge-med">Medium</span>
-          <span class="badge badge-tag">Sales</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge badge-ceo">👔 CEO</span>
         </div>
         <div class="outcomes"><ul>
           <li>SDR: calls, connects, trials, bookings</li>
           <li>AE: deal age, next action, demos</li>
           <li>Stale deal alerts (&gt;7 days no touch)</li>
+          <li>No-next-action alerts (should be 0)</li>
         </ul></div>
       </div>
     </div>
 
     <!-- NEXT -->
     <div class="col-next">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Next</span>
-      </div>
+      <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Asset Management Improvements</div>
         <div class="card-desc">Enhanced asset tracking, service history, and warranty management.</div>
-        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Operations</span></div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Recurring Job Templates</div>
         <div class="card-desc">Schedule and auto-generate recurring maintenance jobs from templates.</div>
-        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Scheduling</span></div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Customer Portal — Self Service</div>
         <div class="card-desc">Let customers view their jobs, invoices, and book service online.</div>
-        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Customer</span></div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="product">
         <div class="card-title">AI-Optimised Routing</div>
         <div class="card-desc">Advanced scheduling using AI to optimise technician routes and reduce drive time.</div>
-        <div class="card-meta"><span class="badge badge-low">Low</span><span class="badge badge-tag">AI</span><span class="badge badge-tag">Scheduling</span></div>
+        <div class="card-meta">
+          <span class="badge badge-low">Low</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="design product">
         <div class="card-title">Quote Approval Workflows</div>
         <div class="card-desc">Internal approval steps before quotes are sent — manager sign-off, margin checks.</div>
-        <div class="card-meta"><span class="badge badge-low">Low</span><span class="badge badge-tag">Finance</span></div>
+        <div class="card-meta">
+          <span class="badge badge-low">Low</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="product">
         <div class="card-title">Stripe Payment Links on Invoices</div>
         <div class="card-desc">One-click payment links embedded in invoice emails — pay online instantly.</div>
-        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Finance</span></div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
       </div>
     </div>
 
     <!-- DONE -->
     <div class="col-done">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Done</span>
-      </div>
-      <div class="card" style="opacity:0.6;">
+      <div class="col-header"><span class="dot"></span><span class="col-label">Done</span></div>
+      <div class="card" data-cat="product" style="opacity:0.6;">
         <div class="card-title" style="color:var(--muted);">Nothing shipped yet</div>
         <div class="card-desc">Features will appear here as they ship, with version numbers.</div>
       </div>
@@ -361,126 +354,195 @@
   </div>
 </div>
 
-<!-- ── Personal Roadmap ──────────────────────────────────────────────────── -->
+<!-- ════════════════════════════════════════════════════════════
+     PERSONAL ROADMAP
+     ════════════════════════════════════════════════════════════ -->
 <div id="view-personal" class="view">
   <div class="hero">
     <h1>Personal Roadmap</h1>
-    <p>Paul Tyrrell — personal projects, systems, and goals.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.2.0</div>
+    <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.3.0</div>
   </div>
 
   <div class="board">
 
     <!-- NOW -->
     <div class="col-now">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Now</span>
-      </div>
+      <div class="col-header"><span class="dot"></span><span class="col-label">Now</span></div>
 
-      <div class="card">
-        <div class="card-title">Alfred — Personal AI Assistant</div>
-        <div class="card-desc">AI assistant named after my grandfather. Runs on Mac Studio, talks via WhatsApp, has access to all Apple Notes and NocoDB.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">In Development</span></div>
+      <div class="card" data-cat="alfred ceo">
+        <div class="card-title">Alfred — Google Sheets (Sales Stats)</div>
+        <div class="card-desc">Alfred reads live SDR and AE pipeline numbers from specific Google Sheets tabs. Ask via WhatsApp — no opening spreadsheets.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+        </div>
         <div class="outcomes"><ul>
-          <li>WhatsApp via Twilio ✓ built</li>
-          <li>Claude AI brain ✓ built</li>
-          <li>Mac Studio deploy — pending</li>
-          <li>Live Twilio webhook — pending</li>
-        </ul></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Apple Notes → NocoDB Sync</div>
-        <div class="card-desc">Daily sync of all Apple Notes into Fountain of Truth for AI search and recall.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">Running</span></div>
-        <div class="outcomes"><ul>
-          <li>1,144 notes synced ✓</li>
-          <li>102 folders ✓</li>
-          <li>Alfred can search all notes via WhatsApp ✓</li>
-        </ul></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">Alfred — Google Sheets Integration</div>
-        <div class="card-desc">Alfred reads live SDR and Sales stats from specific Google Sheets tabs. Ask Alfred for today's numbers via WhatsApp — no opening spreadsheets needed.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Alfred</span><span class="badge badge-tag">Sales</span></div>
-        <div class="outcomes"><ul>
-          <li>Connect specific Google Sheet + tabs via API</li>
-          <li>Alfred reads SDR daily tracker</li>
-          <li>Alfred reads AE pipeline scorecard</li>
+          <li>Connect SDR daily tracker tab</li>
+          <li>Connect AE pipeline scorecard tab</li>
           <li>"What are today's sales numbers?" via WhatsApp</li>
+          <li>Alfred formats and delivers summary</li>
         </ul></div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Alfred — Fathom / Zoom Recording Access</div>
-        <div class="card-desc">Alfred pulls sales call recordings and transcripts from Fathom or Zoom. Summarise calls, extract action items, and surface insights via WhatsApp.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Alfred</span><span class="badge badge-tag">Sales</span></div>
+      <div class="card" data-cat="alfred salesops ceo">
+        <div class="card-title">Alfred — Fathom / Zoom Call Summaries</div>
+        <div class="card-desc">Alfred pulls sales call recordings and transcripts from Fathom. Summarise calls, extract action items, surface insights via WhatsApp.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+        </div>
         <div class="outcomes"><ul>
-          <li>Connect Fathom API (preferred) or Zoom recordings</li>
-          <li>Auto-transcribe and summarise calls</li>
+          <li>Connect Fathom API</li>
           <li>"Summarise my last 3 sales calls" via WhatsApp</li>
           <li>Extract action items per call</li>
           <li>Store transcripts in Fountain of Truth</li>
         </ul></div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Product Roadmap (this)</div>
-        <div class="card-desc">Versioned, GitHub-backed roadmap for personal and FieldInsight planning. Served via GitHub Pages.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">Running</span></div>
+      <div class="card" data-cat="infra alfred">
+        <div class="card-title">Apple Notes → NocoDB Daily Sync</div>
+        <div class="card-desc">Scheduled sync running on Mac Studio every morning at 7am. Alfred searches all notes via WhatsApp.</div>
+        <div class="card-meta">
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
         <div class="outcomes"><ul>
-          <li>Repo created ✓</li>
-          <li>Content written ✓</li>
+          <li>1,144 notes synced ✓</li>
+          <li>102 folders ✓</li>
+          <li>Alfred WhatsApp search confirmed ✓</li>
+          <li>Daily cron on Mac Studio — schedule active</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="infra alfred">
+        <div class="card-title">Cloudflare Tunnel — Permanent URL</div>
+        <div class="card-desc">Replace the ephemeral trycloudflare.com URL with a named permanent tunnel so the Twilio webhook never needs updating.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Set up named cloudflared tunnel</li>
+          <li>Stable URL survives Mac Studio reboots</li>
+          <li>Update Twilio webhook once and forget</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="ceo alfred">
+        <div class="card-title">Alfred — Morning CEO Briefing</div>
+        <div class="card-desc">Alfred sends Paul a WhatsApp briefing every morning at 8am — recent notes, sales numbers, open actions, and anything flagged.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Triggered by launchd at 8am</li>
+          <li>Recent notes summary</li>
+          <li>Sales numbers from Google Sheets</li>
+          <li>Open actions / flagged items</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="infra">
+        <div class="card-title">Product Roadmap Site</div>
+        <div class="card-desc">This page — versioned, GitHub-backed, filterable by category. GitHub Pages for now, Mac Studio or HOKU when ready.</div>
+        <div class="card-meta">
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
+        <div class="outcomes"><ul>
           <li>GitHub Pages live ✓</li>
+          <li>Category filter system ✓</li>
+          <li>v0.3.0 — auto-deploys on push</li>
         </ul></div>
       </div>
     </div>
 
     <!-- NEXT -->
     <div class="col-next">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Next</span>
-      </div>
+      <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
 
-      <div class="card">
+      <div class="card" data-cat="alfred ceo salesops">
         <div class="card-title">Fountain of Truth — Data Completeness</div>
-        <div class="card-desc">Enrich NocoDB with HubSpot, Intercom, Gmail threads, and Grain meeting transcripts.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Data</span></div>
+        <div class="card-desc">Enrich NocoDB with HubSpot, Intercom, Gmail threads, and Fathom transcripts so Alfred has full context.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Mac Studio Always-On Setup</div>
-        <div class="card-desc">Tailscale always running, Alfred on port 8080, Cloudflare tunnel, notes sync scheduled.</div>
-        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Infrastructure</span></div>
+      <div class="card" data-cat="salesops ceo">
+        <div class="card-title">SDR + AE Dashboard — Interactive HTML</div>
+        <div class="card-desc">Build the combined SDR + AE daily scorecard as an interactive HTML dashboard with colour-coded benchmarks.</div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="alfred infra">
         <div class="card-title">Marketing Automation Pipeline</div>
-        <div class="card-desc">Weekly standup → blog post. Transcript → feature summary → WordPress auto-publish.</div>
-        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Content</span></div>
+        <div class="card-desc">Weekly standup → blog post. Transcript → feature summary → WordPress auto-publish via Alfred.</div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="alfred ceo">
+        <div class="card-title">Alfred — HubSpot Deal Intelligence</div>
+        <div class="card-desc">Alfred reads HubSpot deal data and answers questions like "What deals are at risk?" or "Who hasn't been contacted this week?"</div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+        </div>
       </div>
     </div>
 
     <!-- DONE -->
     <div class="col-done">
-      <div class="col-header">
-        <span class="dot"></span>
-        <span class="col-label">Done</span>
-      </div>
+      <div class="col-header"><span class="dot"></span><span class="col-label">Done</span></div>
 
-      <div class="card">
-        <div class="card-title">Apple Notes Sync — Initial Build</div>
-        <div class="card-desc">Parallel folder AppleScript reader + NocoDB uploader. 1,144 notes synced in first run.</div>
-        <div class="card-meta"><span class="badge badge-tag">v0.1.0</span></div>
-      </div>
-
-      <div class="card">
+      <div class="card" data-cat="alfred infra">
         <div class="card-title">Alfred — Live on WhatsApp ✓</div>
-        <div class="card-desc">Deployed to Mac Studio. Flask + Claude + NocoDB + Twilio. Responds to WhatsApp messages, searches 1,144 Apple Notes, survives reboots.</div>
-        <div class="card-meta"><span class="badge badge-tag">v0.1.0</span><span class="badge badge-indev">Live</span></div>
+        <div class="card-desc">Deployed to Mac Studio. Flask + Claude + NocoDB + Twilio. Responds to WhatsApp, searches 1,144 Apple Notes, survives reboots.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.1.0</span>
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="alfred infra">
+        <div class="card-title">Apple Notes Sync — Initial Build ✓</div>
+        <div class="card-desc">Parallel folder AppleScript reader + NocoDB uploader. 1,144 notes synced in first run across 102 folders.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.1.0</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="infra">
+        <div class="card-title">Mac Studio Deployment ✓</div>
+        <div class="card-desc">Alfred running on Mac Studio via Tailscale. SSH, launchd services, Cloudflare tunnel all configured.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.1.0</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
       </div>
     </div>
 
@@ -488,15 +550,42 @@
 </div>
 
 <footer>
-  Roadmap · <a href="https://github.com/ptyrrell/product-roadmap" style="color:var(--muted);text-decoration:none;" target="_blank">ptyrrell/product-roadmap</a> · v0.1.0 · Updated 16 March 2026
+  Roadmap &nbsp;·&nbsp; v0.3.0 &nbsp;·&nbsp;
+  <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
+  &nbsp;·&nbsp; Updated 16 March 2026
 </footer>
 
 <script>
-  function switchView(view) {
+  let currentView = 'fi';
+  let currentFilter = 'all';
+
+  function switchView(view, e) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('view-' + view).classList.add('active');
-    event.target.classList.add('active');
+    if (e && e.target) e.target.classList.add('active');
+    currentView = view;
+    applyFilter(currentFilter);
+  }
+
+  function filterCards(cat, el) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    currentFilter = cat;
+    applyFilter(cat);
+  }
+
+  function applyFilter(cat) {
+    const activeView = document.querySelector('.view.active');
+    if (!activeView) return;
+    activeView.querySelectorAll('.card').forEach(card => {
+      if (cat === 'all') {
+        card.classList.remove('hidden');
+      } else {
+        const cats = (card.dataset.cat || '').split(' ');
+        card.classList.toggle('hidden', !cats.includes(cat));
+      }
+    });
   }
 </script>
 
