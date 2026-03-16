@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roadmap</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf6;
+      --muted: #8b90b8;
+      --now: #00e5b0;
+      --next: #6c8fff;
+      --done: #4ade80;
+      --high: #ff6b6b;
+      --med: #ffa94d;
+      --low: #a9d7ff;
+      --accent: #7c6bf0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav .logo {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--now);
+      letter-spacing: -0.5px;
+    }
+    nav .version {
+      font-size: 0.7rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    nav .spacer { flex: 1; }
+    .tab-bar { display: flex; gap: 4px; }
+    .tab {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text); background: var(--surface2); }
+    .tab.active { background: var(--accent); color: #fff; }
+
+    /* Hero */
+    .hero {
+      padding: 3rem 2rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .hero h1 { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .hero p { color: var(--muted); margin-top: 0.5rem; font-size: 0.95rem; }
+    .updated { font-size: 0.75rem; color: var(--muted); margin-top: 0.5rem; }
+
+    /* Columns */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 1.5rem auto 3rem;
+      padding: 0 2rem;
+    }
+    @media (max-width: 900px) { .board { grid-template-columns: 1fr; } }
+
+    .col-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .col-header .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .col-now .dot { background: var(--now); }
+    .col-next .dot { background: var(--next); }
+    .col-done .dot { background: var(--done); }
+    .col-now .col-label { color: var(--now); }
+    .col-next .col-label { color: var(--next); }
+    .col-done .col-label { color: var(--done); }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: 1rem;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .badge-high { background: rgba(255,107,107,0.15); color: var(--high); border: 1px solid rgba(255,107,107,0.3); }
+    .badge-med { background: rgba(255,169,77,0.15); color: var(--med); border: 1px solid rgba(255,169,77,0.3); }
+    .badge-low { background: rgba(169,215,255,0.15); color: var(--low); border: 1px solid rgba(169,215,255,0.3); }
+    .badge-tag { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .badge-indev { background: rgba(0,229,176,0.15); color: var(--now); border: 1px solid rgba(0,229,176,0.3); }
+
+    /* Outcomes */
+    .outcomes {
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid var(--border);
+    }
+    .outcomes ul {
+      list-style: none;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .outcomes ul li::before { content: "→ "; color: var(--accent); }
+
+    /* View toggle */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">Roadmap</span>
+  <span class="version">v0.1.0</span>
+  <div class="spacer"></div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchView('fieldinisght')">FieldInsight</button>
+    <button class="tab" onclick="switchView('personal')">Personal</button>
+  </div>
+</nav>
+
+<!-- ── FieldInsight Roadmap ──────────────────────────────────────────────── -->
+<div id="view-fieldinisght" class="view active">
+  <div class="hero">
+    <h1>FieldInsight Product Roadmap</h1>
+    <p>Features in flight, planned, and shipped — updated with every build.</p>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.1.0</div>
+  </div>
+
+  <div class="board">
+
+    <!-- NOW -->
+    <div class="col-now">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Now</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Upgrade Link — Sales Team Tool</div>
+        <div class="card-desc">Smart upsell page for the sales team. Pre-fills customer context, tracks click + conversion per rep.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-indev">In Development</span>
+          <span class="badge badge-tag">Sales</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>One-click upgrade flow</li>
+          <li>Personalised with plan + tier data</li>
+          <li>Rep attribution tracking</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">PO Multi-Supplier Price Books</div>
+        <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-tag">Operations</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Multiple suppliers per trade</li>
+          <li>Price book switching at PO level</li>
+          <li>Margin reporting per supplier</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Two-Way Chat via Email Threads</div>
+        <div class="card-desc">Send and receive emails as threaded conversations inside FieldInsight. Gmail and Outlook via OAuth — all context in one place.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-tag">Comms</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Reply to customers from within FieldInsight</li>
+          <li>Threads attached to job / customer record</li>
+          <li>Gmail + Outlook supported</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Onboarding Support Workflows — AI</div>
+        <div class="card-desc">Guided onboarding flows powered by AI. Triggered by usage signals — reduces support load and accelerates activation.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-tag">Growth</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Step-by-step in-app checklists</li>
+          <li>AI suggests next setup actions</li>
+          <li>Reduce time-to-first-job</li>
+          <li>Target: −40% onboarding tickets</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Business Insights via Data Ontologies</div>
+        <div class="card-desc">Actionable business intelligence from customer operational data — jobs, technicians, invoices, assets — structured via ontologies.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-tag">AI</span>
+          <span class="badge badge-tag">Analytics</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Business health score per account</li>
+          <li>Industry benchmarks by trade</li>
+          <li>Actionable weekly insights</li>
+          <li>Exportable reports for owners</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Sales Metrics — SDR + AE Daily Tracker</div>
+        <div class="card-desc">Unified daily scorecard covering both SDR pipeline metrics and AE deal-stage tracking. Flags stale deals and missing next actions.</div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-tag">Sales</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>SDR: calls, connects, trials, bookings</li>
+          <li>AE: deal age, next action, demos</li>
+          <li>Stale deal alerts (&gt;7 days no touch)</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- NEXT -->
+    <div class="col-next">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Next</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Asset Management Improvements</div>
+        <div class="card-desc">Enhanced asset tracking, service history, and warranty management.</div>
+        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Operations</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Recurring Job Templates</div>
+        <div class="card-desc">Schedule and auto-generate recurring maintenance jobs from templates.</div>
+        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Scheduling</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Customer Portal — Self Service</div>
+        <div class="card-desc">Let customers view their jobs, invoices, and book service online.</div>
+        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Customer</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">AI-Optimised Routing</div>
+        <div class="card-desc">Advanced scheduling using AI to optimise technician routes and reduce drive time.</div>
+        <div class="card-meta"><span class="badge badge-low">Low</span><span class="badge badge-tag">AI</span><span class="badge badge-tag">Scheduling</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Quote Approval Workflows</div>
+        <div class="card-desc">Internal approval steps before quotes are sent — manager sign-off, margin checks.</div>
+        <div class="card-meta"><span class="badge badge-low">Low</span><span class="badge badge-tag">Finance</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Stripe Payment Links on Invoices</div>
+        <div class="card-desc">One-click payment links embedded in invoice emails — pay online instantly.</div>
+        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Finance</span></div>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="col-done">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Done</span>
+      </div>
+      <div class="card" style="opacity:0.6;">
+        <div class="card-title" style="color:var(--muted);">Nothing shipped yet</div>
+        <div class="card-desc">Features will appear here as they ship, with version numbers.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Personal Roadmap ──────────────────────────────────────────────────── -->
+<div id="view-personal" class="view">
+  <div class="hero">
+    <h1>Personal Roadmap</h1>
+    <p>Paul Tyrrell — personal projects, systems, and goals.</p>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.1.0</div>
+  </div>
+
+  <div class="board">
+
+    <!-- NOW -->
+    <div class="col-now">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Now</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Alfred — Personal AI Assistant</div>
+        <div class="card-desc">AI assistant named after my grandfather. Runs on Mac Studio, talks via WhatsApp, has access to all Apple Notes and NocoDB.</div>
+        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">In Development</span></div>
+        <div class="outcomes"><ul>
+          <li>WhatsApp via Twilio ✓ built</li>
+          <li>Claude AI brain ✓ built</li>
+          <li>Mac Studio deploy — pending</li>
+          <li>Live Twilio webhook — pending</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Apple Notes → NocoDB Sync</div>
+        <div class="card-desc">Daily sync of all Apple Notes into Fountain of Truth for AI search and recall.</div>
+        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">Running</span></div>
+        <div class="outcomes"><ul>
+          <li>1,144 notes synced ✓</li>
+          <li>102 folders ✓</li>
+          <li>Daily auto-sync on Mac Studio — pending</li>
+        </ul></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Product Roadmap (this)</div>
+        <div class="card-desc">Versioned, GitHub-backed roadmap for personal and FieldInsight planning. Served via GitHub Pages.</div>
+        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-indev">In Development</span></div>
+        <div class="outcomes"><ul>
+          <li>Repo created ✓</li>
+          <li>Content written ✓</li>
+          <li>GitHub Pages live — pending</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <!-- NEXT -->
+    <div class="col-next">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Next</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Fountain of Truth — Data Completeness</div>
+        <div class="card-desc">Enrich NocoDB with HubSpot, Intercom, Gmail threads, and Grain meeting transcripts.</div>
+        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Data</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Mac Studio Always-On Setup</div>
+        <div class="card-desc">Tailscale always running, Alfred on port 8080, Cloudflare tunnel, notes sync scheduled.</div>
+        <div class="card-meta"><span class="badge badge-high">High</span><span class="badge badge-tag">Infrastructure</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Marketing Automation Pipeline</div>
+        <div class="card-desc">Weekly standup → blog post. Transcript → feature summary → WordPress auto-publish.</div>
+        <div class="card-meta"><span class="badge badge-med">Medium</span><span class="badge badge-tag">Content</span></div>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="col-done">
+      <div class="col-header">
+        <span class="dot"></span>
+        <span class="col-label">Done</span>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Apple Notes Sync — Initial Build</div>
+        <div class="card-desc">Parallel folder AppleScript reader + NocoDB uploader. 1,144 notes synced in first run.</div>
+        <div class="card-meta"><span class="badge badge-tag">v0.1.0</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Alfred — Codebase Complete</div>
+        <div class="card-desc">Flask server, Claude brain, NocoDB tools, WhatsApp webhook, Twilio integration, launchd plists.</div>
+        <div class="card-meta"><span class="badge badge-tag">v0.1.0</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Roadmap · v0.1.0 · ptyrrell/product-roadmap · Updated 16 March 2026
+</footer>
+
+<script>
+  function switchView(view) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('view-' + view).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
