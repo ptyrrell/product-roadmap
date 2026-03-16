@@ -147,7 +147,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-  <span class="version">v0.3.0</span>
+    <span class="version">v0.4.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -174,7 +174,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.3.0</div>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.4.0</div>
   </div>
 
   <div class="board">
@@ -182,6 +182,24 @@
     <!-- NOW -->
     <div class="col-now">
       <div class="col-header"><span class="dot"></span><span class="col-label">Now</span></div>
+
+      <div class="card" data-cat="design">
+        <div class="card-title">🎨 Design Queue — Paul to action</div>
+        <div class="card-desc">Features waiting on design decisions before engineering can proceed. Review each and produce wireframes or specs.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>PO Multi-Supplier Price Books — screen flows</li>
+          <li>Two-Way Email Chat — thread UI inside job record</li>
+          <li>Onboarding Checklist — step-by-step UX flow</li>
+          <li>Asset Management v2 — service history layout</li>
+          <li>Recurring Job Templates — template builder UI</li>
+          <li>Customer Portal — self-service booking + invoice view</li>
+          <li>Quote Approval Workflow — approver notification + sign-off UI</li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="salesops product">
         <div class="card-title">Upgrade Link — Sales Team Tool</div>
@@ -208,9 +226,11 @@
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Multiple suppliers per trade</li>
-          <li>Price book switching at PO level</li>
-          <li>Margin reporting per supplier</li>
+          <li>Design: Supplier selector at PO level</li>
+          <li>Design: Price book management screen</li>
+          <li>Design: Margin visibility per line item</li>
+          <li>Design: Switching supplier mid-PO flow</li>
+          <li>Build: API to attach multiple price books per trade type</li>
         </ul></div>
       </div>
 
@@ -223,9 +243,11 @@
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Reply to customers from within FieldInsight</li>
-          <li>Threads attached to job / customer record</li>
-          <li>Gmail + Outlook supported</li>
+          <li>Design: Thread panel within job/customer record</li>
+          <li>Design: Compose + reply UI (inline, not modal)</li>
+          <li>Design: Gmail vs Outlook connection onboarding</li>
+          <li>Build: OAuth flow for Gmail + Outlook</li>
+          <li>Build: Webhook receiver for inbound replies</li>
         </ul></div>
       </div>
 
@@ -238,10 +260,12 @@
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Step-by-step in-app checklists</li>
-          <li>AI suggests next setup actions</li>
-          <li>Reduce time-to-first-job</li>
-          <li>Target: −40% onboarding tickets</li>
+          <li>Design: In-app checklist component (persistent sidebar)</li>
+          <li>Design: Completion state + celebration moment</li>
+          <li>Design: AI suggestion tooltip pattern</li>
+          <li>Build: Usage signal triggers (first job, first invoice, etc.)</li>
+          <li>Build: AI recommendation engine per account state</li>
+          <li>Target: −40% onboarding support tickets</li>
         </ul></div>
       </div>
 
@@ -255,10 +279,12 @@
           <span class="badge badge-ceo">👔 CEO</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Business health score per account</li>
-          <li>Industry benchmarks by trade</li>
-          <li>Actionable weekly insights</li>
-          <li>Exportable reports for owners</li>
+          <li>Design: Insights dashboard — weekly digest layout</li>
+          <li>Design: Health score card component</li>
+          <li>Design: Industry benchmark comparison view</li>
+          <li>Build: Data ontology schema (jobs, techs, invoices, assets)</li>
+          <li>Build: Weekly insights generation pipeline</li>
+          <li>Build: Exportable PDF/CSV reports for owners</li>
         </ul></div>
       </div>
 
@@ -361,7 +387,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.3.0</div>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.4.0</div>
   </div>
 
   <div class="board">
@@ -436,18 +462,32 @@
       </div>
 
       <div class="card" data-cat="ceo alfred">
-        <div class="card-title">Alfred — Morning CEO Briefing</div>
-        <div class="card-desc">Alfred sends Paul a WhatsApp briefing every morning at 8am — recent notes, sales numbers, open actions, and anything flagged.</div>
+        <div class="card-title">Alfred — Morning CEO Briefing ✓ Scheduled</div>
+        <div class="card-desc">Alfred sends Paul a WhatsApp briefing every morning at 8am AEST — recent notes summary + Tim & Jay SDR numbers for last 2 days.</div>
         <div class="card-meta">
-          <span class="badge badge-high">High</span>
+          <span class="badge badge-live">Live</span>
           <span class="badge badge-ceo">👔 CEO</span>
           <span class="badge badge-alfred">🎩 Alfred</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Triggered by launchd at 8am</li>
-          <li>Recent notes summary</li>
-          <li>Sales numbers from Google Sheets</li>
-          <li>Open actions / flagged items</li>
+          <li>launchd fires at 8:00 AM daily ✓</li>
+          <li>Recent notes summary (last 48h) ✓</li>
+          <li>SDR numbers — Tim + Jay last 2 days ✓</li>
+          <li>TODO: add Fathom "calls this week" summary</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="alfred">
+        <div class="card-title">Alfred — Image & Screenshot Reading</div>
+        <div class="card-desc">Send Alfred a photo or screenshot on WhatsApp — Claude Vision extracts all text, reads notes photos, whiteboards, documents.</div>
+        <div class="card-meta">
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Photo of handwritten notes → extracted text ✓</li>
+          <li>Screenshot of any doc → readable summary ✓</li>
+          <li>No caption needed — Alfred infers intent ✓</li>
         </ul></div>
       </div>
 
@@ -536,6 +576,45 @@
         </div>
       </div>
 
+      <div class="card" data-cat="alfred salesops">
+        <div class="card-title">Alfred — Fathom Integration ✓</div>
+        <div class="card-desc">Alfred reads Fathom sales call recordings. "Summarise my last sales call" works on WhatsApp. Action items extracted per call.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.3.0</span>
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="alfred salesops">
+        <div class="card-title">Alfred — Google Sheets SDR Tracker ✓</div>
+        <div class="card-desc">Alfred reads Tim &amp; Jay's daily dials, connects and bookings vs targets with ✅🟡🔴 indicators. Morning briefing scheduled 8am daily.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.4.0</span>
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="alfred">
+        <div class="card-title">Alfred — Image &amp; Screenshot Reading ✓</div>
+        <div class="card-desc">Send Alfred a photo on WhatsApp. Claude Vision extracts text from notes photos, screenshots, whiteboards, documents.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.4.0</span>
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+      </div>
+
+      <div class="card" data-cat="infra alfred">
+        <div class="card-title">Notes Date Fix — ISO Backfill ✓</div>
+        <div class="card-desc">All 1,144 Apple Notes dates converted from AppleScript text to ISO. Notes now sort and filter correctly. Recent-only search defaults on.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.4.0</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+        </div>
+      </div>
+
       <div class="card" data-cat="infra">
         <div class="card-title">Mac Studio Deployment ✓</div>
         <div class="card-desc">Alfred running on Mac Studio via Tailscale. SSH, launchd services, Cloudflare tunnel all configured.</div>
@@ -550,7 +629,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.3.0 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.4.0 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 16 March 2026
 </footer>
