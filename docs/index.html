@@ -147,7 +147,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.4.0</span>
+    <span class="version">v0.5.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -174,7 +174,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.4.0</div>
+    <div class="updated">Last updated: 17 March 2026 &nbsp;·&nbsp; v0.5.0</div>
   </div>
 
   <div class="board">
@@ -198,6 +198,9 @@
           <li>Recurring Job Templates — template builder UI</li>
           <li>Customer Portal — self-service booking + invoice view</li>
           <li>Quote Approval Workflow — approver notification + sign-off UI</li>
+          <li>Voice Job Logging — IVR call flow + confirmation readback</li>
+          <li>IVR Self-Service Booking — phone flow for B2B clients</li>
+          <li>SMS Booking — scheduler-triggered + job status-triggered flows</li>
         </ul></div>
       </div>
 
@@ -366,6 +369,61 @@
           <span class="badge badge-product">🏗 Product</span>
         </div>
       </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">Voice Job Logging — IVR with Claude</div>
+        <div class="card-desc">Field techs call in and speak naturally to log job details. Claude extracts structured data (job type, location, notes, time). Multi-model support — Claude now, Grok later.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Design: Voice-to-job creation flow (call → structured record)</li>
+          <li>Design: Confirmation readback UX ("I've logged a plumbing job at 42 Smith St...")</li>
+          <li>Build: Twilio Voice + speech-to-text pipeline</li>
+          <li>Build: Claude prompt to extract job fields from speech</li>
+          <li>Build: FieldInsight API write-back for job creation</li>
+          <li>Future: Swap in Grok for real-time voice model</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">IVR Self-Service Job Booking — B2B</div>
+        <div class="card-desc">Inbound phone flow for B2B clients to book a job without speaking to a human. Twilio Voice + Claude TTS/STT. Scheduler-triggered invite or client self-service portal.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Design: IVR call flow — greeting, job type, address, time slot selection</li>
+          <li>Design: Confirmation + calendar invite to client</li>
+          <li>Design: Scheduler dashboard showing self-booked appointments</li>
+          <li>Build: Twilio Voice IVR with slot availability from FieldInsight</li>
+          <li>Build: Claude for natural language slot negotiation</li>
+          <li>Build: Auto job creation on booking confirmation</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">SMS Job Booking — Scheduler + Status Triggered</div>
+        <div class="card-desc">Two trigger modes: scheduler sends a booking link via SMS, or a job status change triggers a self-booking request. Client replies to SMS to confirm time and details.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Design: Scheduler-triggered SMS flow ("Your next service is due — reply to book")</li>
+          <li>Design: Job status trigger ("Job complete — book your follow-up service")</li>
+          <li>Design: SMS reply parsing (date/time confirmation)</li>
+          <li>Build: Twilio SMS webhook integration</li>
+          <li>Build: Job status webhook → outbound SMS trigger</li>
+          <li>Build: NLP reply parser (Claude) for time slot extraction</li>
+          <li>Build: Twilio Conversations API for thread-per-booking</li>
+        </ul></div>
+      </div>
     </div>
 
     <!-- DONE -->
@@ -387,7 +445,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v0.4.0</div>
+    <div class="updated">Last updated: 17 March 2026 &nbsp;·&nbsp; v0.5.0</div>
   </div>
 
   <div class="board">
@@ -488,6 +546,38 @@
           <li>Photo of handwritten notes → extracted text ✓</li>
           <li>Screenshot of any doc → readable summary ✓</li>
           <li>No caption needed — Alfred infers intent ✓</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="alfred ceo">
+        <div class="card-title">Alfred — Gmail Integration</div>
+        <div class="card-desc">Alfred reads and searches Paul's Gmail inbox via WhatsApp. "Any emails from FieldInsight customers this week?" — Alfred searches, summarises, and can reply.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Search inbox by keyword, sender, date</li>
+          <li>Read full email thread in context</li>
+          <li>Send email reply via WhatsApp command</li>
+          <li>OAuth 2.0 — no password stored, secure token</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="alfred product">
+        <div class="card-title">Alfred — SMS via Twilio</div>
+        <div class="card-desc">Alfred sends and receives plain SMS (not just WhatsApp). Useful for non-WhatsApp contacts or triggering SMS flows for FieldInsight customers.</div>
+        <div class="card-meta">
+          <span class="badge badge-med">Medium</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Send SMS to any number via WhatsApp command</li>
+          <li>Receive inbound SMS routed to Alfred</li>
+          <li>Twilio phone number provisioned for SMS</li>
+          <li>Foundation for FieldInsight SMS booking flows</li>
         </ul></div>
       </div>
 
@@ -629,9 +719,9 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.4.0 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.5.0 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
-  &nbsp;·&nbsp; Updated 16 March 2026
+  &nbsp;·&nbsp; Updated 17 March 2026
 </footer>
 
 <script>
