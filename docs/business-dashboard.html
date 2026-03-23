@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Business Dashboard — FieldInsight</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#09090f;--surface:#10121e;--surface2:#171a2e;--surface3:#1e2240;
+  --border:#252a48;--border2:#303660;
+  --text:#eaecf8;--muted:#6872a8;--dim:#3a4070;
+  --green:#10d990;--green-bg:rgba(16,217,144,.1);--green-border:rgba(16,217,144,.25);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.1);--amber-border:rgba(245,158,11,.25);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.1);--red-border:rgba(244,63,94,.25);
+  --blue:#6366f1;--blue-light:#818cf8;--blue-bg:rgba(99,102,241,.1);
+  --teal:#06b6d4;--purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;font-size:13px}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;gap:16px;padding:14px 28px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;flex-wrap:wrap;
+  backdrop-filter:blur(8px);
+}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--teal));
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.nav-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.4px}
+.nav-sub{font-size:10px;color:var(--muted)}
+.spacer{flex:1}
+.period-tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;gap:2px}
+.period-tab{background:transparent;border:none;color:var(--muted);border-radius:6px;
+  padding:5px 13px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s;white-space:nowrap}
+.period-tab.active{background:var(--blue);color:#fff;box-shadow:0 1px 8px rgba(99,102,241,.4)}
+.period-tab:not(.active):hover{color:var(--text);background:var(--border)}
+.last-updated{font-size:10px;color:var(--muted)}
+
+/* ── KPI STRIP ── */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;padding:20px 28px;background:var(--surface);border-bottom:1px solid var(--border);
+}
+.kpi{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s;cursor:default;
+}
+.kpi:hover{border-color:var(--border2)}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.kpi.g::after{background:linear-gradient(90deg,var(--green),#05df72)}
+.kpi.b::after{background:linear-gradient(90deg,var(--blue),var(--teal))}
+.kpi.a::after{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+.kpi.r::after{background:linear-gradient(90deg,var(--red),#fb7185)}
+.kpi.p::after{background:linear-gradient(90deg,var(--purple),#c084fc)}
+.kpi.t::after{background:linear-gradient(90deg,var(--teal),#22d3ee)}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
+.kpi-value{font-size:24px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.5px}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;
+  padding:2px 7px;border-radius:12px;margin-top:6px}
+.kpi-delta.up{background:var(--green-bg);color:var(--green)}
+.kpi-delta.down{background:var(--red-bg);color:var(--red)}
+.kpi-delta.flat{background:var(--amber-bg);color:var(--amber)}
+.kpi-sparkline{height:28px;margin-top:8px;opacity:.7}
+
+/* ── PAGE GRID ── */
+.page{max-width:1500px;margin:0 auto;padding:24px 28px;display:flex;flex-direction:column;gap:24px}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-icon{font-size:18px}
+.sec-title{font-size:14px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.sec-chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.sec-actions{margin-left:auto;display:flex;gap:8px}
+.sec-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);
+  border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s}
+.sec-btn:hover{background:var(--border);color:var(--text)}
+.sec-btn.primary{background:var(--blue-bg);border-color:var(--blue);color:var(--blue-light)}
+
+/* ── CHART GRID ── */
+.chart-grid{display:grid;gap:16px}
+.chart-grid-2{grid-template-columns:2fr 1fr}
+.chart-grid-3{grid-template-columns:1fr 1fr 1fr}
+.chart-grid-2-2{grid-template-columns:1fr 1fr}
+@media(max-width:1024px){
+  .chart-grid-2,.chart-grid-3,.chart-grid-2-2{grid-template-columns:1fr}
+}
+
+.chart-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:18px;display:flex;flex-direction:column;gap:12px;
+}
+.chart-card-header{display:flex;align-items:flex-start;gap:8px}
+.chart-card-title{font-size:13px;font-weight:700;color:var(--text)}
+.chart-card-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.chart-card-meta{margin-left:auto;font-size:11px;color:var(--muted)}
+.chart-canvas-wrap{position:relative;flex:1;min-height:180px}
+
+/* ── DIVIDER STAT ── */
+.inline-stats{display:flex;gap:20px;flex-wrap:wrap}
+.istat{display:flex;flex-direction:column;gap:2px}
+.istat-val{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.istat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+
+/* ── TABLE ── */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+thead th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);white-space:nowrap}
+thead th.r{text-align:right}
+thead th.c{text-align:center}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+td{padding:10px 14px;vertical-align:middle;font-size:12px}
+td.name{font-weight:600;color:var(--text)}
+td.r{text-align:right}
+td.c{text-align:center}
+td.muted{color:var(--muted)}
+.tfoot-row td{background:var(--surface2);font-weight:700;border-top:2px solid var(--border2);font-size:12px}
+.tfoot-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+
+/* ── PILL / BADGE ── */
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.pill-red  {background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pill-blue {background:var(--blue-bg);color:var(--blue-light);border:1px solid rgba(99,102,241,.3)}
+.pill-muted{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.progress-label{font-size:11px;font-weight:700;min-width:36px;text-align:right}
+
+/* ── HEALTH RING ── */
+.health-rings{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.health-rings{grid-template-columns:repeat(2,1fr)}}
+.health-ring{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.ring-svg{width:64px;height:64px}
+.ring-bg{fill:none;stroke:var(--border2);stroke-width:5}
+.ring-fg{fill:none;stroke-width:5;stroke-linecap:round;transform:rotate(-90deg);transform-origin:32px 32px;transition:stroke-dashoffset .6s ease}
+.ring-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.ring-value{font-size:18px;font-weight:800;color:var(--text);margin:-4px 0 0}
+
+/* ── TREND ARROW ── */
+.up{color:var(--green)}.down{color:var(--red)}.flat{color:var(--amber)}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:24px;font-size:11px;color:var(--dim);
+  border-top:1px solid var(--border);margin-top:8px}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo-mark">📊</div>
+    <div>
+      <div class="nav-title">Business Dashboard</div>
+      <div class="nav-sub">FieldInsight · Operations &amp; Revenue</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="period-tabs">
+    <button class="period-tab" onclick="setPeriod('month',this)">This Month</button>
+    <button class="period-tab active" onclick="setPeriod('quarter',this)">Quarter</button>
+    <button class="period-tab" onclick="setPeriod('year',this)">Year</button>
+  </div>
+  <div class="last-updated" id="last-updated"></div>
+</nav>
+
+<!-- ── KPI STRIP ── -->
+<div class="kpi-strip">
+  <div class="kpi b">
+    <div class="kpi-label">MRR</div>
+    <div class="kpi-value" id="kv-mrr">$48,200</div>
+    <div class="kpi-delta up" id="kd-mrr">▲ 8.4% MoM</div>
+    <canvas class="kpi-sparkline" id="spark-mrr"></canvas>
+  </div>
+  <div class="kpi g">
+    <div class="kpi-label">ARR</div>
+    <div class="kpi-value" id="kv-arr">$578K</div>
+    <div class="kpi-delta up">▲ 34% YoY</div>
+    <canvas class="kpi-sparkline" id="spark-arr"></canvas>
+  </div>
+  <div class="kpi g">
+    <div class="kpi-label">Active Customers</div>
+    <div class="kpi-value" id="kv-customers">214</div>
+    <div class="kpi-delta up">▲ 12 this month</div>
+    <canvas class="kpi-sparkline" id="spark-cust"></canvas>
+  </div>
+  <div class="kpi t">
+    <div class="kpi-label">New MRR</div>
+    <div class="kpi-value" id="kv-new-mrr">$5,800</div>
+    <div class="kpi-delta up">▲ vs $4.2k last mo</div>
+    <canvas class="kpi-sparkline" id="spark-newmrr"></canvas>
+  </div>
+  <div class="kpi a">
+    <div class="kpi-label">Churn Rate</div>
+    <div class="kpi-value" id="kv-churn">1.8%</div>
+    <div class="kpi-delta up">▼ from 2.3%</div>
+    <canvas class="kpi-sparkline" id="spark-churn"></canvas>
+  </div>
+  <div class="kpi p">
+    <div class="kpi-label">Jobs Completed</div>
+    <div class="kpi-value" id="kv-jobs">1,847</div>
+    <div class="kpi-delta up">▲ 14% vs last qtr</div>
+    <canvas class="kpi-sparkline" id="spark-jobs"></canvas>
+  </div>
+  <div class="kpi g">
+    <div class="kpi-label">NPS</div>
+    <div class="kpi-value" id="kv-nps">72</div>
+    <div class="kpi-delta up">▲ 4 pts</div>
+    <canvas class="kpi-sparkline" id="spark-nps"></canvas>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── ROW 1: REVENUE TREND + JOB MIX ── -->
+  <div>
+    <div class="sec-header">
+      <span class="sec-icon">💰</span>
+      <span class="sec-title">Revenue</span>
+      <span class="sec-chip">12-month rolling</span>
+    </div>
+    <div class="chart-grid chart-grid-2">
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">MRR Growth</div>
+            <div class="chart-card-sub">Monthly Recurring Revenue · 12-month trend</div>
+          </div>
+          <div class="chart-card-meta">
+            <div class="inline-stats">
+              <div class="istat"><div class="istat-val" style="color:var(--green)">$48.2K</div><div class="istat-lbl">Current MRR</div></div>
+              <div class="istat"><div class="istat-val">$578K</div><div class="istat-lbl">ARR Run-rate</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:200px">
+          <canvas id="chart-mrr"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Revenue by Job Type</div>
+            <div class="chart-card-sub">Mix this quarter</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:200px">
+          <canvas id="chart-job-mix"></canvas>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+          <span class="pill pill-blue">❄️ HVAC 38%</span>
+          <span class="pill pill-muted">⚡ Electrical 27%</span>
+          <span class="pill pill-muted">🔧 Plumbing 22%</span>
+          <span class="pill pill-muted">🔨 General 13%</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ROW 2: CUSTOMERS + CHURN ── -->
+  <div>
+    <div class="sec-header">
+      <span class="sec-icon">👥</span>
+      <span class="sec-title">Customer Health</span>
+      <span class="sec-chip">214 active accounts</span>
+    </div>
+    <div class="chart-grid chart-grid-2-2">
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">New vs Churned Customers</div>
+            <div class="chart-card-sub">Net customer growth · 6 months</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:180px">
+          <canvas id="chart-new-churn"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Customer Lifecycle</div>
+            <div class="chart-card-sub">By account age &amp; plan tier</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:180px">
+          <canvas id="chart-lifecycle"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Health rings -->
+    <div class="health-rings" style="margin-top:14px">
+      <div class="health-ring">
+        <svg class="ring-svg" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" cx="32" cy="32" r="27" stroke="var(--green)"
+            stroke-dasharray="169.6" stroke-dashoffset="25" id="ring-nps"/>
+        </svg>
+        <div class="ring-value">85%</div>
+        <div class="ring-label">Trial → Paid</div>
+      </div>
+      <div class="health-ring">
+        <svg class="ring-svg" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" cx="32" cy="32" r="27" stroke="var(--blue)"
+            stroke-dasharray="169.6" stroke-dashoffset="51" id="ring-retention"/>
+        </svg>
+        <div class="ring-value">70%</div>
+        <div class="ring-label">12-mo Retention</div>
+      </div>
+      <div class="health-ring">
+        <svg class="ring-svg" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" cx="32" cy="32" r="27" stroke="var(--amber)"
+            stroke-dasharray="169.6" stroke-dashoffset="68" id="ring-expansion"/>
+        </svg>
+        <div class="ring-value">60%</div>
+        <div class="ring-label">Expansion Rate</div>
+      </div>
+      <div class="health-ring">
+        <svg class="ring-svg" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" cx="32" cy="32" r="27" stroke="var(--teal)"
+            stroke-dasharray="169.6" stroke-dashoffset="17" id="ring-nps2"/>
+        </svg>
+        <div class="ring-value">90%</div>
+        <div class="ring-label">Feature Adoption</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ROW 3: OPERATIONS ── -->
+  <div>
+    <div class="sec-header">
+      <span class="sec-icon">⚙️</span>
+      <span class="sec-title">Operations</span>
+      <span class="sec-chip">Technician Performance</span>
+      <div class="sec-actions">
+        <button class="sec-btn primary" onclick="window.location.href='sdr-dashboard.html'">↗ SDR Dashboard</button>
+      </div>
+    </div>
+    <div class="chart-grid chart-grid-2">
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Jobs Completed by Month</div>
+            <div class="chart-card-sub">All job types · trailing 6 months</div>
+          </div>
+          <div class="chart-card-meta">Avg job value: <strong style="color:var(--text)">$287</strong></div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:180px">
+          <canvas id="chart-jobs"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Technician Utilisation</div>
+            <div class="chart-card-sub">Booked hours vs available · this quarter</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px" id="tech-util-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ROW 4: TOP CUSTOMERS TABLE ── -->
+  <div>
+    <div class="sec-header">
+      <span class="sec-icon">🏆</span>
+      <span class="sec-title">Top Accounts</span>
+      <span class="sec-chip">By MRR</span>
+      <div class="sec-actions">
+        <button class="sec-btn" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Account</th>
+            <th>Plan</th>
+            <th>Industry</th>
+            <th class="r">MRR</th>
+            <th class="r">Jobs / Mo</th>
+            <th class="r">Techs</th>
+            <th class="c">Health</th>
+            <th class="r">Since</th>
+          </tr>
+        </thead>
+        <tbody id="accounts-tbody"></tbody>
+        <tfoot>
+          <tr class="tfoot-row">
+            <td colspan="4" class="tfoot-label">TOP 10 TOTAL</td>
+            <td class="r" id="tfoot-mrr">—</td>
+            <td class="r" id="tfoot-jobs">—</td>
+            <td class="r" id="tfoot-techs">—</td>
+            <td></td><td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ROW 5: SALES PIPELINE ── -->
+  <div>
+    <div class="sec-header">
+      <span class="sec-icon">📈</span>
+      <span class="sec-title">Sales Pipeline</span>
+      <span class="sec-chip">Funnel summary</span>
+      <div class="sec-actions">
+        <button class="sec-btn primary" onclick="window.location.href='sdr-dashboard.html'">↗ Open SDR Dashboard</button>
+      </div>
+    </div>
+    <div class="chart-grid chart-grid-2">
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Pipeline by Stage</div>
+            <div class="chart-card-sub">Active deals · value + count</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px" id="pipeline-stages"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-card-title">Conversion Funnel</div>
+            <div class="chart-card-sub">Leads → Trial → Paid — last 90 days</div>
+          </div>
+        </div>
+        <div class="chart-canvas-wrap" style="min-height:180px">
+          <canvas id="chart-funnel"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  Business Dashboard · FieldInsight &nbsp;·&nbsp;
+  <a href="sdr-dashboard.html">SDR + AE Scorecard</a> &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
+  Data is illustrative — replace with live feeds
+</footer>
+
+<script>
+// ── HELPERS ────────────────────────────────────────────────────────
+const CHART_DEFAULTS = {
+  color: '#6872a8',
+  font: { family: '-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif', size: 11 },
+};
+Chart.defaults.color = CHART_DEFAULTS.color;
+Chart.defaults.font  = CHART_DEFAULTS.font;
+
+function gradient(ctx, h, c1, c2) {
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, c1);
+  g.addColorStop(1, c2);
+  return g;
+}
+
+const MONTHS_12 = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const MONTHS_6  = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+
+// ── MRR SPARKLINES ────────────────────────────────────────────────────
+const SPARKLINES = {
+  'spark-mrr':    [38,40,41,42,43,44,46,45,47,46,48,48.2],
+  'spark-arr':    [430,445,460,470,485,495,510,510,530,540,565,578],
+  'spark-cust':   [185,188,191,194,196,199,200,201,204,207,211,214],
+  'spark-newmrr': [3.8,4.2,3.9,4.5,4.8,4.2,5.0,4.8,5.2,5.5,5.6,5.8],
+  'spark-churn':  [2.9,2.8,2.6,2.5,2.4,2.3,2.2,2.4,2.1,2.0,1.9,1.8],
+  'spark-jobs':   [140,155,148,162,170,165,175,168,180,178,190,196],
+  'spark-nps':    [64,65,66,67,68,67,69,70,70,71,71,72],
+};
+
+Object.entries(SPARKLINES).forEach(([id, data]) => {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  canvas.height = 28;
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: Array(data.length).fill(''),
+      datasets: [{ data, borderColor: 'rgba(99,102,241,.6)', borderWidth: 1.5, pointRadius: 0, fill: false, tension: .4 }],
+    },
+    options: { animation:false, plugins:{legend:{display:false},tooltip:{enabled:false}}, scales:{x:{display:false},y:{display:false}}, responsive:true, maintainAspectRatio:false },
+  });
+});
+
+// ── CHART: MRR GROWTH ─────────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-mrr').getContext('2d');
+  const data = [33.1,35.4,36.8,38.2,40.1,41.5,42.3,43.8,44.2,45.9,46.5,48.2];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: MONTHS_12,
+      datasets: [
+        {
+          label: 'MRR ($K)',
+          data,
+          borderColor: '#6366f1',
+          borderWidth: 2.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#6366f1',
+          fill: true,
+          backgroundColor: (ctx) => {
+            const g = ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);
+            g.addColorStop(0,'rgba(99,102,241,.18)');
+            g.addColorStop(1,'rgba(99,102,241,.0)');
+            return g;
+          },
+          tension: .4,
+        },
+        {
+          label: 'New MRR ($K)',
+          data: [3.8,4.2,3.9,4.5,4.8,4.2,5.0,4.8,5.2,5.5,5.6,5.8],
+          borderColor: '#10d990',
+          borderWidth: 1.5,
+          pointRadius: 2,
+          pointBackgroundColor: '#10d990',
+          fill: false,
+          tension: .4,
+        },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels:{ boxWidth:10, padding:16, color:'#6872a8' } },
+        tooltip: {
+          backgroundColor: '#10121e', borderColor: '#252a48', borderWidth: 1,
+          titleColor: '#eaecf8', bodyColor: '#6872a8', padding: 10,
+          callbacks: { label: c => ` ${c.dataset.label}: $${c.parsed.y.toFixed(1)}K` },
+        },
+      },
+      scales: {
+        x: { grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+        y: { grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8', callback: v => '$'+v+'K' } },
+      },
+    },
+  });
+}
+
+// ── CHART: JOB MIX ───────────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-job-mix').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['HVAC','Electrical','Plumbing','General'],
+      datasets: [{
+        data: [38,27,22,13],
+        backgroundColor: ['#6366f1','#06b6d4','#10d990','#f59e0b'],
+        borderColor: '#10121e', borderWidth: 3, hoverOffset: 6,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor:'#10121e', borderColor:'#252a48', borderWidth:1, titleColor:'#eaecf8', bodyColor:'#6872a8',
+          callbacks: { label: c => ` ${c.label}: ${c.parsed}%` } },
+      },
+    },
+  });
+}
+
+// ── CHART: NEW vs CHURNED ────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-new-churn').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MONTHS_6,
+      datasets: [
+        { label: 'New', data: [14,18,12,16,20,15], backgroundColor: 'rgba(16,217,144,.75)', borderRadius: 4, borderSkipped: false },
+        { label: 'Churned', data: [-3,-4,-2,-5,-3,-4], backgroundColor: 'rgba(244,63,94,.55)', borderRadius: 4, borderSkipped: false },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: { legend:{ labels:{ boxWidth:10, color:'#6872a8' } },
+        tooltip: { backgroundColor:'#10121e', borderColor:'#252a48', borderWidth:1 } },
+      scales: {
+        x: { stacked: false, grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+        y: { grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+      },
+    },
+  });
+}
+
+// ── CHART: LIFECYCLE ─────────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-lifecycle').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['<3mo','3–6mo','6–12mo','1–2yr','2yr+'],
+      datasets: [
+        { label: 'Starter', data: [22,15,12,8,4], backgroundColor: 'rgba(99,102,241,.6)', borderRadius: 4, borderSkipped: false },
+        { label: 'Growth',  data: [8,12,18,24,16], backgroundColor: 'rgba(6,182,212,.6)',   borderRadius: 4, borderSkipped: false },
+        { label: 'Pro',     data: [2,6,10,18,22],  backgroundColor: 'rgba(16,217,144,.6)',  borderRadius: 4, borderSkipped: false },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{ labels:{ boxWidth:10, color:'#6872a8' } },
+        tooltip: { backgroundColor:'#10121e', borderColor:'#252a48', borderWidth:1 } },
+      scales: {
+        x: { stacked: true, grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+        y: { stacked: true, grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+      },
+    },
+  });
+}
+
+// ── CHART: JOBS ─────────────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-jobs').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: MONTHS_6,
+      datasets: [
+        { label: 'HVAC',       data: [68,72,65,78,82,74], backgroundColor: 'rgba(99,102,241,.8)',  borderRadius:3, borderSkipped:false },
+        { label: 'Electrical', data: [48,52,50,55,58,54], backgroundColor: 'rgba(6,182,212,.7)',   borderRadius:3, borderSkipped:false },
+        { label: 'Plumbing',   data: [38,42,40,44,48,42], backgroundColor: 'rgba(16,217,144,.65)', borderRadius:3, borderSkipped:false },
+        { label: 'General',    data: [22,24,20,26,26,26], backgroundColor: 'rgba(245,158,11,.65)', borderRadius:3, borderSkipped:false },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{ labels:{ boxWidth:10, color:'#6872a8' } },
+        tooltip: { backgroundColor:'#10121e', borderColor:'#252a48', borderWidth:1 } },
+      scales: {
+        x: { stacked: true, grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+        y: { stacked: true, grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+      },
+    },
+  });
+}
+
+// ── CHART: FUNNEL ────────────────────────────────────────────────────
+{
+  const ctx = document.getElementById('chart-funnel').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Leads','Qualified','Demo Held','Proposal','Trial','Closed Won'],
+      datasets: [{
+        label: 'Count',
+        data: [420, 186, 72, 48, 38, 21],
+        backgroundColor: ['rgba(99,102,241,.8)','rgba(99,102,241,.7)','rgba(99,102,241,.6)',
+          'rgba(99,102,241,.5)','rgba(16,217,144,.65)','rgba(16,217,144,.9)'],
+        borderRadius: 4, borderSkipped: false,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: { legend:{ display:false },
+        tooltip: { backgroundColor:'#10121e', borderColor:'#252a48', borderWidth:1, bodyColor:'#eaecf8' } },
+      scales: {
+        x: { grid:{ color:'#1e2240' }, ticks:{ color:'#6872a8' } },
+        y: { grid:{ display:false }, ticks:{ color:'#6872a8' } },
+      },
+    },
+  });
+}
+
+// ── TECH UTILISATION ─────────────────────────────────────────────────
+const TECHS = [
+  { name:'Jake Morrison', role:'HVAC',       util:88, jobs:62, color:'#6366f1' },
+  { name:'Sam Peters',    role:'Electrical', util:74, jobs:54, color:'#06b6d4' },
+  { name:'Brad Kim',      role:'Plumbing',   util:81, jobs:58, color:'#10d990' },
+  { name:'Amy Chen',      role:'HVAC/Gen',   util:69, jobs:48, color:'#f59e0b' },
+];
+
+const utilContainer = document.getElementById('tech-util-list');
+TECHS.forEach(t => {
+  const color = t.util >= 80 ? 'var(--green)' : t.util >= 65 ? 'var(--amber)' : 'var(--red)';
+  utilContainer.innerHTML += `
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <div>
+          <span style="font-weight:700;font-size:12px;color:var(--text)">${t.name}</span>
+          <span style="font-size:10px;color:var(--muted);margin-left:6px">${t.role}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:10px;color:var(--muted)">${t.jobs} jobs</span>
+          <span style="font-size:12px;font-weight:700;color:${color}">${t.util}%</span>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${t.util}%;background:${t.color}"></div>
+        </div>
+      </div>
+    </div>`;
+});
+
+// ── ACCOUNTS TABLE ────────────────────────────────────────────────────
+const ACCOUNTS = [
+  { name:'Sunshine Health Group',    plan:'Pro',     industry:'Healthcare',   mrr:2800, jobs:48, techs:4, health:'Healthy', since:'Mar 2022' },
+  { name:'Chadstone SC Management', plan:'Pro',     industry:'Retail',        mrr:2400, jobs:42, techs:3, health:'Healthy', since:'Jun 2022' },
+  { name:'Metro Hotel Group',        plan:'Growth',  industry:'Hospitality',  mrr:1900, jobs:36, techs:2, health:'Healthy', since:'Sep 2022' },
+  { name:'Dulux Commercial RE',      plan:'Growth',  industry:'Real Estate',  mrr:1600, jobs:28, techs:2, health:'At Risk',  since:'Nov 2022' },
+  { name:'Williamstown Council',     plan:'Pro',     industry:'Government',   mrr:1500, jobs:22, techs:2, health:'Healthy', since:'Jan 2023' },
+  { name:'Nexus Property Group',     plan:'Growth',  industry:'Property',     mrr:1200, jobs:20, techs:2, health:'Healthy', since:'Mar 2023' },
+  { name:'St Vincent Private',       plan:'Starter', industry:'Healthcare',   mrr:980,  jobs:18, techs:1, health:'Healthy', since:'Apr 2023' },
+  { name:'Doncaster Toyota',         plan:'Starter', industry:'Automotive',   mrr:850,  jobs:14, techs:1, health:'New',     since:'Jan 2024' },
+  { name:'Fitzroy Commercial',       plan:'Starter', industry:'Commercial',   mrr:720,  jobs:12, techs:1, health:'At Risk',  since:'May 2023' },
+  { name:'Richmond HVAC Club',       plan:'Starter', industry:'Fitness',      mrr:620,  jobs:10, techs:1, health:'Healthy', since:'Jul 2023' },
+];
+
+const tbody = document.getElementById('accounts-tbody');
+let totalMrr=0, totalJobs=0, totalTechs=0;
+ACCOUNTS.forEach((a, i) => {
+  const healthPill = a.health === 'Healthy' ? 'pill-green' : a.health === 'New' ? 'pill-blue' : 'pill-red';
+  const planPill   = a.plan === 'Pro' ? 'pill-blue' : a.plan === 'Growth' ? 'pill-muted' : 'pill-muted';
+  tbody.innerHTML += `<tr>
+    <td class="muted">${i+1}</td>
+    <td class="name">${a.name}</td>
+    <td><span class="pill ${planPill}">${a.plan}</span></td>
+    <td class="muted">${a.industry}</td>
+    <td class="r" style="font-weight:700;color:var(--text)">$${a.mrr.toLocaleString()}</td>
+    <td class="r">${a.jobs}</td>
+    <td class="r">${a.techs}</td>
+    <td class="c"><span class="pill ${healthPill}">${a.health}</span></td>
+    <td class="r muted">${a.since}</td>
+  </tr>`;
+  totalMrr+=a.mrr; totalJobs+=a.jobs; totalTechs+=a.techs;
+});
+document.getElementById('tfoot-mrr').textContent   = '$'+totalMrr.toLocaleString();
+document.getElementById('tfoot-jobs').textContent  = totalJobs;
+document.getElementById('tfoot-techs').textContent = totalTechs;
+
+// ── PIPELINE STAGES ───────────────────────────────────────────────────
+const STAGES = [
+  { name:'Leads',       count:420, value:null,   color:'#6366f1', pct:100 },
+  { name:'Qualified',   count:186, value:null,   color:'#818cf8', pct:44 },
+  { name:'Demo Held',   count:72,  value:null,   color:'#06b6d4', pct:17 },
+  { name:'Proposal',    count:48,  value:'$86K', color:'#10d990', pct:11 },
+  { name:'Trial',       count:38,  value:'$68K', color:'#f59e0b', pct:9  },
+  { name:'Closed Won',  count:21,  value:'$47K', color:'#f59e0b', pct:5  },
+];
+
+const pipelineContainer = document.getElementById('pipeline-stages');
+STAGES.forEach(s => {
+  pipelineContainer.innerHTML += `
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <span style="font-size:12px;font-weight:600;color:var(--text)">${s.name}</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          ${s.value ? `<span style="font-size:11px;color:var(--muted)">${s.value}</span>` : ''}
+          <span style="font-size:12px;font-weight:700;color:${s.color}">${s.count}</span>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${s.pct}%;background:${s.color}"></div>
+      </div>
+    </div>`;
+});
+
+// ── PERIOD SELECTOR ───────────────────────────────────────────────────
+function setPeriod(p, el) {
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  // In a live implementation this would refetch data
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['#','Account','Plan','Industry','MRR','Jobs/Mo','Techs','Health','Since']];
+  ACCOUNTS.forEach((a,i) => rows.push([i+1,a.name,a.plan,a.industry,a.mrr,a.jobs,a.techs,a.health,a.since]));
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv,' + encodeURIComponent(csv);
+  a.download = 'fieldinsight-accounts.csv';
+  a.click();
+}
+
+// ── DATE ─────────────────────────────────────────────────────────────
+document.getElementById('last-updated').textContent =
+  'Updated ' + new Date().toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'});
+</script>
+</body>
+</html>
