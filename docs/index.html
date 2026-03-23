@@ -147,7 +147,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.6.0</span>
+    <span class="version">v0.7.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -174,7 +174,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 18 March 2026 &nbsp;·&nbsp; v0.6.0</div>
+    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.7.0</div>
   </div>
 
   <div class="board">
@@ -227,6 +227,7 @@
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
         </div>
         <div class="outcomes"><ul>
           <li>Design: Supplier selector at PO level</li>
@@ -234,14 +235,16 @@
           <li>Design: Margin visibility per line item</li>
           <li>Design: Switching supplier mid-PO flow</li>
           <li>Build: API to attach multiple price books per trade type</li>
+          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a> &nbsp;·&nbsp; v0.4.0</li>
         </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
         <div class="card-title">Two-Way Chat via Email Threads</div>
-        <div class="card-desc">Send and receive emails as threaded conversations inside FieldInsight. Gmail and Outlook via OAuth — all context in one place.</div>
+        <div class="card-desc">Send and receive emails as threaded conversations inside FieldInsight. SMS simulation included. Gmail and Outlook via OAuth — all context in one place.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
+          <span class="badge badge-indev">In Development</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
@@ -249,8 +252,11 @@
           <li>Design: Thread panel within job/customer record</li>
           <li>Design: Compose + reply UI (inline, not modal)</li>
           <li>Design: Gmail vs Outlook connection onboarding</li>
+          <li>Design: SMS mock interface for simulation</li>
           <li>Build: OAuth flow for Gmail + Outlook</li>
           <li>Build: Webhook receiver for inbound replies</li>
+          <li>Build: SMS thread simulation (Twilio Conversations)</li>
+          <li>🔗 Prototype: <em>building now</em> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-two-way-comms" target="_blank" style="color:#00e5b0">GitHub</a></li>
         </ul></div>
       </div>
 
@@ -445,7 +451,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 18 March 2026 &nbsp;·&nbsp; v0.6.0</div>
+    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.7.0</div>
   </div>
 
   <div class="board">
@@ -736,7 +742,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.6.0 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.7.0 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 18 March 2026
 </footer>
