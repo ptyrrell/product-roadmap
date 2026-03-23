@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Voice IVR Technical Spec — FieldInsight Email/SMS/VOIP Scheduler</title>
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--surface3:#191d2a;
+  --border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --blue:#6366f1;--blue-light:#a5b4fc;--blue-glow:rgba(99,102,241,.18);
+  --green:#10d990;--green-bg:rgba(16,217,144,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --teal:#06b6d4;--purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+  --font:'Inter var',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* HEADER */
+.spec-header{
+  background:linear-gradient(160deg,#0b0d1a 0%,#0f1128 60%,#13102a 100%);
+  border-bottom:1px solid var(--border);padding:48px 40px 40px;
+  position:relative;overflow:hidden;
+}
+.spec-header::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none;
+}
+.spec-header::after{
+  content:'';position:absolute;bottom:-80px;left:20%;width:500px;height:300px;
+  background:radial-gradient(ellipse,rgba(16,217,144,.06) 0%,transparent 70%);pointer-events:none;
+}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.spec-breadcrumb a{color:var(--blue-light);text-decoration:none}.spec-breadcrumb a:hover{text-decoration:underline}
+.spec-title{font-size:32px;font-weight:800;letter-spacing:-.8px;color:#fff;line-height:1.2;position:relative;z-index:1}
+.spec-title span{color:var(--blue-light)}
+.spec-subtitle{font-size:15px;color:var(--muted);margin-top:8px;position:relative;z-index:1;max-width:600px}
+.spec-meta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.blue{background:var(--blue-glow);border-color:rgba(99,102,241,.35);color:var(--blue-light)}
+.meta-pill.green{background:var(--green-bg);border-color:rgba(16,217,144,.25);color:var(--green)}
+
+/* NAV */
+nav.spec-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 40px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100;
+}
+nav.spec-nav a{
+  display:block;padding:14px 16px;font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;
+}
+nav.spec-nav a:hover{color:var(--text);border-bottom-color:var(--border2)}
+nav.spec-nav a.active{color:var(--blue-light);border-bottom-color:var(--blue)}
+
+/* LAYOUT */
+.spec-body{max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:56px}
+
+/* SECTION */
+.spec-section{}
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--blue);margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.4px;color:#fff;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);max-width:700px;line-height:1.7;margin-bottom:24px}
+
+/* CALLOUT */
+.callout{border-radius:var(--r);padding:16px 18px;border-left:3px solid;margin:16px 0;font-size:13px}
+.callout.blue{background:var(--blue-glow);border-color:var(--blue);color:var(--blue-light)}
+.callout.green{background:var(--green-bg);border-color:var(--green);color:#6ee7b7}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout strong{color:inherit;font-weight:700}
+
+/* ARCH DIAGRAM */
+.arch-diagram{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:32px;overflow-x:auto;
+}
+.arch-flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;min-width:600px}
+.arch-node{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:8px;
+  padding:14px 18px;text-align:center;min-width:110px;flex-shrink:0;
+}
+.arch-node.highlight{background:var(--blue-glow);border-color:rgba(99,102,241,.4)}
+.arch-node.ai{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.35)}
+.arch-node.phone{background:rgba(16,217,144,.08);border-color:rgba(16,217,144,.25)}
+.arch-icon{font-size:22px;display:block;margin-bottom:4px}
+.arch-name{font-size:11px;font-weight:700;color:var(--text)}
+.arch-role{font-size:9px;color:var(--muted);margin-top:2px}
+.arch-arrow{font-size:18px;color:var(--border2);padding:0 6px;flex-shrink:0}
+.arch-arrow.bi::before{content:'⇄'}
+.arch-arrow.fwd::before{content:'→'}
+
+/* CALL FLOW */
+.call-flow{display:flex;flex-direction:column;gap:0}
+.cf-step{
+  display:flex;gap:16px;align-items:flex-start;padding:16px 0;
+  border-left:2px solid var(--border);padding-left:20px;margin-left:16px;position:relative;
+}
+.cf-step:last-child{border-left-color:transparent}
+.cf-dot{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;position:absolute;left:-15px;top:16px;
+}
+.cf-dot.blue{background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.green{background:var(--green);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.purple{background:var(--purple);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.amber{background:var(--amber);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.teal{background:var(--teal);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-body{padding-left:4px;flex:1}
+.cf-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.cf-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.cf-code{
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11px;
+  color:#93c5fd;margin-top:8px;overflow-x:auto;line-height:1.5;
+}
+.cf-tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;margin-left:6px;vertical-align:middle}
+.cf-tag.twilio{background:rgba(244,63,94,.15);color:#fca5a5;border:1px solid rgba(244,63,94,.25)}
+.cf-tag.ai{background:rgba(168,85,247,.15);color:#d8b4fe;border:1px solid rgba(168,85,247,.25)}
+.cf-tag.be{background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.25)}
+.cf-tag.fe{background:rgba(6,182,212,.15);color:#67e8f9;border:1px solid rgba(6,182,212,.25)}
+
+/* OPTIONS GRID */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.options-grid{grid-template-columns:1fr}}
+.option-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:20px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+}
+.option-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.option-card.recommended::before{background:linear-gradient(90deg,var(--green),#05df72)}
+.option-card.byot::before{background:linear-gradient(90deg,var(--blue),var(--teal))}
+.option-card.redirect::before{background:linear-gradient(90deg,var(--amber),#fbbf24)}
+.option-card.sip::before{background:linear-gradient(90deg,var(--purple),#c084fc)}
+.option-badge{
+  position:absolute;top:14px;right:14px;font-size:9px;font-weight:800;padding:2px 8px;
+  border-radius:10px;text-transform:uppercase;letter-spacing:.5px;
+}
+.option-badge.rec{background:var(--green-bg);color:var(--green);border:1px solid rgba(16,217,144,.25)}
+.option-badge.complex{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.option-badge.adv{background:rgba(168,85,247,.1);color:#d8b4fe;border:1px solid rgba(168,85,247,.25)}
+.option-num{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.option-title{font-size:16px;font-weight:800;color:#fff;line-height:1.2}
+.option-tag{font-size:11px;color:var(--muted)}
+.option-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.pros,.cons{font-size:11px;line-height:1.6}
+.pros li{color:#6ee7b7;list-style:none;padding-left:14px;position:relative}
+.pros li::before{content:'✓';position:absolute;left:0;color:var(--green)}
+.cons li{color:#fca5a5;list-style:none;padding-left:14px;position:relative}
+.cons li::before{content:'✗';position:absolute;left:0;color:var(--red)}
+.option-effort{display:flex;align-items:center;gap:6px;margin-top:8px;padding-top:10px;border-top:1px solid var(--border)}
+.effort-label{font-size:10px;color:var(--muted);font-weight:600}
+.effort-dots{display:flex;gap:3px}
+.effort-dot{width:8px;height:8px;border-radius:50%}
+.effort-dot.fill{background:var(--blue)}
+.effort-dot.empty{background:var(--border2)}
+
+/* API TABLE */
+.api-table{width:100%;border-collapse:collapse}
+.api-table thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+.api-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.api-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.api-table tbody tr:last-child{border-bottom:none}
+.api-table tbody tr:hover{background:var(--surface2)}
+.api-table td{padding:10px 14px;font-size:12px;vertical-align:top}
+.method{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;
+  font-family:monospace;letter-spacing:.3px}
+.method.POST{background:rgba(16,217,144,.15);color:var(--green)}
+.method.GET {background:rgba(99,102,241,.15);color:var(--blue-light)}
+.method.ws  {background:rgba(168,85,247,.15);color:#d8b4fe}
+.endpoint{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#93c5fd}
+.api-desc{color:var(--muted);font-size:12px}
+
+/* DATA MODEL */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.model-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.model-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px;
+  display:flex;align-items:center;gap:6px}
+.model-name span{font-size:16px}
+.model-field{display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid var(--dim);font-size:11px}
+.model-field:last-child{border-bottom:none}
+.field-name{font-family:monospace;color:#93c5fd}
+.field-type{color:var(--amber);font-family:monospace;font-size:10px}
+.field-note{color:var(--muted);font-size:10px}
+
+/* ROADMAP TABLE */
+.phase-grid{display:flex;flex-direction:column;gap:12px}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;gap:16px}
+.phase-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0}
+.phase-num.p1{background:rgba(16,217,144,.15);color:var(--green)}
+.phase-num.p2{background:rgba(99,102,241,.15);color:var(--blue-light)}
+.phase-num.p3{background:rgba(245,158,11,.15);color:var(--amber)}
+.phase-num.p4{background:rgba(168,85,247,.15);color:#d8b4fe}
+.phase-body{flex:1}
+.phase-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.phase-items{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.phase-items li{background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:2px 10px;font-size:11px;color:var(--muted)}
+.phase-effort{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* CODE BLOCK */
+pre.code-block{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11.5px;
+  line-height:1.6;overflow-x:auto;color:#e2e8f0;
+}
+pre.code-block .comment{color:#4a5578}
+pre.code-block .key{color:#93c5fd}
+pre.code-block .val{color:#6ee7b7}
+pre.code-block .str{color:#fde68a}
+pre.code-block .kw{color:#c084fc}
+
+/* FOOTER */
+footer{text-align:center;padding:32px 40px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+footer a{color:var(--muted);text-decoration:none}.footer a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com/" target="_blank">Live Prototype</a>
+    <span>›</span>
+    <span>Technical Spec</span>
+  </div>
+  <div class="spec-title">Email / SMS / <span>VOIP Scheduler</span></div>
+  <div class="spec-subtitle">Technical design specification — voice IVR architecture, integration options, API contracts, and implementation roadmap for a developer handoff.</div>
+  <div class="spec-meta">
+    <span class="meta-pill blue">🔥 Active Build</span>
+    <span class="meta-pill green">🟢 Prototype Live</span>
+    <span class="meta-pill">Version 1.0</span>
+    <span class="meta-pill">Last updated: Mar 2026</span>
+    <span class="meta-pill">Owner: Paul Tyrrell</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="spec-nav">
+  <a href="#overview" class="active">Overview</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#call-flow">Voice Call Flow</a>
+  <a href="#integration">Integration Options</a>
+  <a href="#api">API Endpoints</a>
+  <a href="#data-model">Data Model</a>
+  <a href="#security">Security</a>
+  <a href="#roadmap">Implementation Roadmap</a>
+</nav>
+
+<div class="spec-body">
+
+  <!-- ── OVERVIEW ── -->
+  <section class="spec-section" id="overview">
+    <div class="sec-label">Section 01</div>
+    <div class="sec-title">Overview</div>
+    <div class="sec-desc">The FieldInsight Scheduler allows customers to self-book field service appointments through any of four channels — Voice (VOIP/IVR), Web Chat, SMS, and Email — with a single AI persona (Fiona) managing the conversation and writing confirmed bookings directly into the scheduler.</div>
+
+    <div class="callout blue">
+      <strong>Prototype status:</strong> The current prototype uses the browser's native Web Speech API for voice (STT + TTS). This spec defines the production implementation using real telephony. The AI, booking logic, and multi-channel architecture remain identical across prototype and production.
+    </div>
+
+    <div class="arch-diagram" style="margin-top:20px">
+      <div style="text-align:center;margin-bottom:24px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Channel Overview</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
+        <div class="arch-node phone"><span class="arch-icon">📞</span><div class="arch-name">VOIP / IVR</div><div class="arch-role">Twilio Voice or SIP redirect</div></div>
+        <div class="arch-node highlight"><span class="arch-icon">💬</span><div class="arch-name">Web Chat</div><div class="arch-role">Embedded widget on site</div></div>
+        <div class="arch-node highlight"><span class="arch-icon">📱</span><div class="arch-name">SMS</div><div class="arch-role">Twilio Messaging</div></div>
+        <div class="arch-node highlight"><span class="arch-icon">✉️</span><div class="arch-name">Email</div><div class="arch-role">SendGrid / SMTP inbound</div></div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-bottom:16px;font-size:22px;color:var(--border2)">↓ ↓ ↓ ↓</div>
+      <div class="arch-flow">
+        <div class="arch-node highlight"><span class="arch-icon">⚙️</span><div class="arch-name">FieldInsight</div><div class="arch-role">Node.js / Express API</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node ai"><span class="arch-icon">🤖</span><div class="arch-name">Claude AI</div><div class="arch-role">Anthropic claude-haiku-4-5</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node"><span class="arch-icon">🗓</span><div class="arch-name">Scheduler DB</div><div class="arch-role">Jobs + Availability</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node phone"><span class="arch-icon">📬</span><div class="arch-name">Confirmations</div><div class="arch-role">SMS + Email</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ARCHITECTURE ── -->
+  <section class="spec-section" id="architecture">
+    <div class="sec-label">Section 02</div>
+    <div class="sec-title">Voice Architecture</div>
+    <div class="sec-desc">Production voice uses Twilio's telephony infrastructure to receive calls, perform speech-to-text, invoke the FieldInsight backend, and synthesise responses — creating a fully spoken IVR powered by Claude.</div>
+
+    <div class="arch-diagram">
+      <div style="text-align:center;margin-bottom:28px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)">Voice Call Architecture</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:center">
+          <div class="arch-node phone"><span class="arch-icon">📞</span><div class="arch-name">Customer</div><div class="arch-role">Dials number</div></div>
+          <div style="font-size:20px;color:var(--border2);text-align:center">→</div>
+          <div class="arch-node phone"><span class="arch-icon">☎️</span><div class="arch-name">Twilio</div><div class="arch-role">PSTN / SIP</div></div>
+          <div style="font-size:20px;color:var(--border2);text-align:center">⇄</div>
+          <div class="arch-node highlight"><span class="arch-icon">⚙️</span><div class="arch-name">FI Backend</div><div class="arch-role">Webhook handler</div></div>
+          <div style="font-size:20px;color:var(--border2);text-align:center">⇄</div>
+          <div class="arch-node ai"><span class="arch-icon">🤖</span><div class="arch-name">Claude API</div><div class="arch-role">NLU + Response</div></div>
+        </div>
+
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding:8px 0">
+          ↕ TwiML responses (gather speech → convert to text → send to AI → TTS response back)
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center">
+          <div class="arch-node"><span class="arch-icon">🗓</span><div class="arch-name">Scheduler</div><div class="arch-role">Available slots</div></div>
+          <div style="font-size:20px;color:var(--border2);text-align:center">←</div>
+          <div class="arch-node highlight"><span class="arch-icon">📋</span><div class="arch-name">Booking</div><div class="arch-role">Job created</div></div>
+          <div style="font-size:20px;color:var(--border2);text-align:center">→</div>
+          <div class="arch-node phone"><span class="arch-icon">📬</span><div class="arch-name">Confirm SMS + Email</div><div class="arch-role">Twilio / SendGrid</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="callout amber" style="margin-top:16px">
+      <strong>Prototype vs Production:</strong> The current browser prototype uses <code>window.SpeechRecognition</code> (STT) and <code>window.speechSynthesis</code> (TTS) — these are Chrome-only and not suitable for real phone calls. Production replaces these with Twilio's <code>&lt;Gather input="speech"&gt;</code> for STT and <code>&lt;Say&gt;</code> / Amazon Polly for TTS.
+    </div>
+
+    <h3 style="font-size:14px;font-weight:700;color:var(--text);margin:24px 0 10px">How Twilio's Speech IVR Works</h3>
+    <pre class="code-block"><span class="comment">// 1. Customer calls Twilio number → Twilio POSTs to /api/voice/incoming</span>
+<span class="comment">// 2. Backend responds with TwiML to gather speech:</span>
+
+<span class="kw">&lt;Response&gt;</span>
+  <span class="kw">&lt;Say voice="Polly.Joanna"&gt;</span><span class="str">Hi, I'm Fiona from FieldInsight. How can I help?</span><span class="kw">&lt;/Say&gt;</span>
+  <span class="kw">&lt;Gather input="speech" action="/api/voice/process" speechTimeout="auto"
+         speechModel="phone_call" language="en-AU"&gt;</span>
+  <span class="kw">&lt;/Gather&gt;</span>
+<span class="kw">&lt;/Response&gt;</span>
+
+<span class="comment">// 3. Twilio STT converts speech → text → POSTs SpeechResult to /api/voice/process</span>
+<span class="comment">// 4. Backend sends text + conversation history to Claude</span>
+<span class="comment">// 5. Claude responds with booking intent + natural language reply</span>
+<span class="comment">// 6. Backend wraps reply in &lt;Say&gt; + next &lt;Gather&gt; TwiML</span>
+<span class="comment">// 7. Loop continues until booking confirmed or call ends</span></pre>
+  </section>
+
+  <!-- ── CALL FLOW ── -->
+  <section class="spec-section" id="call-flow">
+    <div class="sec-label">Section 03</div>
+    <div class="sec-title">Voice Call Flow</div>
+    <div class="sec-desc">Step-by-step sequence of a customer calling to book a job, from PSTN entry through to booking confirmation and SMS receipt.</div>
+
+    <div class="call-flow">
+
+      <div class="cf-step">
+        <div class="cf-dot blue">1</div>
+        <div class="cf-body">
+          <div class="cf-title">Inbound Call Received <span class="cf-tag twilio">Twilio</span></div>
+          <div class="cf-desc">Customer dials the FieldInsight IVR number. Twilio receives the call on the PSTN and immediately POSTs a webhook to the FieldInsight backend with call metadata (CallSid, From, To).</div>
+          <div class="cf-code">POST /api/voice/incoming
+Body: CallSid=CA123&From=+61400000000&To=+61391234567</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot blue">2</div>
+        <div class="cf-body">
+          <div class="cf-title">Session Initialised + Greeting Played <span class="cf-tag be">Backend</span></div>
+          <div class="cf-desc">Backend creates an in-memory conversation session keyed by <code>CallSid</code>. Responds with TwiML containing Fiona's opening greeting and a <code>&lt;Gather&gt;</code> to listen for customer speech. Voice engine: Amazon Polly Joanna (Australian English).</div>
+          <div class="cf-code">&lt;Response&gt;
+  &lt;Say voice="Polly.Joanna"&gt;Hi, I'm Fiona from FieldInsight. How can I help you today?&lt;/Say&gt;
+  &lt;Gather input="speech" action="/api/voice/process" speechTimeout="auto"
+          speechModel="phone_call" language="en-AU" /&gt;
+&lt;/Response&gt;</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot purple">3</div>
+        <div class="cf-body">
+          <div class="cf-title">Customer Speaks <span class="cf-tag twilio">Twilio STT</span></div>
+          <div class="cf-desc">Twilio's speech recognition model (<code>phone_call</code>) converts the customer's speech to text. The confidence score is also returned. If confidence &lt; 0.4, Fiona asks the customer to repeat.</div>
+          <div class="cf-code">POST /api/voice/process
+Body: CallSid=CA123&SpeechResult=I+need+to+book+an+air+con+service&Confidence=0.92</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot purple">4</div>
+        <div class="cf-body">
+          <div class="cf-title">Claude Processes Turn <span class="cf-tag ai">Claude API</span></div>
+          <div class="cf-desc">Backend appends the user turn to the session history and calls Claude with the full conversation. The system prompt includes available time slots, job types, and the VOIP channel style directive ("natural spoken language, no markdown, short sentences").</div>
+          <div class="cf-code"><span class="comment">// Session structure</span>
+{
+  <span class="key">callSid</span>: <span class="str">"CA123"</span>,
+  <span class="key">from</span>: <span class="str">"+61400000000"</span>,
+  <span class="key">history</span>: [
+    { <span class="key">role</span>: <span class="str">"user"</span>,      <span class="key">content</span>: <span class="str">"I need to book an air con service"</span> },
+    { <span class="key">role</span>: <span class="str">"assistant"</span>, <span class="key">content</span>: <span class="str">"Of course! Could I get your name please?"</span> }
+  ],
+  <span class="key">bookingData</span>: {},
+  <span class="key">startedAt</span>: <span class="str">"2026-03-23T10:00:00Z"</span>
+}</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot green">5</div>
+        <div class="cf-body">
+          <div class="cf-title">Response Spoken Back <span class="cf-tag twilio">Twilio TTS</span></div>
+          <div class="cf-desc">Backend strips any markdown from Claude's reply, wraps it in a <code>&lt;Say&gt;</code> TwiML verb, and appends another <code>&lt;Gather&gt;</code> to continue the conversation. The loop continues for up to 15 turns or 8 minutes.</div>
+          <div class="cf-code">&lt;Response&gt;
+  &lt;Say voice="Polly.Joanna"&gt;Great, I have Tuesday the 25th at 9am or Thursday the 27th at 2pm available. Which works best for you?&lt;/Say&gt;
+  &lt;Gather input="speech" action="/api/voice/process" speechTimeout="auto" /&gt;
+&lt;/Response&gt;</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot green">6</div>
+        <div class="cf-body">
+          <div class="cf-title">Booking Confirmed + Written <span class="cf-tag be">Backend</span></div>
+          <div class="cf-desc">When Claude outputs a <code>BOOKING:{...}</code> JSON line, the backend parses it, writes the job to the scheduler, and plays a confirmation message. The call can then end gracefully.</div>
+          <div class="cf-code"><span class="comment">// Claude output (stripped from spoken response before TTS)</span>
+BOOKING:{"tech":"Jake Morrison","customer":"David Chen","type":"HVAC",
+"address":"42 Collins St Melbourne","mobile":"+61412345678",
+"email":"d.chen@example.com","date":"2026-03-25","startHour":9,"duration":2}</div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot amber">7</div>
+        <div class="cf-body">
+          <div class="cf-title">Confirmation SMS + Email Sent <span class="cf-tag twilio">Twilio SMS</span></div>
+          <div class="cf-desc">Backend fires a confirmation SMS to the caller's number (extracted from the call's <code>From</code> field — no need to ask if they called from their mobile) and a confirmation email if collected. A reminder is scheduled 1 hour before the job using a cron job or Twilio Scheduled Messages.</div>
+          <div class="cf-code"><span class="comment">// Confirmation SMS (Twilio Messages API)</span>
+<span class="str">"Your FieldInsight booking is confirmed: HVAC Service, Tue 25 Mar at 9am.
+42 Collins St Melbourne. Reply CANCEL to cancel. FieldInsight Team."</span></div>
+        </div>
+      </div>
+
+      <div class="cf-step">
+        <div class="cf-dot teal">8</div>
+        <div class="cf-body">
+          <div class="cf-title">Call Ends + Session Cleaned Up <span class="cf-tag be">Backend</span></div>
+          <div class="cf-desc">Twilio fires a status callback on call completion. Backend persists the session transcript to the job record for internal review, then clears the in-memory session. The booking is now visible in the internal scheduler.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── INTEGRATION OPTIONS ── -->
+  <section class="spec-section" id="integration">
+    <div class="sec-label">Section 04</div>
+    <div class="sec-title">Voice Integration Options</div>
+    <div class="sec-desc">There are four ways a FieldInsight customer can connect a real phone number to Fiona's IVR. The right choice depends on their technical comfort level, whether they already have a Twilio account, and how they want to integrate with their existing phone system.</div>
+
+    <div class="options-grid">
+
+      <!-- OPTION A -->
+      <div class="option-card recommended">
+        <span class="option-badge rec">★ Recommended</span>
+        <div class="option-num">Option A</div>
+        <div class="option-title">FieldInsight Managed Number</div>
+        <div class="option-tag">We provision a Twilio number on your behalf</div>
+        <div class="option-desc">FieldInsight holds a Twilio sub-account (or uses Twilio's Marketplace / white-label reseller model). When a business activates VOIP in settings, they're assigned a dedicated local number in their area code instantly. No Twilio account needed. Cost is bundled into the FieldInsight plan or as a small add-on.</div>
+        <div class="pros-cons">
+          <ul class="pros">
+            <li>Zero setup for the business</li>
+            <li>One-click activation</li>
+            <li>We handle all Twilio config</li>
+            <li>Best UX for non-technical customers</li>
+          </ul>
+          <ul class="cons">
+            <li>FieldInsight carries Twilio cost</li>
+            <li>Number is "ours", not theirs</li>
+            <li>Requires Twilio reseller agreement</li>
+          </ul>
+        </div>
+        <div class="option-effort">
+          <span class="effort-label">Business effort:</span>
+          <div class="effort-dots">
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+          </div>
+          <span style="font-size:10px;color:var(--green);margin-left:6px">Minimal</span>
+        </div>
+        <div class="callout green" style="margin-top:12px;font-size:11px">
+          <strong>Implementation:</strong> Use Twilio's Programmable Voice + sub-account API. Register number → set webhook to <code>/api/voice/incoming?tenant={id}</code> → done. Implemented via Twilio's node.js SDK on first VOIP activation.
+        </div>
+      </div>
+
+      <!-- OPTION B -->
+      <div class="option-card byot">
+        <span class="option-badge complex">Self-managed</span>
+        <div class="option-num">Option B</div>
+        <div class="option-title">Bring Your Own Twilio</div>
+        <div class="option-tag">Business supplies Twilio credentials</div>
+        <div class="option-desc">The business signs up for their own Twilio account, purchases a number, and pastes their Account SID + Auth Token + Phone Number into FieldInsight settings. FieldInsight automatically configures the number's webhook URL to point at the IVR. The business is billed directly by Twilio.</div>
+        <div class="pros-cons">
+          <ul class="pros">
+            <li>Business owns their number</li>
+            <li>Direct Twilio billing</li>
+            <li>Full Twilio console access</li>
+            <li>Works for existing Twilio users</li>
+          </ul>
+          <ul class="cons">
+            <li>Business must create Twilio account</li>
+            <li>3–5 step setup process</li>
+            <li>Credential management / security</li>
+          </ul>
+        </div>
+        <div class="option-effort">
+          <span class="effort-label">Business effort:</span>
+          <div class="effort-dots">
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+          </div>
+          <span style="font-size:10px;color:var(--amber);margin-left:6px">Moderate</span>
+        </div>
+        <div class="cf-code" style="margin-top:12px">
+<span class="comment">// Settings fields required from business:</span>
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxx
+TWILIO_FROM_NUMBER=+61391234567
+<span class="comment">// On save: FieldInsight auto-sets webhook via Twilio REST API</span></div>
+      </div>
+
+      <!-- OPTION C -->
+      <div class="option-card redirect">
+        <span class="option-badge">★ Best for SMBs</span>
+        <div class="option-num">Option C</div>
+        <div class="option-title">Dedicated Redirect Number</div>
+        <div class="option-tag">Forward any existing number to a FieldInsight IVR line</div>
+        <div class="option-desc">FieldInsight provides a dedicated national number (e.g. 1300 or local) per tenant. The business then redirects their existing business line to this number — either always, or conditionally (after-hours, on busy, or via an IVR menu option like "Press 2 to book"). No Twilio account, no setup — just a call forward on their existing phone plan.</div>
+        <div class="pros-cons">
+          <ul class="pros">
+            <li>Business keeps their existing number</li>
+            <li>Works with any carrier</li>
+            <li>No Twilio account needed</li>
+            <li>Conditional forward = after-hours only</li>
+          </ul>
+          <ul class="cons">
+            <li>Forwarding costs on their carrier</li>
+            <li>Business must set up forward</li>
+            <li>Slight latency from double-hop</li>
+          </ul>
+        </div>
+        <div class="option-effort">
+          <span class="effort-label">Business effort:</span>
+          <div class="effort-dots">
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+            <div class="effort-dot empty"></div>
+          </div>
+          <span style="font-size:10px;color:var(--amber);margin-left:6px">Low — just a call forward</span>
+        </div>
+        <div class="callout amber" style="margin-top:12px;font-size:11px">
+          <strong>Use case:</strong> "Divert your after-hours calls to 03 9123 4567 and Fiona will handle all booking requests while you're closed." This is the most compelling pitch to a small service business.
+        </div>
+      </div>
+
+      <!-- OPTION D -->
+      <div class="option-card sip">
+        <span class="option-badge adv">Advanced</span>
+        <div class="option-num">Option D</div>
+        <div class="option-title">SIP Trunk / PBX Integration</div>
+        <div class="option-tag">Direct SIP endpoint for businesses with a PBX</div>
+        <div class="option-desc">For businesses running RingCentral, 3CX, FreePBX, or any SIP-capable PBX. FieldInsight exposes a SIP URI (via Twilio SIP Domain) that can be configured as an extension or IVR transfer target. The call arrives at FieldInsight directly over SIP, bypassing the PSTN entirely.</div>
+        <div class="pros-cons">
+          <ul class="pros">
+            <li>No carrier call-forward costs</li>
+            <li>Deep PBX integration possible</li>
+            <li>Lower latency</li>
+            <li>Works with existing call flows</li>
+          </ul>
+          <ul class="cons">
+            <li>Requires IT involvement</li>
+            <li>Not suitable for small businesses</li>
+            <li>SIP config complexity</li>
+          </ul>
+        </div>
+        <div class="option-effort">
+          <span class="effort-label">Business effort:</span>
+          <div class="effort-dots">
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot fill"></div>
+            <div class="effort-dot empty"></div>
+          </div>
+          <span style="font-size:10px;color:var(--red);margin-left:6px">Significant IT setup</span>
+        </div>
+        <div class="cf-code" style="margin-top:12px"><span class="comment">// SIP URI assigned per tenant:</span>
+sip:tenant-abc@fi-ivr.sip.twilio.com
+<span class="comment">// Configure in PBX as outbound route or IVR transfer target</span></div>
+      </div>
+
+    </div>
+
+    <div class="callout blue" style="margin-top:20px">
+      <strong>Recommended launch strategy:</strong> Launch with <strong>Option A (Managed Number)</strong> for simplicity and conversion rate. Add <strong>Option C (Redirect)</strong> as the marketing pitch for after-hours ("never miss a booking"). Add <strong>Option B (BYOT)</strong> for enterprise/tech-savvy customers in v2. Option D is a v3 enterprise feature.
+    </div>
+  </section>
+
+  <!-- ── API ENDPOINTS ── -->
+  <section class="spec-section" id="api">
+    <div class="sec-label">Section 05</div>
+    <div class="sec-title">API Endpoints</div>
+    <div class="sec-desc">Full list of backend endpoints required for production voice IVR, plus the existing multi-channel endpoints. All endpoints are authenticated with a tenant API key in production.</div>
+
+    <div style="overflow-x:auto">
+    <table class="api-table">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Used By</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/voice/incoming</td>
+          <td class="api-desc">Twilio webhook for inbound calls. Creates session, returns greeting TwiML.</td>
+          <td><span class="cf-tag twilio">Twilio</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/voice/process</td>
+          <td class="api-desc">Receives <code>SpeechResult</code> from Twilio Gather, sends to Claude, returns next TwiML turn.</td>
+          <td><span class="cf-tag twilio">Twilio</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/voice/status</td>
+          <td class="api-desc">Twilio status callback on call completion. Persists transcript, cleans up session.</td>
+          <td><span class="cf-tag twilio">Twilio</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/voice/provision</td>
+          <td class="api-desc">Admin: provision a new Twilio number for a tenant (Option A). Returns assigned number.</td>
+          <td><span class="cf-tag be">Backend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/chat</td>
+          <td class="api-desc">Web/SMS chat turn. Sends user message + history to Claude. Returns reply + booking data.</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td class="endpoint">/api/schedule</td>
+          <td class="api-desc">Returns jobs, techs, techSettings, bookingSettings for the scheduler view.</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/schedule/jobs</td>
+          <td class="api-desc">Create a confirmed job. Called by booking parser when BOOKING JSON detected.</td>
+          <td><span class="cf-tag be">Backend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td class="endpoint">/api/settings/booking</td>
+          <td class="api-desc">Fetch booking rules (buffer hours, working days, hours, lunch break).</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/settings/booking</td>
+          <td class="api-desc">Update booking rules.</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td class="endpoint">/api/settings/prompt</td>
+          <td class="api-desc">Fetch AI persona + prompt settings (Fiona config).</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td class="endpoint">/api/settings/prompt/preview</td>
+          <td class="api-desc">Returns the compiled system prompt as it will be sent to Claude.</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/send-sms</td>
+          <td class="api-desc">Send an SMS via Twilio (confirmation, reminder, or manual from Booking Details view).</td>
+          <td><span class="cf-tag fe">Frontend</span> <span class="cf-tag be">Backend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method POST">POST</span></td>
+          <td class="endpoint">/api/validate-address</td>
+          <td class="api-desc">Validate + geocode an address via Google Maps Geocoding API.</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+        <tr>
+          <td><span class="method GET">GET</span></td>
+          <td class="endpoint">/api/config</td>
+          <td class="api-desc">Returns public config (Google Maps API key, tenant VOIP number).</td>
+          <td><span class="cf-tag fe">Frontend</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <!-- ── DATA MODEL ── -->
+  <section class="spec-section" id="data-model">
+    <div class="sec-label">Section 06</div>
+    <div class="sec-title">Data Model</div>
+    <div class="sec-desc">Core data structures. Currently in-memory — production requires a persistent database (PostgreSQL recommended for relational scheduling data).</div>
+
+    <div class="model-grid">
+      <div class="model-card">
+        <div class="model-name"><span>🗓</span> Job</div>
+        <div class="model-field"><span class="field-name">id</span><span class="field-type">string</span><span class="field-note">J-001</span></div>
+        <div class="model-field"><span class="field-name">tech</span><span class="field-type">string</span><span class="field-note">Assigned technician</span></div>
+        <div class="model-field"><span class="field-name">customer</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">type</span><span class="field-type">enum</span><span class="field-note">HVAC|Electrical|…</span></div>
+        <div class="model-field"><span class="field-name">address</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">date</span><span class="field-type">YYYY-MM-DD</span></div>
+        <div class="model-field"><span class="field-name">startHour</span><span class="field-type">int</span><span class="field-note">0–23</span></div>
+        <div class="model-field"><span class="field-name">duration</span><span class="field-type">int</span><span class="field-note">hours</span></div>
+        <div class="model-field"><span class="field-name">mobile</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">email</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">status</span><span class="field-type">enum</span><span class="field-note">pending|confirmed|…</span></div>
+        <div class="model-field"><span class="field-name">sourceChannel</span><span class="field-type">enum</span><span class="field-note">voip|web|sms|email</span></div>
+        <div class="model-field"><span class="field-name">transcript</span><span class="field-type">JSON[]</span><span class="field-note">Full conversation</span></div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name"><span>📞</span> VoiceSession</div>
+        <div class="model-field"><span class="field-name">callSid</span><span class="field-type">string</span><span class="field-note">Twilio CallSid</span></div>
+        <div class="model-field"><span class="field-name">tenantId</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">from</span><span class="field-type">E.164</span><span class="field-note">Caller number</span></div>
+        <div class="model-field"><span class="field-name">to</span><span class="field-type">E.164</span><span class="field-note">IVR number</span></div>
+        <div class="model-field"><span class="field-name">history</span><span class="field-type">Message[]</span><span class="field-note">Claude turns</span></div>
+        <div class="model-field"><span class="field-name">bookingData</span><span class="field-type">Partial&lt;Job&gt;</span></div>
+        <div class="model-field"><span class="field-name">turnCount</span><span class="field-type">int</span></div>
+        <div class="model-field"><span class="field-name">startedAt</span><span class="field-type">ISO8601</span></div>
+        <div class="model-field"><span class="field-name">completedAt</span><span class="field-type">ISO8601</span></div>
+        <div class="model-field"><span class="field-name">outcome</span><span class="field-type">enum</span><span class="field-note">booked|abandoned|…</span></div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name"><span>⚙️</span> BookingSettings</div>
+        <div class="model-field"><span class="field-name">bufferHours</span><span class="field-type">int</span><span class="field-note">Min advance notice</span></div>
+        <div class="model-field"><span class="field-name">workingDays</span><span class="field-type">int[]</span><span class="field-note">0=Sun…6=Sat</span></div>
+        <div class="model-field"><span class="field-name">startHour</span><span class="field-type">int</span></div>
+        <div class="model-field"><span class="field-name">endHour</span><span class="field-type">int</span></div>
+        <div class="model-field"><span class="field-name">lunchEnabled</span><span class="field-type">bool</span></div>
+        <div class="model-field"><span class="field-name">lunchStart</span><span class="field-type">int</span></div>
+        <div class="model-field"><span class="field-name">lunchEnd</span><span class="field-type">int</span></div>
+        <div class="model-field"><span class="field-name">voipEnabled</span><span class="field-type">bool</span></div>
+        <div class="model-field"><span class="field-name">voipNumber</span><span class="field-type">E.164</span></div>
+        <div class="model-field"><span class="field-name">voipProvider</span><span class="field-type">enum</span><span class="field-note">managed|byot|redirect|sip</span></div>
+      </div>
+
+      <div class="model-card">
+        <div class="model-name"><span>🤖</span> PromptSettings</div>
+        <div class="model-field"><span class="field-name">personaName</span><span class="field-type">string</span><span class="field-note">Fiona</span></div>
+        <div class="model-field"><span class="field-name">companyName</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">greeting</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">showTechNames</span><span class="field-type">bool</span></div>
+        <div class="model-field"><span class="field-name">collectContactDetails</span><span class="field-type">bool</span></div>
+        <div class="model-field"><span class="field-name">enabledJobTypes</span><span class="field-type">string[]</span></div>
+        <div class="model-field"><span class="field-name">requiredFields</span><span class="field-type">string[]</span><span class="field-note">date|time|address…</span></div>
+        <div class="model-field"><span class="field-name">customInstructions</span><span class="field-type">string</span></div>
+        <div class="model-field"><span class="field-name">customFullPrompt</span><span class="field-type">string?</span><span class="field-note">Overrides auto-build</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECURITY ── -->
+  <section class="spec-section" id="security">
+    <div class="sec-label">Section 07</div>
+    <div class="sec-title">Security Considerations</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <h3 style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Twilio Webhook Validation</h3>
+        <div class="cf-desc" style="font-size:12px;color:var(--muted);margin-bottom:8px">All Twilio webhooks must be validated using the X-Twilio-Signature header to prevent spoofed requests.</div>
+        <pre class="code-block" style="font-size:10.5px">import twilio from 'twilio';
+const valid = twilio.validateRequest(
+  authToken, signature,
+  req.url, req.body
+);
+if (!valid) return res.status(403).end();</pre>
+      </div>
+      <div>
+        <h3 style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Credential Storage</h3>
+        <div class="cf-desc" style="font-size:12px;color:var(--muted);margin-bottom:8px">Twilio credentials and API keys must never be stored in frontend code or committed to git.</div>
+        <pre class="code-block" style="font-size:10.5px"><span class="comment"># .env (never committed)</span>
+ANTHROPIC_API_KEY=sk-ant-...
+TWILIO_ACCOUNT_SID=ACxxx
+TWILIO_AUTH_TOKEN=xxxxxx
+TWILIO_FROM_NUMBER=+613...
+GOOGLE_MAPS_API_KEY=AIza...</pre>
+      </div>
+      <div>
+        <h3 style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Rate Limiting</h3>
+        <div class="cf-desc" style="font-size:12px;color:var(--muted)">Voice sessions: max 15 turns per call (prevents runaway Claude billing). Chat: 60 req/min per IP. SMS: Twilio rate limits apply. Implement using <code>express-rate-limit</code>.</div>
+      </div>
+      <div>
+        <h3 style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">PII Handling</h3>
+        <div class="cf-desc" style="font-size:12px;color:var(--muted)">Call transcripts contain PII (name, address, mobile). Store encrypted at rest. Implement transcript retention policy (default: 90 days). Australia: bound by Privacy Act 1988 for customer data.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── IMPLEMENTATION ROADMAP ── -->
+  <section class="spec-section" id="roadmap">
+    <div class="sec-label">Section 08</div>
+    <div class="sec-title">Implementation Roadmap</div>
+    <div class="sec-desc">Phased build plan to move from the current browser-based prototype to production-grade telephony. Each phase is independently deployable.</div>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <div class="phase-num p1">P1</div>
+        <div class="phase-body">
+          <div class="phase-title">Production Voice IVR — Core <span style="font-size:11px;color:var(--green);font-weight:600">~3–5 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Replace Web Speech API with Twilio Programmable Voice. Implement <code>/api/voice/incoming</code> + <code>/api/voice/process</code> + session management. Use Amazon Polly Joanna (AU English) for TTS. Connect to existing Claude booking logic.</div>
+          <ul class="phase-items">
+            <li>Twilio Voice webhooks</li>
+            <li>In-memory session store (Redis for scale)</li>
+            <li>TwiML builder utility</li>
+            <li>Polly voice config</li>
+            <li>Low-confidence fallback handler</li>
+            <li>8-minute / 15-turn call guard</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num p1">P1</div>
+        <div class="phase-body">
+          <div class="phase-title">Managed Number Provisioning (Option A) <span style="font-size:11px;color:var(--green);font-weight:600">~1–2 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Implement <code>/api/voice/provision</code> using Twilio's IncomingPhoneNumbers API. One-click number assignment per tenant with webhook auto-configuration. Display assigned number in settings.</div>
+          <ul class="phase-items">
+            <li>Twilio sub-account per tenant (or shared + tenant routing)</li>
+            <li>Number search by area code</li>
+            <li>Webhook auto-configuration</li>
+            <li>Settings UI: "Activate VOIP Booking Line"</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num p2">P2</div>
+        <div class="phase-body">
+          <div class="phase-title">BYOT + Redirect Number (Options B + C) <span style="font-size:11px;color:var(--blue-light);font-weight:600">~2–3 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Add credential input UI for BYOT. Implement auto-webhook-configuration via Twilio REST when BYOT credentials saved. For Option C, provision a shared IVR pool number with tenant routing by <code>To</code> parameter.</div>
+          <ul class="phase-items">
+            <li>BYOT credential form + validation</li>
+            <li>Auto-webhook setter via Twilio API</li>
+            <li>Tenant routing by To number</li>
+            <li>Redirect guide / setup wizard</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num p2">P2</div>
+        <div class="phase-body">
+          <div class="phase-title">Persistent Database <span style="font-size:11px;color:var(--blue-light);font-weight:600">~3–5 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Move from in-memory storage to PostgreSQL. Jobs, sessions, transcripts, settings all persisted. Multi-tenant isolation. Required before production launch.</div>
+          <ul class="phase-items">
+            <li>PostgreSQL schema + migrations</li>
+            <li>Prisma ORM (or Knex)</li>
+            <li>Multi-tenant row-level security</li>
+            <li>Session store → Redis</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num p3">P3</div>
+        <div class="phase-body">
+          <div class="phase-title">Scheduled Reminders + Email Confirmations <span style="font-size:11px;color:var(--amber);font-weight:600">~2 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Implement job-based reminder scheduler. Send SMS (Twilio) and email (SendGrid) confirmations on booking. Schedule a 1-hour-before reminder using a cron queue (BullMQ + Redis or Heroku Scheduler).</div>
+          <ul class="phase-items">
+            <li>BullMQ job queue</li>
+            <li>SendGrid email templates</li>
+            <li>SMS confirmation on booking</li>
+            <li>1-hour reminder job</li>
+            <li>CANCEL reply handling</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-num p4">P4</div>
+        <div class="phase-body">
+          <div class="phase-title">SIP Trunk Integration (Option D) + Analytics <span style="font-size:11px;color:var(--muted);font-weight:600">~5 days dev</span></div>
+          <div class="cf-desc" style="font-size:12px">Twilio SIP Domain setup for PBX customers. IVR analytics dashboard (call volume, booking rate, avg call duration, abandonment). Voice A/B testing (alternate prompts).</div>
+          <ul class="phase-items">
+            <li>Twilio SIP Domain per tenant</li>
+            <li>SIP credentials + INVITE auth</li>
+            <li>Analytics dashboard</li>
+            <li>Call recording (opt-in)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:24px">
+      <strong>Stack recommendation:</strong> Node.js (ESM) · Express 5 · PostgreSQL + Prisma · Redis (sessions + job queue) · BullMQ (reminders) · Twilio SDK v4 · @anthropic-ai/sdk · SendGrid · Heroku (or Railway for simpler Postgres provisioning). Existing prototype already uses Node.js/Express — P1 is a direct evolution, not a rewrite.
+    </div>
+  </section>
+
+</div><!-- /spec-body -->
+
+<footer>
+  FieldInsight Voice IVR Spec v1.0 &nbsp;·&nbsp; 
+  <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
+  <a href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com/" target="_blank">Live Prototype →</a> &nbsp;·&nbsp;
+  <a href="sdr-dashboard.html">SDR Dashboard</a> &nbsp;·&nbsp;
+  <a href="business-dashboard.html">Business Dashboard</a>
+</footer>
+
+<script>
+// Highlight active nav on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks  = document.querySelectorAll('nav.spec-nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
