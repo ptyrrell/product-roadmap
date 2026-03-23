@@ -26,6 +26,9 @@
       --cat-ceo:      #818cf8;
       --cat-infra:    #60a5fa;
       --cat-product:  #a78bfa;
+      /* Status colours */
+      --active:   #ff8c42;
+      --pending:  #f5c518;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
@@ -76,17 +79,56 @@
     .updated { font-size: 0.73rem; color: var(--muted); margin-top: 0.4rem; }
 
     /* ── Board ── */
-    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 1.25rem auto 3rem; padding: 0 2rem; align-items: start; }
-    @media (max-width: 960px) { .board { grid-template-columns: 1fr; } }
+    .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1400px; margin: 1.25rem auto 3rem; padding: 0 2rem; align-items: start; }
+    @media (max-width: 1100px) { .board { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px)  { .board { grid-template-columns: 1fr; } }
 
     .col-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
     .col-header .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .col-now .dot { background: var(--now); }
-    .col-next .dot { background: var(--next); }
-    .col-done .dot { background: var(--done); }
-    .col-now .col-label { color: var(--now); }
-    .col-next .col-label { color: var(--next); }
-    .col-done .col-label { color: var(--done); }
+    .col-now .dot     { background: var(--now); }
+    .col-next .dot    { background: var(--next); }
+    .col-done .dot    { background: var(--done); }
+    .col-active .dot  { background: var(--active); box-shadow: 0 0 6px var(--active); animation: pulse-dot 2s ease-in-out infinite; }
+    .col-pending .dot { background: var(--pending); }
+    .col-now .col-label     { color: var(--now); }
+    .col-next .col-label    { color: var(--next); }
+    .col-done .col-label    { color: var(--done); }
+    .col-active .col-label  { color: var(--active); }
+    .col-pending .col-label { color: var(--pending); }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 4px var(--active); }
+      50%       { box-shadow: 0 0 10px var(--active), 0 0 20px rgba(255,140,66,0.3); }
+    }
+
+    /* ── One Ring ── */
+    .one-ring-wrap { max-width: 1400px; margin: 1.5rem auto 0; padding: 0 2rem; }
+    .one-ring {
+      background: linear-gradient(135deg, rgba(255,140,66,0.08) 0%, rgba(245,197,24,0.06) 50%, rgba(124,107,240,0.08) 100%);
+      border: 1px solid rgba(255,140,66,0.4);
+      border-radius: 14px;
+      padding: 1.4rem 1.8rem;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .one-ring::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(255,140,66,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .one-ring-crown { font-size: 1.4rem; margin-right: 0.5rem; }
+    .one-ring-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--active); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem; }
+    .one-ring-title { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text); margin-bottom: 0.35rem; }
+    .one-ring-desc  { font-size: 0.82rem; color: var(--muted); line-height: 1.65; max-width: 760px; }
+    .one-ring-meta  { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .one-ring-links { display: flex; gap: 1rem; margin-top: 0.8rem; }
+    .one-ring-links a { font-size: 0.78rem; font-weight: 600; color: var(--active); text-decoration: none; border: 1px solid rgba(255,140,66,0.35); padding: 4px 12px; border-radius: 6px; transition: all 0.15s; }
+    .one-ring-links a:hover { background: rgba(255,140,66,0.12); color: var(--text); }
+    .ai-model { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3px; padding: 2px 8px; border-radius: 20px; }
+    .ai-claude  { background: rgba(204,153,102,0.2); color: #cc9966; border: 1px solid rgba(204,153,102,0.4); }
+    .ai-grok    { background: rgba(167,139,250,0.2); color: #a78bfa; border: 1px solid rgba(167,139,250,0.4); }
+    .ai-swap    { font-size: 0.65rem; color: var(--muted); }
 
     /* ── Cards ── */
     .card {
@@ -119,6 +161,12 @@
     .badge-live    { background: rgba(0,229,176,0.15);   color: var(--now);  border: 1px solid rgba(0,229,176,0.3); }
     .badge-indev   { background: rgba(108,143,255,0.15); color: var(--next); border: 1px solid rgba(108,143,255,0.3); }
     .badge-version { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .badge-active  { background: rgba(255,140,66,0.18);  color: var(--active); border: 1px solid rgba(255,140,66,0.5); animation: pulse-active 2s ease-in-out infinite; }
+    .badge-pending { background: rgba(245,197,24,0.15);  color: var(--pending); border: 1px solid rgba(245,197,24,0.4); }
+    @keyframes pulse-active {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,140,66,0); }
+      50%       { box-shadow: 0 0 0 4px rgba(255,140,66,0.2); }
+    }
 
     /* Category badges */
     .badge-design  { background: rgba(244,114,182,0.15); color: var(--cat-design);  border: 1px solid rgba(244,114,182,0.35); }
@@ -147,7 +195,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.7.0</span>
+    <span class="version">v0.8.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -174,25 +222,107 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.7.0</div>
+    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.8.0</div>
+  </div>
+
+  <!-- ── One Ring ── -->
+  <div class="one-ring-wrap">
+    <div class="one-ring">
+      <div class="one-ring-label">💍 One Ring to Rule Them All — Primary Focus</div>
+      <div class="one-ring-title">Email / SMS / VOIP Scheduler — AI Interaction Model</div>
+      <div class="one-ring-desc">The centrepiece build. Customers book, reschedule, and communicate with FieldInsight entirely through their preferred channel — email thread, SMS reply, or VOIP call. A unified AI layer (Claude primary, Grok swappable) understands intent across all three channels, maps it to job state, and responds naturally. The scheduler drives outbound; customers drive inbound. One conversation per job, regardless of channel.</div>
+      <div class="one-ring-meta">
+        <span class="badge badge-active">🔥 Active</span>
+        <span class="badge badge-high">High</span>
+        <span class="badge badge-product">🏗 Product</span>
+        <span class="badge badge-design">🎨 Design</span>
+        <span class="ai-model ai-claude">Claude</span>
+        <span class="ai-swap">⇄</span>
+        <span class="ai-model ai-grok">Grok</span>
+      </div>
+      <div class="one-ring-links">
+        <a href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com" target="_blank">🟢 Live Prototype</a>
+        <a href="https://github.com/ptyrrell/proto-two-way-comms" target="_blank">GitHub →</a>
+      </div>
+    </div>
   </div>
 
   <div class="board">
 
-    <!-- NOW -->
-    <div class="col-now">
-      <div class="col-header"><span class="dot"></span><span class="col-label">Now</span></div>
+    <!-- ACTIVE -->
+    <div class="col-active">
+      <div class="col-header"><span class="dot"></span><span class="col-label">Active</span></div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">Email / SMS / VOIP Scheduler</div>
+        <div class="card-desc">Two-way customer communication across Email, SMS, and VOIP — threaded inside the job record. AI-powered intent model built on Claude, interchangeable with Grok.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Email thread panel within job record</li>
+          <li>SMS mock interface — live simulation</li>
+          <li>VOIP IVR flow — natural language booking</li>
+          <li>AI interaction model: Claude (primary), Grok (swap)</li>
+          <li>Intent extraction: book / reschedule / query / confirm</li>
+          <li>Scheduler-triggered outbound across all channels</li>
+          <li>Build: OAuth Gmail + Outlook</li>
+          <li>Build: Twilio SMS + Conversations API</li>
+          <li>Build: Twilio Voice + STT/TTS pipeline</li>
+          <li>🔗 <a href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-two-way-comms" target="_blank" style="color:#00e5b0">GitHub</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">PO Multi-Supplier Price Books</div>
+        <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Supplier selector at PO level</li>
+          <li>Price book management screen</li>
+          <li>Margin visibility per line item</li>
+          <li>Switching supplier mid-PO flow</li>
+          <li>API to attach multiple price books per trade type</li>
+          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product">
+        <div class="card-title">Bill Importer</div>
+        <div class="card-desc">Import supplier bills and invoices directly into FieldInsight from email, PDF, or CSV. Auto-match to jobs and purchase orders. Reduce manual data entry for the office team.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Import via email attachment (PDF/CSV)</li>
+          <li>OCR + AI field extraction (supplier, amount, date, line items)</li>
+          <li>Auto-match to open POs and jobs</li>
+          <li>Exception queue for unmatched bills</li>
+          <li>Xero / MYOB sync on approval</li>
+          <li>Audit trail — original bill stored against job</li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="design">
         <div class="card-title">🎨 Design Queue — Paul to action</div>
-        <div class="card-desc">Features waiting on design decisions before engineering can proceed. Review each and produce wireframes or specs.</div>
+        <div class="card-desc">Features waiting on design decisions before engineering can proceed.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
         </div>
         <div class="outcomes"><ul>
-          <li>PO Multi-Supplier Price Books — screen flows</li>
-          <li>Two-Way Email Chat — thread UI inside job record</li>
           <li>Onboarding Checklist — step-by-step UX flow</li>
           <li>Asset Management v2 — service history layout</li>
           <li>Recurring Job Templates — template builder UI</li>
@@ -204,12 +334,18 @@
         </ul></div>
       </div>
 
+    </div>
+
+    <!-- PENDING -->
+    <div class="col-pending">
+      <div class="col-header"><span class="dot"></span><span class="col-label">Pending</span></div>
+
       <div class="card" data-cat="salesops product">
         <div class="card-title">Upgrade Link — Sales Team Tool</div>
-        <div class="card-desc">Smart upsell page for the sales team. Pre-fills customer context, tracks click + conversion per rep.</div>
+        <div class="card-desc">Smart upsell page for the sales team. Pre-fills customer context, tracks click + conversion per rep. Defined — waiting on priority slot.</div>
         <div class="card-meta">
+          <span class="badge badge-pending">⏳ Pending</span>
           <span class="badge badge-high">High</span>
-          <span class="badge badge-indev">In Development</span>
           <span class="badge badge-salesops">📊 Sales Ops</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
@@ -217,47 +353,7 @@
           <li>One-click upgrade flow</li>
           <li>Personalised with plan + tier data</li>
           <li>Rep attribution tracking</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="design product">
-        <div class="card-title">PO Multi-Supplier Price Books</div>
-        <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-design">🎨 Design</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>Design: Supplier selector at PO level</li>
-          <li>Design: Price book management screen</li>
-          <li>Design: Margin visibility per line item</li>
-          <li>Design: Switching supplier mid-PO flow</li>
-          <li>Build: API to attach multiple price books per trade type</li>
-          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a> &nbsp;·&nbsp; v0.4.0</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="design product">
-        <div class="card-title">Two-Way Chat via Email Threads</div>
-        <div class="card-desc">Send and receive emails as threaded conversations inside FieldInsight. SMS simulation included. Gmail and Outlook via OAuth — all context in one place.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-indev">In Development</span>
-          <span class="badge badge-design">🎨 Design</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>Design: Thread panel within job/customer record</li>
-          <li>Design: Compose + reply UI (inline, not modal)</li>
-          <li>Design: Gmail vs Outlook connection onboarding</li>
-          <li>Design: SMS mock interface for simulation</li>
-          <li>Build: OAuth flow for Gmail + Outlook</li>
-          <li>Build: Webhook receiver for inbound replies</li>
-          <li>Build: SMS thread simulation (Twilio Conversations)</li>
-          <li>🔗 <a href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-two-way-comms" target="_blank" style="color:#00e5b0">GitHub</a></li>
+          <li>Smart URL — pre-fills customer context</li>
         </ul></div>
       </div>
 
@@ -265,16 +361,17 @@
         <div class="card-title">Onboarding Support Workflows — AI</div>
         <div class="card-desc">Guided onboarding flows powered by AI. Triggered by usage signals — reduces support load and accelerates activation.</div>
         <div class="card-meta">
+          <span class="badge badge-pending">⏳ Pending</span>
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Design: In-app checklist component (persistent sidebar)</li>
-          <li>Design: Completion state + celebration moment</li>
-          <li>Design: AI suggestion tooltip pattern</li>
-          <li>Build: Usage signal triggers (first job, first invoice, etc.)</li>
-          <li>Build: AI recommendation engine per account state</li>
+          <li>In-app checklist component (persistent sidebar)</li>
+          <li>Completion state + celebration moment</li>
+          <li>AI suggestion tooltip pattern</li>
+          <li>Usage signal triggers (first job, first invoice, etc.)</li>
+          <li>AI recommendation engine per account state</li>
           <li>Target: −40% onboarding support tickets</li>
         </ul></div>
       </div>
@@ -283,18 +380,19 @@
         <div class="card-title">Business Insights via Data Ontologies</div>
         <div class="card-desc">Actionable business intelligence from customer operational data — jobs, technicians, invoices, assets — structured via ontologies.</div>
         <div class="card-meta">
+          <span class="badge badge-pending">⏳ Pending</span>
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
           <span class="badge badge-ceo">👔 CEO</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Design: Insights dashboard — weekly digest layout</li>
-          <li>Design: Health score card component</li>
-          <li>Design: Industry benchmark comparison view</li>
-          <li>Build: Data ontology schema (jobs, techs, invoices, assets)</li>
-          <li>Build: Weekly insights generation pipeline</li>
-          <li>Build: Exportable PDF/CSV reports for owners</li>
+          <li>Insights dashboard — weekly digest layout</li>
+          <li>Health score card component</li>
+          <li>Industry benchmark comparison view</li>
+          <li>Data ontology schema (jobs, techs, invoices, assets)</li>
+          <li>Weekly insights generation pipeline</li>
+          <li>Exportable PDF/CSV reports for owners</li>
         </ul></div>
       </div>
 
@@ -302,6 +400,7 @@
         <div class="card-title">Sales Metrics — SDR + AE Daily Tracker</div>
         <div class="card-desc">Unified daily scorecard covering both SDR pipeline metrics and AE deal-stage tracking. Flags stale deals and missing next actions.</div>
         <div class="card-meta">
+          <span class="badge badge-pending">⏳ Pending</span>
           <span class="badge badge-med">Medium</span>
           <span class="badge badge-salesops">📊 Sales Ops</span>
           <span class="badge badge-ceo">👔 CEO</span>
@@ -313,6 +412,7 @@
           <li>No-next-action alerts (should be 0)</li>
         </ul></div>
       </div>
+
     </div>
 
     <!-- NEXT -->
@@ -379,56 +479,52 @@
 
       <div class="card" data-cat="design product">
         <div class="card-title">Voice Job Logging — IVR with Claude</div>
-        <div class="card-desc">Field techs call in and speak naturally to log job details. Claude extracts structured data (job type, location, notes, time). Multi-model support — Claude now, Grok later.</div>
+        <div class="card-desc">Field techs call in and speak naturally to log job details. Claude extracts structured data. Multi-model — Claude now, Grok later.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Design: Voice-to-job creation flow (call → structured record)</li>
-          <li>Design: Confirmation readback UX ("I've logged a plumbing job at 42 Smith St...")</li>
-          <li>Build: Twilio Voice + speech-to-text pipeline</li>
-          <li>Build: Claude prompt to extract job fields from speech</li>
-          <li>Build: FieldInsight API write-back for job creation</li>
+          <li>Voice-to-job creation flow (call → structured record)</li>
+          <li>Confirmation readback UX</li>
+          <li>Twilio Voice + speech-to-text pipeline</li>
+          <li>Claude prompt to extract job fields from speech</li>
+          <li>FieldInsight API write-back for job creation</li>
           <li>Future: Swap in Grok for real-time voice model</li>
         </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
         <div class="card-title">IVR Self-Service Job Booking — B2B</div>
-        <div class="card-desc">Inbound phone flow for B2B clients to book a job without speaking to a human. Twilio Voice + Claude TTS/STT. Scheduler-triggered invite or client self-service portal.</div>
+        <div class="card-desc">Inbound phone flow for B2B clients to book a job without speaking to a human. Twilio Voice + Claude TTS/STT.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Design: IVR call flow — greeting, job type, address, time slot selection</li>
-          <li>Design: Confirmation + calendar invite to client</li>
-          <li>Design: Scheduler dashboard showing self-booked appointments</li>
-          <li>Build: Twilio Voice IVR with slot availability from FieldInsight</li>
-          <li>Build: Claude for natural language slot negotiation</li>
-          <li>Build: Auto job creation on booking confirmation</li>
+          <li>IVR call flow — greeting, job type, address, time slot</li>
+          <li>Confirmation + calendar invite to client</li>
+          <li>Scheduler dashboard showing self-booked appointments</li>
+          <li>Claude for natural language slot negotiation</li>
+          <li>Auto job creation on booking confirmation</li>
         </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
         <div class="card-title">SMS Job Booking — Scheduler + Status Triggered</div>
-        <div class="card-desc">Two trigger modes: scheduler sends a booking link via SMS, or a job status change triggers a self-booking request. Client replies to SMS to confirm time and details.</div>
+        <div class="card-desc">Scheduler sends a booking link via SMS, or job status change triggers a self-booking request. Client replies to confirm time and details.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Design: Scheduler-triggered SMS flow ("Your next service is due — reply to book")</li>
-          <li>Design: Job status trigger ("Job complete — book your follow-up service")</li>
-          <li>Design: SMS reply parsing (date/time confirmation)</li>
-          <li>Build: Twilio SMS webhook integration</li>
-          <li>Build: Job status webhook → outbound SMS trigger</li>
-          <li>Build: NLP reply parser (Claude) for time slot extraction</li>
-          <li>Build: Twilio Conversations API for thread-per-booking</li>
+          <li>Scheduler-triggered SMS flow</li>
+          <li>Job status trigger ("Job complete — book follow-up")</li>
+          <li>NLP reply parser (Claude) for time slot extraction</li>
+          <li>Twilio Conversations API — thread-per-booking</li>
         </ul></div>
       </div>
     </div>
@@ -452,7 +548,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.7.0</div>
+    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.8.0</div>
   </div>
 
   <div class="board">
@@ -743,9 +839,9 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.7.0 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.8.0 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
-  &nbsp;·&nbsp; Updated 18 March 2026
+  &nbsp;·&nbsp; Updated 23 March 2026
 </footer>
 
 <script>
