@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SDR + AE Daily Scorecard</title>
+<style>
+:root{
+  --bg:#0b0e1a;--surface:#131629;--surface2:#1c2038;--surface3:#242844;
+  --border:#2a2f52;--border2:#363c62;
+  --text:#e8eaf6;--muted:#7b82b4;--dim:#4a5080;
+  --green:#22c55e;--green-bg:rgba(34,197,94,.12);--green-border:rgba(34,197,94,.3);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.12);--amber-border:rgba(245,158,11,.3);
+  --red:#ef4444;--red-bg:rgba(239,68,68,.12);--red-border:rgba(239,68,68,.3);
+  --blue:#6366f1;--blue-bg:rgba(99,102,241,.12);
+  --salesops:#ffa94d;
+  --r:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;gap:12px;padding:12px 24px;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;flex-wrap:wrap}
+.nav-logo{font-size:15px;font-weight:800;color:var(--salesops);letter-spacing:-.5px}
+.nav-sub{font-size:11px;color:var(--muted)}
+.nav-space{flex:1}
+.date-nav{display:flex;align-items:center;gap:6px}
+.date-nav button{background:var(--surface2);border:1px solid var(--border);color:var(--text);
+  border-radius:6px;padding:5px 10px;cursor:pointer;font-size:12px;transition:all .15s}
+.date-nav button:hover{background:var(--border);border-color:var(--border2)}
+#date-display{font-weight:700;font-size:13px;min-width:160px;text-align:center;
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:5px 12px;cursor:pointer}
+.today-btn{background:var(--blue-bg)!important;border-color:var(--blue)!important;color:var(--blue)!important;font-size:11px!important;padding:5px 10px!important}
+.week-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:2px;gap:2px}
+.week-toggle button{background:transparent;border:none;color:var(--muted);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s}
+.week-toggle button.active{background:var(--blue);color:#fff}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:flex;gap:12px;padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;overflow-x:auto}
+.kpi-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 16px;min-width:140px;flex:1;max-width:200px;position:relative;overflow:hidden}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-card.green::before{background:var(--green)}
+.kpi-card.amber::before{background:var(--amber)}
+.kpi-card.red::before{background:var(--red)}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:4px}
+.kpi-value{font-size:22px;font-weight:800;color:var(--text);line-height:1}
+.kpi-target{font-size:10px;color:var(--muted);margin-top:3px}
+.kpi-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.kpi-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+
+/* ── SECTION ── */
+.section{max-width:1400px;margin:20px auto;padding:0 24px}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.section-icon{font-size:20px}
+.section-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.section-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;
+  background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.section-note{font-size:11px;color:var(--muted);margin-left:auto}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);white-space:nowrap}
+thead th.num{text-align:center}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
+tbody td{padding:8px 12px;vertical-align:middle}
+tbody td.name{font-weight:700;color:var(--text);font-size:13px;min-width:120px}
+tbody td.num{text-align:center}
+tbody td.rate{text-align:center;font-weight:700;font-size:12px}
+tbody td.notes{color:var(--muted);font-size:11px;min-width:160px}
+tbody tr.total-row td{background:var(--surface2);font-weight:700;border-top:2px solid var(--border2)}
+tbody tr.total-row td.total-label{color:var(--muted);font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+
+/* ── EDITABLE CELLS ── */
+.cell-input{
+  background:transparent;border:none;outline:none;color:var(--text);
+  font-size:13px;font-weight:600;text-align:center;width:100%;
+  padding:4px;border-radius:4px;transition:background .15s;cursor:pointer;
+  -moz-appearance:textfield;
+}
+.cell-input::-webkit-inner-spin-button,.cell-input::-webkit-outer-spin-button{-webkit-appearance:none}
+.cell-input:hover,.cell-input:focus{background:var(--surface3);cursor:text}
+.cell-notes-input{
+  background:transparent;border:none;outline:none;color:var(--muted);
+  font-size:11px;width:100%;padding:4px;border-radius:4px;transition:background .15s;cursor:pointer;
+}
+.cell-notes-input:hover,.cell-notes-input:focus{background:var(--surface3);color:var(--text);cursor:text}
+
+/* ── COLOR CODES ── */
+.c-green{background:var(--green-bg);border-radius:5px;color:var(--green)}
+.c-amber{background:var(--amber-bg);border-radius:5px;color:var(--amber)}
+.c-red{background:var(--red-bg);border-radius:5px;color:var(--red)}
+
+/* ── BENCHMARK LEGEND ── */
+.benchmark-row{display:flex;align-items:center;gap:16px;padding:8px 12px;
+  background:var(--surface2);border-top:1px solid var(--border);font-size:10px;color:var(--muted)}
+.bm{display:flex;align-items:center;gap:5px;font-weight:600}
+.bm-dot{width:8px;height:8px;border-radius:50%}
+
+/* ── WEEK CHART ── */
+.week-chart{display:flex;gap:4px;align-items:flex-end;height:40px;padding:0 4px}
+.week-bar{flex:1;border-radius:3px 3px 0 0;transition:height .3s ease;min-height:2px;cursor:pointer;opacity:.7}
+.week-bar:hover{opacity:1}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:24px;font-size:11px;color:var(--dim);margin-top:20px;
+  border-top:1px solid var(--border)}
+
+/* ── SAVED INDICATOR ── */
+.save-indicator{font-size:10px;color:var(--green);opacity:0;transition:opacity .3s;margin-left:8px}
+.save-indicator.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="nav-logo">📊 SDR + AE Daily Scorecard</div>
+    <div class="nav-sub">FieldInsight Sales Team · Interactive Benchmark Dashboard</div>
+  </div>
+  <div class="nav-space"></div>
+  <div class="date-nav">
+    <button onclick="shiftDay(-1)">←</button>
+    <div id="date-display" onclick="openDatePicker()">—</div>
+    <input type="date" id="date-picker" style="position:absolute;opacity:0;pointer-events:none" onchange="onDatePick(this.value)"/>
+    <button onclick="shiftDay(1)">→</button>
+    <button class="today-btn" onclick="goToday()">Today</button>
+  </div>
+  <div class="week-toggle">
+    <button class="active" onclick="setMode('day',this)" id="mode-day">Day</button>
+    <button onclick="setMode('week',this)" id="mode-week">Week</button>
+  </div>
+  <span class="save-indicator" id="save-ind">✓ Saved</span>
+</nav>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip" id="kpi-strip">
+  <div class="kpi-card" id="kpi-total-calls">
+    <div class="kpi-label">Total Calls</div>
+    <div class="kpi-value" id="kv-calls">—</div>
+    <div class="kpi-target" id="kt-calls">Target: 100</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-calls" style="width:0;background:var(--green)"></div></div>
+  </div>
+  <div class="kpi-card" id="kpi-connects">
+    <div class="kpi-label">Connects</div>
+    <div class="kpi-value" id="kv-connects">—</div>
+    <div class="kpi-target" id="kt-connects">Target: 30</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-connects" style="width:0;background:var(--green)"></div></div>
+  </div>
+  <div class="kpi-card" id="kpi-disc">
+    <div class="kpi-label">Discovery Calls</div>
+    <div class="kpi-value" id="kv-disc">—</div>
+    <div class="kpi-target">Target: 10</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-disc" style="width:0;background:var(--green)"></div></div>
+  </div>
+  <div class="kpi-card" id="kpi-connect-rate">
+    <div class="kpi-label">Avg Connect Rate</div>
+    <div class="kpi-value" id="kv-crate">—</div>
+    <div class="kpi-target">Target: ≥ 30%</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-crate" style="width:0;background:var(--green)"></div></div>
+  </div>
+  <div class="kpi-card" id="kpi-prospects">
+    <div class="kpi-label">Prospects Added</div>
+    <div class="kpi-value" id="kv-prospects">—</div>
+    <div class="kpi-target">Target: 20</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-prospects" style="width:0;background:var(--green)"></div></div>
+  </div>
+  <div class="kpi-card" id="kpi-pipeline">
+    <div class="kpi-label">Pipeline Deals</div>
+    <div class="kpi-value" id="kv-pipeline">—</div>
+    <div class="kpi-target">Total active</div>
+    <div class="kpi-bar"><div class="kpi-bar-fill" id="kb-pipeline" style="width:100;background:var(--blue)"></div></div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- SECTION 1: RESEARCHERS                 -->
+<!-- ─────────────────────────────────────── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">🔍</span>
+    <span class="section-title">Researchers</span>
+    <span class="section-badge" id="res-badge">—</span>
+    <span class="section-note">Benchmarks: Prospects ≥10 · Verified ≥10 · Sequences ≥5</span>
+  </div>
+  <div class="table-wrap">
+    <table id="res-table">
+      <thead>
+        <tr>
+          <th>Researcher</th>
+          <th class="num">Research<br/>Tasks</th>
+          <th class="num">Prospects<br/>Added</th>
+          <th class="num">Emails<br/>Verified</th>
+          <th class="num">LinkedIn<br/>Connects</th>
+          <th class="num">Sequences<br/>Launched</th>
+          <th class="num">Score</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="res-tbody"></tbody>
+    </table>
+    <div class="benchmark-row">
+      <div class="bm"><div class="bm-dot" style="background:var(--green)"></div> On target</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--amber)"></div> 70–99% of target</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--red)"></div> Below 70%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- SECTION 2: SDR CALLS                   -->
+<!-- ─────────────────────────────────────── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">📞</span>
+    <span class="section-title">SDR Calls</span>
+    <span class="section-badge" id="sdr-badge">—</span>
+    <span class="section-note">Benchmarks: Calls ≥50 · Connects ≥15 · Connect Rate ≥30% · Discovery ≥5</span>
+  </div>
+  <div class="table-wrap">
+    <table id="sdr-table">
+      <thead>
+        <tr>
+          <th>SDR</th>
+          <th class="num">Calls<br/>Made</th>
+          <th class="num">Connects</th>
+          <th class="num">Connect<br/>Rate</th>
+          <th class="num">Discovery<br/>Booked</th>
+          <th class="num">Booking<br/>Rate</th>
+          <th class="num">Trials<br/>Started</th>
+          <th class="num">Demos<br/>Held</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody id="sdr-tbody"></tbody>
+    </table>
+    <div class="benchmark-row">
+      <div class="bm"><div class="bm-dot" style="background:var(--green)"></div> On/above target</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--amber)"></div> 70–99%</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--red)"></div> Below 70%</div>
+      <span style="margin-left:auto;font-size:10px">Daily targets per SDR: Calls 50 · Connects 15 · Disc 5</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────── -->
+<!-- SECTION 3: SALES SUMMARY               -->
+<!-- ─────────────────────────────────────── -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-icon">💼</span>
+    <span class="section-title">Sales Summary</span>
+    <span class="section-badge" id="ae-badge">—</span>
+    <span class="section-note">AE pipeline health — cumulative month-to-date</span>
+  </div>
+  <div class="table-wrap">
+    <table id="ae-table">
+      <thead>
+        <tr>
+          <th>Account Executive</th>
+          <th class="num">Active<br/>Pipeline</th>
+          <th class="num">Demos<br/>Scheduled</th>
+          <th class="num">Proposals<br/>Sent</th>
+          <th class="num">Verbal<br/>Commits</th>
+          <th class="num">Closed<br/>Won MTD</th>
+          <th class="num">MRR<br/>Added</th>
+          <th class="num">Win<br/>Rate</th>
+          <th>Next Action / Notes</th>
+        </tr>
+      </thead>
+      <tbody id="ae-tbody"></tbody>
+    </table>
+    <div class="benchmark-row">
+      <div class="bm"><div class="bm-dot" style="background:var(--green)"></div> Pipeline healthy</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--amber)"></div> Needs attention</div>
+      <div class="bm"><div class="bm-dot" style="background:var(--red)"></div> At risk / stale</div>
+      <span style="margin-left:auto;font-size:10px">Targets MTD: Closed ≥3 · MRR ≥$6k · Win Rate ≥30%</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  SDR + AE Daily Scorecard · FieldInsight Sales Team ·
+  Data auto-saved to browser · <a href="https://ptyrrell.github.io/product-roadmap/" style="color:var(--muted)">← Roadmap</a>
+</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────
+const RESEARCHERS = [
+  { name: 'Alex Thompson', role: 'Lead Researcher' },
+  { name: 'Sarah Chen',    role: 'Researcher' },
+];
+const SDRS = [
+  { name: 'Tim',  target: { calls:50, connects:15, disc:5, trials:1, demos:2 } },
+  { name: 'Jay',  target: { calls:50, connects:15, disc:5, trials:1, demos:2 } },
+];
+const AES = [
+  { name: 'AE — Full Cycle', target: { closed:3, mrr:6000, winrate:30 } },
+];
+
+const RES_TARGETS = { tasks:10, prospects:10, verified:10, linkedinConnects:5, sequences:5 };
+
+// ── STATE ────────────────────────────────────────────────────────────
+let currentDate = todayStr();
+let viewMode = 'day';
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+function storageKey(date) { return `sdr-dash-${date}`; }
+
+function defaultData(date) {
+  return {
+    researchers: RESEARCHERS.map(r => ({ ...r, tasks:0, prospects:0, verified:0, linkedinConnects:0, sequences:0, notes:'' })),
+    sdrs: SDRS.map(s => ({ ...s, calls:0, connects:0, disc:0, trials:0, demos:0, notes:'' })),
+    aes: AES.map(a => ({ ...a, pipeline:0, demos:0, proposals:0, verbal:0, closed:0, mrr:0, notes:'' })),
+  };
+}
+
+function loadData(date) {
+  try {
+    const raw = localStorage.getItem(storageKey(date));
+    if (!raw) return defaultData(date);
+    return JSON.parse(raw);
+  } catch { return defaultData(date); }
+}
+
+function saveData(date, data) {
+  localStorage.setItem(storageKey(date), JSON.stringify(data));
+  const ind = document.getElementById('save-ind');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1500);
+}
+
+let data = loadData(currentDate);
+
+// ── DATE NAVIGATION ──────────────────────────────────────────────────
+function fmtDisplay(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const today = todayStr();
+  const prefix = dateStr === today ? 'Today — ' : '';
+  return prefix + d.toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+
+function setDate(dateStr) {
+  currentDate = dateStr;
+  document.getElementById('date-display').textContent = fmtDisplay(dateStr);
+  data = loadData(dateStr);
+  renderAll();
+}
+
+function shiftDay(delta) {
+  const d = new Date(currentDate + 'T00:00:00');
+  d.setDate(d.getDate() + delta);
+  setDate(d.toISOString().split('T')[0]);
+}
+
+function goToday() { setDate(todayStr()); }
+
+function openDatePicker() {
+  const picker = document.getElementById('date-picker');
+  picker.value = currentDate;
+  picker.click();
+}
+function onDatePick(val) { if(val) setDate(val); }
+
+function setMode(mode, el) {
+  viewMode = mode;
+  document.querySelectorAll('.week-toggle button').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+// ── BENCHMARK COLOR ──────────────────────────────────────────────────
+function benchClass(val, target, higherBetter = true) {
+  if (!target || target === 0) return '';
+  const pct = higherBetter ? val / target : target / val;
+  if (pct >= 1)    return 'c-green';
+  if (pct >= 0.7)  return 'c-amber';
+  return 'c-red';
+}
+
+function kpiColor(pct) {
+  if (pct >= 1)   return 'green';
+  if (pct >= 0.7) return 'amber';
+  return 'red';
+}
+
+function updateKpi(id, valEl, barEl, val, target, suffix='') {
+  const card = document.getElementById(id);
+  const pct = target ? Math.min(val / target, 1) : 0;
+  const cls = kpiColor(pct);
+  card.className = `kpi-card ${cls}`;
+  document.getElementById(valEl).textContent = suffix ? val + suffix : val;
+  document.getElementById(barEl).style.width = (pct * 100) + '%';
+  document.getElementById(barEl).style.background =
+    cls === 'green' ? 'var(--green)' : cls === 'amber' ? 'var(--amber)' : 'var(--red)';
+}
+
+// ── EDITABLE CELL ────────────────────────────────────────────────────
+function makeNumInput(val, onChange) {
+  const inp = document.createElement('input');
+  inp.type = 'number';
+  inp.className = 'cell-input';
+  inp.min = '0';
+  inp.value = val || '';
+  inp.placeholder = '—';
+  inp.addEventListener('change', () => { onChange(parseInt(inp.value) || 0); renderAll(); });
+  inp.addEventListener('input',  () => { onChange(parseInt(inp.value) || 0); renderAll(); });
+  inp.addEventListener('blur',   () => saveData(currentDate, data));
+  return inp;
+}
+
+function makeTextInput(val, onChange) {
+  const inp = document.createElement('input');
+  inp.type = 'text';
+  inp.className = 'cell-notes-input';
+  inp.value = val || '';
+  inp.placeholder = 'Add note…';
+  inp.addEventListener('change', () => { onChange(inp.value); saveData(currentDate, data); });
+  return inp;
+}
+
+function makeMrrInput(val, onChange) {
+  const inp = document.createElement('input');
+  inp.type = 'number';
+  inp.className = 'cell-input';
+  inp.min = '0';
+  inp.step = '100';
+  inp.value = val || '';
+  inp.placeholder = '—';
+  inp.addEventListener('change', () => { onChange(parseInt(inp.value) || 0); renderAll(); });
+  inp.addEventListener('blur',   () => saveData(currentDate, data));
+  return inp;
+}
+
+// ── RATE CELL ────────────────────────────────────────────────────────
+function rateCell(num, denom, targetPct) {
+  const td = document.createElement('td');
+  td.className = 'num rate';
+  const pct = denom > 0 ? Math.round((num / denom) * 100) : 0;
+  td.textContent = pct + '%';
+  if (targetPct) {
+    td.className += ' ' + benchClass(pct, targetPct);
+    const input = document.createElement('span'); // invisible wrapper for class
+    td.innerHTML = `<span class="${benchClass(pct, targetPct)}" style="padding:3px 8px;border-radius:5px">${pct}%</span>`;
+  }
+  return td;
+}
+
+// ── RENDER RESEARCHERS ────────────────────────────────────────────────
+function renderResearchers() {
+  const tbody = document.getElementById('res-tbody');
+  tbody.innerHTML = '';
+  let totals = {tasks:0,prospects:0,verified:0,linkedinConnects:0,sequences:0};
+  let scoreSum = 0;
+
+  data.researchers.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    const score = Math.round((
+      Math.min(r.tasks       / RES_TARGETS.tasks, 1) * 20 +
+      Math.min(r.prospects   / RES_TARGETS.prospects, 1) * 30 +
+      Math.min(r.verified    / RES_TARGETS.verified, 1) * 20 +
+      Math.min(r.sequences   / RES_TARGETS.sequences, 1) * 30
+    ));
+    scoreSum += score;
+
+    tr.innerHTML = `<td class="name">${r.name}<div style="font-size:10px;color:var(--muted);font-weight:400">${r.role||''}</div></td>`;
+    const fields = [
+      { key:'tasks',          target:RES_TARGETS.tasks          },
+      { key:'prospects',      target:RES_TARGETS.prospects      },
+      { key:'verified',       target:RES_TARGETS.verified       },
+      { key:'linkedinConnects',target:RES_TARGETS.linkedinConnects},
+      { key:'sequences',      target:RES_TARGETS.sequences      },
+    ];
+    fields.forEach(f => {
+      const td = document.createElement('td');
+      td.className = 'num';
+      const inp = makeNumInput(r[f.key], v => { data.researchers[i][f.key] = v; });
+      const cls = benchClass(r[f.key], f.target);
+      if (cls) inp.style.color = cls === 'c-green' ? 'var(--green)' : cls === 'c-amber' ? 'var(--amber)' : 'var(--red)';
+      td.appendChild(inp);
+      tr.appendChild(td);
+      totals[f.key] += r[f.key] || 0;
+    });
+
+    const scoreTd = document.createElement('td');
+    scoreTd.className = 'num';
+    const scoreCls = score >= 80 ? 'c-green' : score >= 60 ? 'c-amber' : 'c-red';
+    scoreTd.innerHTML = `<span class="${scoreCls}" style="padding:3px 8px;border-radius:5px;font-weight:700">${score}%</span>`;
+    tr.appendChild(scoreTd);
+
+    const notesTd = document.createElement('td');
+    notesTd.appendChild(makeTextInput(r.notes, v => data.researchers[i].notes = v));
+    tr.appendChild(notesTd);
+
+    tbody.appendChild(tr);
+  });
+
+  // Totals row
+  const tr = document.createElement('tr');
+  tr.className = 'total-row';
+  tr.innerHTML = `<td class="name total-label">TOTAL</td>`;
+  ['tasks','prospects','verified','linkedinConnects','sequences'].forEach(k => {
+    const td = document.createElement('td');
+    td.className = 'num';
+    td.style.fontWeight = '700';
+    td.textContent = totals[k] || '—';
+    tr.appendChild(td);
+  });
+  const avgScore = Math.round(scoreSum / data.researchers.length) || 0;
+  tr.innerHTML += `<td class="num"><span class="${avgScore>=80?'c-green':avgScore>=60?'c-amber':'c-red'}" style="padding:3px 8px;border-radius:5px;font-weight:700">${avgScore}%</span></td><td></td>`;
+  tbody.appendChild(tr);
+
+  document.getElementById('res-badge').textContent = `${data.researchers.length} active`;
+  // KPI
+  updateKpi('kpi-prospects','kv-prospects','kb-prospects', totals.prospects, RES_TARGETS.prospects * data.researchers.length);
+}
+
+// ── RENDER SDR CALLS ─────────────────────────────────────────────────
+function renderSDR() {
+  const tbody = document.getElementById('sdr-tbody');
+  tbody.innerHTML = '';
+  let totals = {calls:0,connects:0,disc:0,trials:0,demos:0};
+
+  data.sdrs.forEach((s, i) => {
+    const t = SDRS[i]?.target || {calls:50,connects:15,disc:5,trials:1,demos:2};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="name">${s.name}</td>`;
+
+    const fields = [
+      { key:'calls',    target:t.calls    },
+      { key:'connects', target:t.connects },
+    ];
+    fields.forEach(f => {
+      const td = document.createElement('td');
+      td.className = 'num';
+      const inp = makeNumInput(s[f.key], v => { data.sdrs[i][f.key] = v; });
+      const cls = benchClass(s[f.key], f.target);
+      if(cls) inp.style.color = cls==='c-green'?'var(--green)':cls==='c-amber'?'var(--amber)':'var(--red)';
+      td.appendChild(inp);
+      tr.appendChild(td);
+      totals[f.key] += s[f.key]||0;
+    });
+
+    // Connect rate
+    tr.appendChild(rateCell(s.connects, s.calls, 30));
+
+    // Discovery booked
+    const discTd = document.createElement('td');
+    discTd.className = 'num';
+    const discInp = makeNumInput(s.disc, v => { data.sdrs[i].disc = v; });
+    const discCls = benchClass(s.disc, t.disc);
+    if(discCls) discInp.style.color = discCls==='c-green'?'var(--green)':discCls==='c-amber'?'var(--amber)':'var(--red)';
+    discTd.appendChild(discInp);
+    tr.appendChild(discTd);
+    totals.disc += s.disc||0;
+
+    // Booking rate
+    tr.appendChild(rateCell(s.disc, s.connects, 33));
+
+    // Trials
+    const trialsTd = document.createElement('td');
+    trialsTd.className = 'num';
+    const trialsInp = makeNumInput(s.trials, v => { data.sdrs[i].trials = v; });
+    const trialsCls = benchClass(s.trials, t.trials);
+    if(trialsCls) trialsInp.style.color = trialsCls==='c-green'?'var(--green)':trialsCls==='c-amber'?'var(--amber)':'var(--red)';
+    trialsTd.appendChild(trialsInp);
+    tr.appendChild(trialsTd);
+    totals.trials += s.trials||0;
+
+    // Demos
+    const demosTd = document.createElement('td');
+    demosTd.className = 'num';
+    const demosInp = makeNumInput(s.demos, v => { data.sdrs[i].demos = v; });
+    demosTd.appendChild(demosInp);
+    tr.appendChild(demosTd);
+    totals.demos += s.demos||0;
+
+    // Notes
+    const notesTd = document.createElement('td');
+    notesTd.appendChild(makeTextInput(s.notes, v => data.sdrs[i].notes = v));
+    tr.appendChild(notesTd);
+
+    tbody.appendChild(tr);
+  });
+
+  // Totals row
+  const tr = document.createElement('tr');
+  tr.className = 'total-row';
+  const totalConnectRate = totals.calls > 0 ? Math.round((totals.connects/totals.calls)*100) : 0;
+  const totalBookingRate  = totals.connects > 0 ? Math.round((totals.disc/totals.connects)*100) : 0;
+  tr.innerHTML = `
+    <td class="name total-label">TOTAL / AVG</td>
+    <td class="num">${totals.calls||'—'}</td>
+    <td class="num">${totals.connects||'—'}</td>
+    <td class="num rate"><span class="${benchClass(totalConnectRate,30)}" style="padding:3px 8px;border-radius:5px">${totalConnectRate}%</span></td>
+    <td class="num">${totals.disc||'—'}</td>
+    <td class="num rate"><span class="${benchClass(totalBookingRate,33)}" style="padding:3px 8px;border-radius:5px">${totalBookingRate}%</span></td>
+    <td class="num">${totals.trials||'—'}</td>
+    <td class="num">${totals.demos||'—'}</td>
+    <td></td>`;
+  tbody.appendChild(tr);
+
+  document.getElementById('sdr-badge').textContent = `${data.sdrs.length} SDRs`;
+
+  const totalTarget = SDRS.reduce((s, r) => s + r.target.calls, 0);
+  const connTarget  = SDRS.reduce((s, r) => s + r.target.connects, 0);
+  const discTarget  = SDRS.reduce((s, r) => s + r.target.disc, 0);
+  updateKpi('kpi-total-calls', 'kv-calls', 'kb-calls', totals.calls, totalTarget);
+  updateKpi('kpi-connects',    'kv-connects','kb-connects', totals.connects, connTarget);
+  updateKpi('kpi-disc',        'kv-disc',    'kb-disc',     totals.disc, discTarget);
+  const avgCR = totals.calls > 0 ? Math.round((totals.connects/totals.calls)*100) : 0;
+  updateKpi('kpi-connect-rate','kv-crate','kb-crate', avgCR, 30, '%');
+}
+
+// ── RENDER SALES SUMMARY ──────────────────────────────────────────────
+function renderAE() {
+  const tbody = document.getElementById('ae-tbody');
+  tbody.innerHTML = '';
+  let totals = {pipeline:0,demos:0,proposals:0,verbal:0,closed:0,mrr:0};
+
+  data.aes.forEach((a, i) => {
+    const t = AES[i]?.target || {closed:3,mrr:6000,winrate:30};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="name">${a.name}</td>`;
+
+    ['pipeline','demos','proposals','verbal'].forEach(k => {
+      const td = document.createElement('td');
+      td.className = 'num';
+      const inp = makeNumInput(a[k], v => { data.aes[i][k] = v; });
+      // pipeline coloring: ≥10 green, 5-9 amber, <5 red
+      if(k === 'pipeline'){
+        const cls = benchClass(a[k], 10);
+        if(cls) inp.style.color = cls==='c-green'?'var(--green)':cls==='c-amber'?'var(--amber)':'var(--red)';
+      }
+      td.appendChild(inp);
+      tr.appendChild(td);
+      totals[k] += a[k]||0;
+    });
+
+    // Closed MTD
+    const closedTd = document.createElement('td');
+    closedTd.className = 'num';
+    const closedInp = makeNumInput(a.closed, v => { data.aes[i].closed = v; });
+    const closedCls = benchClass(a.closed, t.closed);
+    if(closedCls) closedInp.style.color = closedCls==='c-green'?'var(--green)':closedCls==='c-amber'?'var(--amber)':'var(--red)';
+    closedTd.appendChild(closedInp);
+    tr.appendChild(closedTd);
+    totals.closed += a.closed||0;
+
+    // MRR
+    const mrrTd = document.createElement('td');
+    mrrTd.className = 'num';
+    const mrrInp = makeMrrInput(a.mrr, v => { data.aes[i].mrr = v; });
+    const mrrCls = benchClass(a.mrr, t.mrr);
+    if(mrrCls) mrrInp.style.color = mrrCls==='c-green'?'var(--green)':mrrCls==='c-amber'?'var(--amber)':'var(--red)';
+    mrrTd.appendChild(mrrInp);
+    tr.appendChild(mrrTd);
+    totals.mrr += a.mrr||0;
+
+    // Win rate (closed / proposals * 100)
+    tr.appendChild(rateCell(a.closed, a.proposals, t.winrate));
+
+    // Notes
+    const notesTd = document.createElement('td');
+    notesTd.appendChild(makeTextInput(a.notes, v => data.aes[i].notes = v));
+    tr.appendChild(notesTd);
+
+    tbody.appendChild(tr);
+  });
+
+  // Totals row
+  const totalWR = totals.proposals > 0 ? Math.round((totals.closed/totals.proposals)*100) : 0;
+  const tr = document.createElement('tr');
+  tr.className = 'total-row';
+  tr.innerHTML = `
+    <td class="name total-label">TOTAL</td>
+    <td class="num">${totals.pipeline||'—'}</td>
+    <td class="num">${totals.demos||'—'}</td>
+    <td class="num">${totals.proposals||'—'}</td>
+    <td class="num">${totals.verbal||'—'}</td>
+    <td class="num">${totals.closed||'—'}</td>
+    <td class="num">${totals.mrr ? '$'+totals.mrr.toLocaleString() : '—'}</td>
+    <td class="num rate"><span class="${benchClass(totalWR,30)}" style="padding:3px 8px;border-radius:5px">${totalWR}%</span></td>
+    <td></td>`;
+  tbody.appendChild(tr);
+
+  document.getElementById('ae-badge').textContent = `${data.aes.length} AE${data.aes.length!==1?'s':''}`;
+  updateKpi('kpi-pipeline','kv-pipeline','kb-pipeline', totals.pipeline, 10);
+}
+
+// ── MAIN RENDER ───────────────────────────────────────────────────────
+function renderAll() {
+  renderResearchers();
+  renderSDR();
+  renderAE();
+}
+
+// ── KEYBOARD SHORTCUT ─────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowLeft')  shiftDay(-1);
+  if (e.key === 'ArrowRight') shiftDay(1);
+  if (e.key === 't' || e.key === 'T') goToday();
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────
+setDate(todayStr());
+</script>
+</body>
+</html>
