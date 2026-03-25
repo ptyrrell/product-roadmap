@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FieldInsight — Cashflow Growth Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:      #080c14;
+  --s1:      #0e1422;
+  --s2:      #141d2e;
+  --s3:      #1c2840;
+  --border:  #253350;
+  --t1:      #e8f0ff;
+  --t2:      #8fa8cc;
+  --t3:      #4d6480;
+  --accent:  #3d7eff;
+  --green:   #10d97e;
+  --amber:   #f9a825;
+  --red:     #ff5252;
+  --purple:  #9c6fff;
+  --teal:    #00d4c8;
+  --pink:    #ff6b9d;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
+
+/* ── Header ── */
+.header{
+  background:linear-gradient(135deg,#080c14,#0d1428 60%,#080c14);
+  border-bottom:1px solid var(--border);
+  padding:40px 32px 32px;
+  position:relative;overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 1000px 300px at 50% -50px,rgba(61,126,255,.1),transparent);
+  pointer-events:none;
+}
+.header-inner{max-width:1300px;margin:0 auto;position:relative}
+.header-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);
+  margin-bottom:14px;
+}
+.header h1{
+  font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,44px);
+  font-weight:800;letter-spacing:-1px;
+  background:linear-gradient(120deg,#e8f0ff 30%,#6aa3ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:10px;
+}
+.header-sub{font-size:15px;color:var(--t2);max-width:600px;margin-bottom:28px}
+.target-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:30px;
+  background:rgba(16,217,126,.1);border:1px solid rgba(16,217,126,.3);
+  font-size:13px;font-weight:600;color:var(--green);
+}
+
+/* ── Layout ── */
+.page{max-width:1300px;margin:0 auto;padding:32px 24px 80px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.grid2,.grid3,.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+/* ── Panel ── */
+.panel{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:14px;padding:24px;
+}
+.panel-title{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.8px;color:var(--t2);
+  margin-bottom:18px;display:flex;align-items:center;gap:8px;
+}
+.panel-title span{font-size:16px}
+
+/* ── Inputs ── */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:9px 12px;border-radius:8px;
+  background:var(--s3);border:1px solid var(--border);
+  color:var(--t1);font-family:'Inter',sans-serif;font-size:14px;
+  transition:border-color .15s;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.field select option{background:var(--s2)}
+.prefix-wrap{position:relative}
+.prefix-wrap .prefix{
+  position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  font-size:13px;color:var(--t3);pointer-events:none;
+}
+.prefix-wrap input{padding-left:24px}
+
+/* ── KPI strip ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.kpi{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;
+}
+.kpi-label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.kpi-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-1px;color:var(--t1)}
+.kpi-sub{font-size:11px;color:var(--t3);margin-top:3px}
+.kpi.green .kpi-value{color:var(--green)}
+.kpi.amber .kpi-value{color:var(--amber)}
+.kpi.blue  .kpi-value{color:var(--accent)}
+.kpi.purple .kpi-value{color:var(--purple)}
+
+/* ── Milestone timeline ── */
+.milestones{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.ms{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+  position:relative;
+}
+.ms:last-child{border-bottom:none}
+.ms-dot{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;margin-top:2px;
+}
+.ms-dot.reached{background:rgba(16,217,126,.15);border:2px solid var(--green)}
+.ms-dot.next{background:rgba(61,126,255,.15);border:2px solid var(--accent);animation:pulse-ms 2s infinite}
+.ms-dot.future{background:var(--s3);border:2px solid var(--border)}
+@keyframes pulse-ms{0%,100%{box-shadow:0 0 0 0 rgba(61,126,255,.4)}50%{box-shadow:0 0 0 6px rgba(61,126,255,0)}}
+.ms-body{}
+.ms-month{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--t3);margin-bottom:2px}
+.ms-title{font-size:14px;font-weight:600;color:var(--t1)}
+.ms-detail{font-size:12px;color:var(--t2);margin-top:2px}
+.ms-mrr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-top:3px}
+
+/* ── Table ── */
+.proj-table-wrap{overflow-x:auto;margin-top:4px}
+.proj-table{width:100%;border-collapse:collapse;font-size:12px}
+.proj-table th{
+  padding:8px 12px;text-align:right;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.4px;color:var(--t3);
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.proj-table th:first-child{text-align:left}
+.proj-table td{
+  padding:7px 12px;text-align:right;border-bottom:1px solid rgba(37,51,80,.5);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);
+  white-space:nowrap;
+}
+.proj-table td:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:var(--t1)}
+.proj-table tr.hire-row td{background:rgba(61,126,255,.06)}
+.proj-table tr.target-row td{background:rgba(16,217,126,.06)}
+.proj-table tr.target-row td{color:var(--green)!important;font-weight:700}
+.proj-table .pos{color:var(--green)}
+.proj-table .neg{color:var(--red)}
+.hire-badge{
+  display:inline-block;padding:1px 7px;border-radius:10px;font-size:9px;
+  font-weight:700;margin-left:6px;font-family:'Inter',sans-serif;
+  text-transform:uppercase;letter-spacing:.3px;
+}
+.hire-badge.sdr{background:rgba(61,126,255,.2);color:var(--accent)}
+.hire-badge.ae{background:rgba(156,111,255,.2);color:var(--purple)}
+.hire-badge.us{background:rgba(249,168,37,.2);color:var(--amber)}
+
+/* ── Chart area ── */
+.chart-wrap{position:relative;height:320px;margin-top:8px}
+
+/* ── Role cards ── */
+.role-card{
+  background:var(--s2);border:1px solid var(--border);border-radius:12px;
+  padding:16px;
+}
+.role-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.role-tag{
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.role-tag.sdr{background:rgba(61,126,255,.15);color:var(--accent)}
+.role-tag.ae{background:rgba(156,111,255,.15);color:var(--purple)}
+.role-tag.us{background:rgba(249,168,37,.15);color:var(--amber)}
+.role-tag.au-target{background:rgba(16,217,126,.15);color:var(--green)}
+.role-hire-month{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3)}
+.role-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.role-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.role-metric-label{font-size:10px;color:var(--t3);margin-bottom:1px;text-transform:uppercase;letter-spacing:.3px}
+.role-metric-value{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--t1)}
+
+/* ── Save banner ── */
+.save-bar{
+  position:fixed;bottom:24px;right:24px;z-index:99;
+  background:rgba(16,217,126,.12);border:1px solid rgba(16,217,126,.3);
+  border-radius:10px;padding:10px 18px;font-size:13px;
+  color:var(--green);font-weight:500;opacity:0;
+  transition:opacity .3s;pointer-events:none;
+}
+.save-bar.show{opacity:1}
+
+/* ── Section heading ── */
+.section-heading{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  color:var(--t1);margin:28px 0 14px;display:flex;align-items:center;gap:10px;
+}
+.section-heading::after{content:'';flex:1;height:1px;background:var(--border);margin-left:8px}
+
+/* ── Progress bar ── */
+.progress-wrap{margin-top:12px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+.progress-label span:first-child{color:var(--t2)}
+.progress-label span:last-child{font-family:'JetBrains Mono',monospace;color:var(--green)}
+.progress-track{height:8px;background:var(--s3);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .5s ease}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-eyebrow">📈 FieldInsight Growth Planning</div>
+    <h1>Cashflow Growth Plan</h1>
+    <p class="header-sub">Model when you can hire to grow the AU + US sales team and track the path to 10 sales/month.</p>
+    <div class="target-badge">🎯 AU Target: 10 Sales / Month</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── KPI strip ── -->
+  <div class="kpi-strip" id="kpiStrip">
+    <div class="kpi blue">
+      <div class="kpi-label">Current MRR</div>
+      <div class="kpi-value" id="kpiMRR">–</div>
+      <div class="kpi-sub">Monthly recurring revenue</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Current Sales/Mo</div>
+      <div class="kpi-value" id="kpiSales">–</div>
+      <div class="kpi-sub">AU team this month</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Months to Target</div>
+      <div class="kpi-value" id="kpiMonths">–</div>
+      <div class="kpi-sub">To reach 10 sales/mo AU</div>
+    </div>
+    <div class="kpi purple">
+      <div class="kpi-label">Next Hire</div>
+      <div class="kpi-value" id="kpiNextHire">–</div>
+      <div class="kpi-sub">When cashflow supports it</div>
+    </div>
+  </div>
+
+  <!-- ── Inputs ── -->
+  <div class="grid2" style="margin-bottom:24px">
+
+    <!-- Current State -->
+    <div class="panel">
+      <div class="panel-title"><span>💰</span> Current State</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Current MRR ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inMRR" value="45000" min="0" step="1000" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>Monthly Costs ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inCosts" value="38000" min="0" step="1000" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>Avg Deal Size / MRR ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inDeal" value="800" min="100" step="100" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>Current AU Sales/Mo</label>
+          <input type="number" id="inSales" value="3" min="0" step="0.5" oninput="recalc()"/>
+        </div>
+        <div class="field">
+          <label>Monthly Churn Rate (%)</label>
+          <input type="number" id="inChurn" value="2" min="0" max="20" step="0.5" oninput="recalc()"/>
+        </div>
+        <div class="field">
+          <label>Cash Buffer (months)</label>
+          <input type="number" id="inBuffer" value="3" min="1" max="6" step="1" oninput="recalc()"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Costs -->
+    <div class="panel">
+      <div class="panel-title"><span>👥</span> Hire Costs (Monthly Salary)</div>
+      <div class="grid2">
+        <div class="field">
+          <label>AU SDR Cost/Mo ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inSDRCost" value="6500" min="0" step="500" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>AU AE Cost/Mo ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inAECost" value="9000" min="0" step="500" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>US AE Cost/Mo ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inUSCost" value="14000" min="0" step="500" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>US SDR Cost/Mo ($)</label>
+          <div class="prefix-wrap"><span class="prefix">$</span>
+          <input type="number" id="inUSSdrCost" value="8000" min="0" step="500" oninput="recalc()"/></div>
+        </div>
+        <div class="field">
+          <label>SDR → Deals/Mo (quota)</label>
+          <input type="number" id="inSDRQuota" value="1.5" min="0.5" max="10" step="0.5" oninput="recalc()"/>
+        </div>
+        <div class="field">
+          <label>AE → Deals/Mo (quota)</label>
+          <input type="number" id="inAEQuota" value="2" min="0.5" max="10" step="0.5" oninput="recalc()"/>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Progress to target ── -->
+  <div class="panel" style="margin-bottom:24px">
+    <div class="panel-title"><span>🎯</span> Progress to 10 Sales/Month (AU)</div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Current AU pace</span>
+        <span id="progLabel">0 / 10 sales/mo</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+    <div id="roleCards" class="grid4" style="margin-top:20px"></div>
+  </div>
+
+  <!-- ── Chart ── -->
+  <div class="section-heading">📊 Revenue & Cashflow Projection (24 months)</div>
+  <div class="panel" style="margin-bottom:24px">
+    <div class="chart-wrap"><canvas id="growthChart"></canvas></div>
+  </div>
+
+  <!-- ── Milestones + Table ── -->
+  <div class="grid2" style="margin-bottom:24px">
+
+    <div class="panel">
+      <div class="panel-title"><span>🏁</span> Hire Milestones</div>
+      <div class="milestones" id="milestones"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span>📋</span> Monthly Projection</div>
+      <div class="proj-table-wrap">
+        <table class="proj-table" id="projTable">
+          <thead>
+            <tr>
+              <th style="text-align:left">Month</th>
+              <th>MRR</th>
+              <th>Sales</th>
+              <th>Cashflow</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="projBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="save-bar" id="saveBar">✓ Saved</div>
+
+<script>
+const STORAGE_KEY = 'fi-growth-plan-v1';
+let chartInstance = null;
+
+// ── Persist inputs ─────────────────────────────────────────────
+const INPUT_IDS = ['inMRR','inCosts','inDeal','inSales','inChurn','inBuffer',
+                   'inSDRCost','inAECost','inUSCost','inUSSdrCost','inSDRQuota','inAEQuota'];
+
+function save() {
+  const data = {};
+  INPUT_IDS.forEach(id => data[id] = document.getElementById(id).value);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const bar = document.getElementById('saveBar');
+  bar.classList.add('show');
+  clearTimeout(save._t);
+  save._t = setTimeout(() => bar.classList.remove('show'), 1800);
+}
+
+function load() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    INPUT_IDS.forEach(id => { if (data[id] !== undefined) document.getElementById(id).value = data[id]; });
+  } catch(e) {}
+}
+
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+// ── Core projection ────────────────────────────────────────────
+function project() {
+  const mrr0      = v('inMRR');
+  const costs0    = v('inCosts');
+  const dealMRR   = v('inDeal');
+  const sales0    = v('inSales');
+  const churnPct  = v('inChurn') / 100;
+  const buffer    = v('inBuffer');
+  const sdrCost   = v('inSDRCost');
+  const aeCost    = v('inAECost');
+  const usCost    = v('inUSCost');
+  const usSdrCost = v('inUSSdrCost');
+  const sdrQuota  = v('inSDRQuota');
+  const aeQuota   = v('inAEQuota');
+
+  // Headcount: start with 1 AE (Paul equivalent), track additions
+  let team = { auAE: 1, auSDR: 0, usAE: 0, usSDR: 0 };
+  let mrr  = mrr0;
+  let costs = costs0;
+  let sales = sales0; // AU team current
+  const months = [];
+  const hireEvents = [];
+
+  // Hire plan order: AU SDR → AU AE → US SDR → US AE → AU AE again → ...
+  // Trigger: cashflow surplus > buffer * newHireCost for 2 consecutive months
+  let surplusStreak = 0;
+  let nextHireType = 'AU SDR';
+
+  const hireOrder = ['AU SDR','AU AE','AU AE','US SDR','US AE','AU AE','AU SDR','US AE','AU AE'];
+  let hireIdx = 0;
+
+  for (let m = 1; m <= 24; m++) {
+    // Churn & new sales add to MRR
+    const churnLoss = mrr * churnPct;
+    const newSalesMRR = sales * dealMRR;
+    mrr = mrr - churnLoss + newSalesMRR;
+
+    // Sales capacity based on team
+    const auSalesCap = team.auAE * aeQuota + team.auSDR * sdrQuota;
+    sales = Math.max(sales0, auSalesCap); // can't go below starting
+
+    const cashflow = mrr - costs;
+
+    // Hire decision
+    let hireThis = null;
+    if (hireIdx < hireOrder.length) {
+      const nextHire = hireOrder[hireIdx];
+      const nextCost = hireCost(nextHire, sdrCost, aeCost, usCost, usSdrCost);
+      if (cashflow > nextCost * buffer) {
+        surplusStreak++;
+        if (surplusStreak >= 1) { // fire on first month that cashflow supports it
+          hireThis = nextHire;
+          team = addToTeam(team, nextHire);
+          costs += nextCost;
+          hireEvents.push({ month: m, type: nextHire, mrr: Math.round(mrr), cashflow: Math.round(cashflow) });
+          hireIdx++;
+          surplusStreak = 0;
+        }
+      } else {
+        surplusStreak = 0;
+      }
+    }
+
+    months.push({
+      m, mrr: Math.round(mrr), costs: Math.round(costs),
+      cashflow: Math.round(cashflow), sales: Math.round(sales * 10) / 10,
+      team: { ...team }, hire: hireThis,
+      isTarget: sales >= 10 && months.every(mo => mo.sales < 10),
+    });
+  }
+
+  return { months, hireEvents, team };
+}
+
+function hireCost(type, sdr, ae, us, usSdr) {
+  if (type === 'AU SDR') return sdr;
+  if (type === 'AU AE')  return ae;
+  if (type === 'US AE')  return us;
+  if (type === 'US SDR') return usSdr;
+  return ae;
+}
+
+function addToTeam(t, type) {
+  const team = {...t};
+  if (type === 'AU SDR') team.auSDR++;
+  if (type === 'AU AE')  team.auAE++;
+  if (type === 'US AE')  team.usAE++;
+  if (type === 'US SDR') team.usSDR++;
+  return team;
+}
+
+function monthLabel(m) {
+  const d = new Date();
+  d.setMonth(d.getMonth() + m);
+  return d.toLocaleDateString('en-AU', { month: 'short', year: '2-digit' });
+}
+
+// ── Render ─────────────────────────────────────────────────────
+function recalc() {
+  save();
+  const { months, hireEvents } = project();
+  const mrr0  = v('inMRR');
+  const sales0 = v('inSales');
+
+  // KPIs
+  document.getElementById('kpiMRR').textContent   = '$' + fmt(mrr0);
+  document.getElementById('kpiSales').textContent = sales0;
+
+  const targetMonth = months.find(m => m.sales >= 10);
+  document.getElementById('kpiMonths').textContent = targetMonth ? targetMonth.m : '24+';
+
+  const nextHireEvent = hireEvents[0];
+  document.getElementById('kpiNextHire').textContent = nextHireEvent ? monthLabel(nextHireEvent.month) : 'Now!';
+
+  // Progress bar
+  const pct = Math.min(100, (sales0 / 10) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progLabel').textContent = `${sales0} / 10 sales/mo`;
+
+  // Role cards
+  const finalTeam = months[months.length - 1].team;
+  const sdrQuota  = v('inSDRQuota');
+  const aeQuota   = v('inAEQuota');
+  const auSalesCap = finalTeam.auAE * aeQuota + finalTeam.auSDR * sdrQuota;
+
+  document.getElementById('roleCards').innerHTML = [
+    { tag:'au-target', icon:'🎯', name:'AU 10 Sales/Mo', hire: targetMonth ? monthLabel(targetMonth.m) : '24+ mo',
+      m1:'Target', v1:'10 deals/mo', m2:'Current', v2:`${sales0} deals/mo` },
+    { tag:'sdr', icon:'📞', name:'AU SDR',
+      hire: hireEvents.find(e=>e.type==='AU SDR') ? monthLabel(hireEvents.find(e=>e.type==='AU SDR').month) : 'TBD',
+      m1:'Quota', v1:`${sdrQuota} deals/mo`, m2:'Final count', v2:`${finalTeam.auSDR}` },
+    { tag:'ae', icon:'🤝', name:'AU Account Exec',
+      hire: hireEvents.find(e=>e.type==='AU AE') ? monthLabel(hireEvents.find(e=>e.type==='AU AE').month) : 'TBD',
+      m1:'Quota', v1:`${aeQuota} deals/mo`, m2:'Final count', v2:`${finalTeam.auAE}` },
+    { tag:'us', icon:'🇺🇸', name:'US AE / SDR',
+      hire: hireEvents.find(e=>e.type==='US AE'||e.type==='US SDR') ? monthLabel(hireEvents.find(e=>e.type==='US AE'||e.type==='US SDR').month) : 'TBD',
+      m1:'US AE', v1:`${finalTeam.usAE}`, m2:'US SDR', v2:`${finalTeam.usSDR}` },
+  ].map(r => `
+    <div class="role-card">
+      <div class="role-card-head">
+        <span class="role-tag ${r.tag}">${r.tag === 'au-target' ? '🎯 AU Target' : r.tag.toUpperCase()}</span>
+        <span class="role-hire-month">${r.hire}</span>
+      </div>
+      <div class="role-name">${r.icon} ${r.name}</div>
+      <div class="role-metrics">
+        <div><div class="role-metric-label">${r.m1}</div><div class="role-metric-value">${r.v1}</div></div>
+        <div><div class="role-metric-label">${r.m2}</div><div class="role-metric-value">${r.v2}</div></div>
+      </div>
+    </div>`).join('');
+
+  // Chart
+  const labels  = months.map(m => monthLabel(m.m));
+  const mrrData = months.map(m => m.mrr);
+  const cfData  = months.map(m => m.cashflow);
+  const salesData = months.map(m => m.sales);
+
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(document.getElementById('growthChart'), {
+    data: {
+      labels,
+      datasets: [
+        {
+          type:'line', label:'MRR', data: mrrData, yAxisID:'yMRR',
+          borderColor:'#3d7eff', backgroundColor:'rgba(61,126,255,.08)',
+          borderWidth:2, pointRadius:2, fill:true, tension:.35,
+        },
+        {
+          type:'line', label:'Cashflow', data: cfData, yAxisID:'yMRR',
+          borderColor:'#10d97e', backgroundColor:'rgba(16,217,126,.05)',
+          borderWidth:2, pointRadius:2, fill:true, tension:.35,
+          borderDash:[4,3],
+        },
+        {
+          type:'bar', label:'Sales/Mo (AU)', data: salesData, yAxisID:'ySales',
+          backgroundColor: salesData.map(s => s >= 10 ? 'rgba(16,217,126,.4)' : 'rgba(61,126,255,.25)'),
+          borderRadius:4,
+        },
+      ],
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ labels:{ color:'#8fa8cc', font:{ family:'Inter', size:11 }, boxWidth:12 } },
+        tooltip:{
+          backgroundColor:'#141d2e', borderColor:'#253350', borderWidth:1,
+          titleColor:'#e8f0ff', bodyColor:'#8fa8cc',
+          callbacks:{
+            label: ctx => {
+              if (ctx.datasetIndex < 2) return ` ${ctx.dataset.label}: $${fmt(ctx.raw)}`;
+              return ` Sales/Mo: ${ctx.raw}`;
+            }
+          }
+        },
+        annotation: {},
+      },
+      scales:{
+        x:{ ticks:{ color:'#4d6480', font:{size:10}, maxRotation:45 }, grid:{ color:'rgba(37,51,80,.4)' } },
+        yMRR:{ position:'left', ticks:{ color:'#4d6480', font:{size:10}, callback: v => '$'+fmt(v) }, grid:{ color:'rgba(37,51,80,.4)' } },
+        ySales:{ position:'right', max:14, ticks:{ color:'#4d6480', font:{size:10} }, grid:{ display:false } },
+      },
+    },
+  });
+
+  // Milestones
+  document.getElementById('milestones').innerHTML = [
+    { icon:'🚀', title:'Now — Start', detail:`${sales0} sales/mo · MRR $${fmt(mrr0)}`, month:0, type:'current' },
+    ...hireEvents.slice(0,6).map(e => ({
+      icon: e.type==='AU SDR'?'📞':e.type==='AU AE'?'🤝':e.type==='US AE'?'🇺🇸':'📱',
+      title:`Hire ${e.type}`,
+      detail:`Cashflow $${fmt(e.cashflow)}/mo · MRR $${fmt(e.mrr)}`,
+      month: e.month, type:'hire', badge: e.type,
+    })),
+    ...(targetMonth ? [{ icon:'🎯', title:'10 Sales/Mo — AU Target Reached!',
+      detail:`MRR $${fmt(targetMonth.mrr)} · Month ${targetMonth.m}`, month: targetMonth.m, type:'target' }] : []),
+  ].map((ms, i, arr) => {
+    const cls = ms.month === 0 ? 'reached' : (i === 1 ? 'next' : (ms.type === 'target' ? 'reached' : 'future'));
+    const badgeHTML = ms.badge
+      ? `<span class="hire-badge ${ms.badge.toLowerCase().includes('sdr')?'sdr':ms.badge.toLowerCase().includes('us')?'us':'ae'}">${ms.badge}</span>`
+      : '';
+    return `
+      <div class="ms">
+        <div class="ms-dot ${cls}">${ms.icon}</div>
+        <div class="ms-body">
+          <div class="ms-month">${ms.month === 0 ? 'Today' : monthLabel(ms.month)}${badgeHTML}</div>
+          <div class="ms-title">${ms.title}</div>
+          <div class="ms-detail">${ms.detail}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Table (first 18 months)
+  document.getElementById('projBody').innerHTML = months.slice(0,18).map(m => {
+    const hireBadge = m.hire
+      ? `<span class="hire-badge ${m.hire.toLowerCase().includes('sdr')?'sdr':m.hire.toLowerCase().includes('us')?'us':'ae'}">+ ${m.hire}</span>`
+      : '';
+    const cfClass = m.cashflow >= 0 ? 'pos' : 'neg';
+    const rowClass = m.hire ? 'hire-row' : (m.sales >= 10 ? 'target-row' : '');
+    return `<tr class="${rowClass}">
+      <td>${monthLabel(m.m)}</td>
+      <td>$${fmt(m.mrr)}</td>
+      <td>${m.sales}</td>
+      <td class="${cfClass}">$${fmt(m.cashflow)}</td>
+      <td>${hireBadge}${m.isTarget ? '<span class="hire-badge ae">🎯 Target!</span>' : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function fmt(n) {
+  if (Math.abs(n) >= 1000) return (n/1000).toFixed(1)+'k';
+  return Math.round(n).toString();
+}
+
+// ── Init ──────────────────────────────────────────────────────
+load();
+recalc();
+</script>
+</body>
+</html>
