@@ -151,6 +151,8 @@
     .card.hidden { display: none; }
 
     .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.35; margin-bottom: 0.45rem; padding-left: 6px; }
+    .ticket-id { display: inline-block; font-family: 'Courier New', monospace; font-size: 0.68rem; font-weight: 700; color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 1px 6px; margin-bottom: 5px; letter-spacing: 0.03em; }
+    .card-flow-img { width: 100%; border-radius: 8px; margin: 10px 0 6px; border: 1px solid rgba(255,255,255,0.08); display: block; }
     .card-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.65rem; padding-left: 6px; }
     .card-meta { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; padding-left: 6px; }
 
@@ -255,6 +257,7 @@
       <div class="col-header"><span class="dot"></span><span class="col-label">Active</span></div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-001</div>
         <div class="card-title">Email / SMS / VOIP Scheduler</div>
         <div class="card-desc">Two-way customer communication across Email, SMS, and VOIP — threaded inside the job record. AI-powered intent model built on Claude, interchangeable with Grok.</div>
         <div class="card-meta">
@@ -279,6 +282,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-002</div>
         <div class="card-title">PO Multi-Supplier Price Books</div>
         <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
         <div class="card-meta">
@@ -299,6 +303,7 @@
       </div>
 
       <div class="card" data-cat="product">
+        <div class="ticket-id">FI-003</div>
         <div class="card-title">Bill Importer</div>
         <div class="card-desc">Import supplier bills and invoices directly into FieldInsight from email, PDF, or CSV. Auto-match to jobs and purchase orders. Reduce manual data entry for the office team.</div>
         <div class="card-meta">
@@ -344,6 +349,7 @@
       <div class="col-header"><span class="dot"></span><span class="col-label">Pending</span></div>
 
       <div class="card" data-cat="salesops product">
+        <div class="ticket-id">FI-004</div>
         <div class="card-title">Upgrade Link — Sales Team Tool</div>
         <div class="card-desc">Smart upsell page for the sales team. Pre-fills customer context, tracks click + conversion per rep. Defined — waiting on priority slot.</div>
         <div class="card-meta">
@@ -361,6 +367,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-005</div>
         <div class="card-title">Onboarding Support Workflows — AI</div>
         <div class="card-desc">Guided onboarding flows powered by AI. Triggered by usage signals — reduces support load and accelerates activation.</div>
         <div class="card-meta">
@@ -380,6 +387,7 @@
       </div>
 
       <div class="card" data-cat="design product ceo">
+        <div class="ticket-id">FI-006</div>
         <div class="card-title">Business Insights via Data Ontologies</div>
         <div class="card-desc">Actionable business intelligence from customer operational data — jobs, technicians, invoices, assets — structured via ontologies.</div>
         <div class="card-meta">
@@ -400,6 +408,7 @@
       </div>
 
       <div class="card" data-cat="salesops ceo">
+        <div class="ticket-id">FI-007</div>
         <div class="card-title">Sales Metrics — SDR + AE Daily Tracker</div>
         <div class="card-desc">Unified daily scorecard covering both SDR pipeline metrics and AE deal-stage tracking. Flags stale deals and missing next actions.</div>
         <div class="card-meta">
@@ -423,6 +432,7 @@
       <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
 
       <div class="card" data-cat="product infra">
+        <div class="ticket-id">FI-008</div>
         <div class="card-title">IoT — HVAC Fault Monitoring &amp; SMS Alerts (Daikin / Mitsubishi / Panasonic)</div>
         <div class="card-desc">Hardware-to-cloud pipeline: a configurable IoT SMS device wired or wirelessly connected to the HVAC controller captures fault codes and sends SMS alerts to the FieldInsight platform before the customer knows anything is wrong. Proactive outreach turns reactive callouts into a predictive service revenue stream. Supports Daikin, Mitsubishi Electric, and Panasonic across VRF/VRV commercial and split system residential.</div>
         <div class="card-meta">
@@ -452,27 +462,10 @@
       </div>
 
       <div class="card" data-cat="design product">
-        <div class="card-title">Tech Job Notes — Field Workflow</div>
-        <div class="card-desc">Structured job notes workflow for technicians in the field. Techs capture what they found, what they did, and what's required next — directly inside the job record from mobile. Notes flow through to the scheduler, office staff, and the client-facing summary. Replaces unstructured free-text with guided capture that's useful downstream.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-design">🎨 Design</span>
-          <span class="badge badge-product">🏗 Product</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>Mobile-first note entry on the job record (tech view)</li>
-          <li>Note type selector: Service Notes · Quote Required · Defect Found · Defect + Quote · Follow-up Required</li>
-          <li>Scheduler job notes panel — office view of all tech notes per job</li>
-          <li>Notes visible to office on job card before tech returns</li>
-          <li>Note history timeline — who wrote what, when</li>
-          <li>Attach photos to a note (evidence, defects, readings)</li>
-          <li>Client-facing note summary (sanitised) for job completion email</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="design product">
-        <div class="card-title">Job Notes AI Enhancer — Prompt Library</div>
-        <div class="card-desc">AI layer on top of tech job notes. The tech writes rough notes in the field and the AI enhances them into professional, structured output based on the selected prompt type. A built-in prompt library covers the most common note scenarios, with a default prompt to get started. Prompts are editable and extensible.</div>
+        <div class="ticket-id">FI-009</div>
+        <div class="card-title">AI Notes Enhancer — Voice to Job Notes</div>
+        <div class="card-desc">Tech taps <strong>Voice Log</strong> on the mobile job record, speaks their notes naturally, watches the word count tick up live, then gets a polished AI-enhanced note ready to save — same interaction pattern as the VOIP scheduler (speak → processing pause → clean output). Notes flow to the scheduler, office staff, and the client-facing job summary.</div>
+        <img src="fi-voice-notes-flow.png" alt="AI Notes Enhancer mobile flow: Voice Log button → processing dialog → enhanced note result" class="card-flow-img"/>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
@@ -480,21 +473,29 @@
           <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
         </div>
         <div class="outcomes"><ul>
-          <li>One-tap "Enhance with AI" button on the notes field</li>
-          <li><strong>Default prompt library:</strong></li>
-          <li>📋 Service Notes — clean professional summary of work performed</li>
-          <li>💰 Build a Quote — structured scope + cost summary from rough notes</li>
+          <li><strong>Voice flow (as per VOIP Scheduler UX):</strong></li>
+          <li>① Tap <em>Voice Log</em> — microphone activates on job record</li>
+          <li>② Speak freely — live word count displayed as you talk</li>
+          <li>③ Processing pause — "Message being processed…" with animated dots</li>
+          <li>④ AI-enhanced note appears — reviewed by tech before saving</li>
+          <li>⑤ Actions: Save · SMS note to client · Voice Log again</li>
+          <li><strong>Prompt library (select before speaking):</strong></li>
+          <li>📋 Service Notes — professional summary of work performed</li>
+          <li>💰 Build a Quote — structured scope + cost from rough description</li>
           <li>⚠️ Defect Found — plain-language defect description for client</li>
-          <li>⚠️💰 Defect Found + Quote Required — defect detail plus scoped remediation quote</li>
-          <li>🔁 Follow-up / Return Visit Required — outline what's outstanding and why</li>
-          <li>Prompt picker UI — select before enhancing, preview result</li>
-          <li>Editable prompts — office admin can customise any prompt or add new ones</li>
-          <li>AI output is editable — tech reviews before saving</li>
-          <li>Scheduler view shows original + AI-enhanced version side-by-side</li>
+          <li>⚠️💰 Defect Found + Quote Required — defect detail + remediation scope</li>
+          <li>🔁 Follow-up / Return Visit — what's outstanding and why</li>
+          <li>Note type selector on job record: Service Notes · Quote · Defect · Defect+Quote · Follow-up</li>
+          <li>Scheduler panel — office sees all tech notes per job in real time</li>
+          <li>Editable prompts — admin customises or adds new prompt types</li>
+          <li>Original voice transcript + AI output shown side-by-side in scheduler</li>
+          <li>Photo attachments to note — evidence, defect photos, meter readings</li>
+          <li>Client-facing sanitised summary auto-included in job completion email</li>
         </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-010</div>
         <div class="card-title">Asset Management Improvements</div>
         <div class="card-desc">Enhanced asset tracking, service history, and warranty management.</div>
         <div class="card-meta">
@@ -505,6 +506,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-011</div>
         <div class="card-title">Recurring Job Templates</div>
         <div class="card-desc">Schedule and auto-generate recurring maintenance jobs from templates.</div>
         <div class="card-meta">
@@ -515,6 +517,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-012</div>
         <div class="card-title">Customer Portal — Self Service</div>
         <div class="card-desc">Let customers view their jobs, invoices, and book service online.</div>
         <div class="card-meta">
@@ -525,6 +528,7 @@
       </div>
 
       <div class="card" data-cat="product">
+        <div class="ticket-id">FI-013</div>
         <div class="card-title">AI-Optimised Routing</div>
         <div class="card-desc">Advanced scheduling using AI to optimise technician routes and reduce drive time.</div>
         <div class="card-meta">
@@ -534,6 +538,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-014</div>
         <div class="card-title">Quote Approval Workflows</div>
         <div class="card-desc">Internal approval steps before quotes are sent — manager sign-off, margin checks.</div>
         <div class="card-meta">
@@ -544,6 +549,7 @@
       </div>
 
       <div class="card" data-cat="product">
+        <div class="ticket-id">FI-015</div>
         <div class="card-title">Stripe Payment Links on Invoices</div>
         <div class="card-desc">One-click payment links embedded in invoice emails — pay online instantly.</div>
         <div class="card-meta">
@@ -553,6 +559,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-016</div>
         <div class="card-title">Voice Job Logging — IVR with Claude</div>
         <div class="card-desc">Field techs call in and speak naturally to log job details. Claude extracts structured data. Multi-model — Claude now, Grok later.</div>
         <div class="card-meta">
@@ -571,6 +578,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-017</div>
         <div class="card-title">IVR Self-Service Job Booking — B2B</div>
         <div class="card-desc">Inbound phone flow for B2B clients to book a job without speaking to a human. Twilio Voice + Claude TTS/STT.</div>
         <div class="card-meta">
@@ -588,6 +596,7 @@
       </div>
 
       <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-018</div>
         <div class="card-title">SMS Job Booking — Scheduler + Status Triggered</div>
         <div class="card-desc">Scheduler sends a booking link via SMS, or job status change triggers a self-booking request. Client replies to confirm time and details.</div>
         <div class="card-meta">
@@ -623,7 +632,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.6</div>
+    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.7</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -957,7 +966,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.9.6 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.9.7 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 25 March 2026
   &nbsp;·&nbsp;
