@@ -332,6 +332,8 @@
           <li>Voice Job Logging — IVR call flow + confirmation readback</li>
           <li>IVR Self-Service Booking — phone flow for B2B clients</li>
           <li>SMS Booking — scheduler-triggered + job status-triggered flows</li>
+          <li>Tech Job Notes — mobile note entry UX + note type selector</li>
+          <li>Job Notes AI Enhancer — prompt picker UI + enhance flow</li>
         </ul></div>
       </div>
 
@@ -436,6 +438,49 @@
           <li>Proactive SMS / email alert to client with booking CTA</li>
           <li>Technician briefed with fault history before attending site</li>
           <li>Failure trend dashboard — which units, which faults, which clients</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">Tech Job Notes — Field Workflow</div>
+        <div class="card-desc">Structured job notes workflow for technicians in the field. Techs capture what they found, what they did, and what's required next — directly inside the job record from mobile. Notes flow through to the scheduler, office staff, and the client-facing summary. Replaces unstructured free-text with guided capture that's useful downstream.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Mobile-first note entry on the job record (tech view)</li>
+          <li>Note type selector: Service Notes · Quote Required · Defect Found · Defect + Quote · Follow-up Required</li>
+          <li>Scheduler job notes panel — office view of all tech notes per job</li>
+          <li>Notes visible to office on job card before tech returns</li>
+          <li>Note history timeline — who wrote what, when</li>
+          <li>Attach photos to a note (evidence, defects, readings)</li>
+          <li>Client-facing note summary (sanitised) for job completion email</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product">
+        <div class="card-title">Job Notes AI Enhancer — Prompt Library</div>
+        <div class="card-desc">AI layer on top of tech job notes. The tech writes rough notes in the field and the AI enhances them into professional, structured output based on the selected prompt type. A built-in prompt library covers the most common note scenarios, with a default prompt to get started. Prompts are editable and extensible.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>One-tap "Enhance with AI" button on the notes field</li>
+          <li><strong>Default prompt library:</strong></li>
+          <li>📋 Service Notes — clean professional summary of work performed</li>
+          <li>💰 Build a Quote — structured scope + cost summary from rough notes</li>
+          <li>⚠️ Defect Found — plain-language defect description for client</li>
+          <li>⚠️💰 Defect Found + Quote Required — defect detail plus scoped remediation quote</li>
+          <li>🔁 Follow-up / Return Visit Required — outline what's outstanding and why</li>
+          <li>Prompt picker UI — select before enhancing, preview result</li>
+          <li>Editable prompts — office admin can customise any prompt or add new ones</li>
+          <li>AI output is editable — tech reviews before saving</li>
+          <li>Scheduler view shows original + AI-enhanced version side-by-side</li>
         </ul></div>
       </div>
 
@@ -568,7 +613,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.4</div>
+    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.5</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -902,7 +947,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.9.4 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.9.5 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 25 March 2026
   &nbsp;·&nbsp;
