@@ -423,8 +423,8 @@
       <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
 
       <div class="card" data-cat="product infra">
-        <div class="card-title">IoT — Daikin Unit Monitoring &amp; Fault Alerts</div>
-        <div class="card-desc">Hook into Daikin control panels via IoT WiFi to read live unit telemetry. Surface fault codes, temperature deviations, and performance anomalies before the customer notices a problem. Proactive outreach — "We see your unit is running hot, want us to book a check?" — turns reactive service into a predictive revenue stream.</div>
+        <div class="card-title">IoT — HVAC Fault Monitoring &amp; SMS Alerts (Daikin / Mitsubishi / Panasonic)</div>
+        <div class="card-desc">Hardware-to-cloud pipeline: a configurable IoT SMS device wired or wirelessly connected to the HVAC controller captures fault codes and sends SMS alerts to the FieldInsight platform before the customer knows anything is wrong. Proactive outreach turns reactive callouts into a predictive service revenue stream. Supports Daikin, Mitsubishi Electric, and Panasonic across VRF/VRV commercial and split system residential.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-product">🏗 Product</span>
@@ -432,12 +432,22 @@
           <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
         </div>
         <div class="outcomes"><ul>
-          <li>WiFi / IoT bridge reads Daikin BACnet / Modbus or cloud API</li>
-          <li>Fault code library maps error codes to plain-language alerts</li>
-          <li>AI triage — classify severity, recommend action, auto-create draft job</li>
-          <li>Proactive SMS / email alert to client with booking CTA</li>
-          <li>Technician briefed with fault history before attending site</li>
-          <li>Failure trend dashboard — which units, which faults, which clients</li>
+          <li><strong>Hardware options researched:</strong></li>
+          <li>📦 <strong>S270 (Kirby HVACR — AU)</strong> — 4G SMS alarm unit, 2 digital inputs (fault relay), 2 analog inputs, 240V AC + battery backup, mobile app. Best fit for AU market.</li>
+          <li>📦 <strong>AIRTEK GCSMSB</strong> — BACnet IP SMS alarm module, alerts up to 10 phones, GSM 900/1800MHz, RS232 config. Enterprise BMS grade.</li>
+          <li>📦 <strong>LifeSmart LS175 HVAC Gateway</strong> — WiFi, supports Daikin, Mitsubishi, Panasonic, Hitachi, Toshiba. Zone control + fault monitoring. QR/app setup.</li>
+          <li><strong>Brand-specific protocol adapters:</strong></li>
+          <li>🔌 <strong>Daikin</strong> — D-BACS BACnet interface (up to 512 indoor units) or DIII-NET/Modbus RS485 adapter. Daikin M2M cloud + AU monitoring app (needs BTSC/i2S adapter).</li>
+          <li>🔌 <strong>Mitsubishi Electric</strong> — MICRO M2M SMS Interface (up to 8 units, direct SMS fault codes) or PANEL_RS_SMS (includes fire alarm input). ME-AC-SMS-32 for larger installs.</li>
+          <li>🔌 <strong>Panasonic</strong> — HMS Networks MQTT Gateway (ECOi/PACi to AWS/Azure), CZ-CFUNC2 BMS serial adapter, or PAW-AC-MBS-1 Modbus interface.</li>
+          <li><strong>Configuration methods:</strong> WiFi app · Bluetooth · QR code scan · RS485 wired · BACnet IP</li>
+          <li><strong>FieldInsight integration layer:</strong></li>
+          <li>Inbound SMS fault webhook → parse fault code → lookup error library → classify severity</li>
+          <li>AI triage: recommend action, auto-draft job, assign technician</li>
+          <li>Proactive client SMS/email: "We detected a fault on your unit — want us to book a check?"</li>
+          <li>Technician briefed with full fault history before attending site</li>
+          <li>Failure trend dashboard — units, fault types, clients, repeat offenders</li>
+          <li><strong>Next step:</strong> Evaluate S270 (AU 4G) + Daikin DIII-NET Modbus adapter as pilot hardware stack</li>
         </ul></div>
       </div>
 
@@ -613,7 +623,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.5</div>
+    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.6</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -947,7 +957,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.9.5 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.9.6 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 25 March 2026
   &nbsp;·&nbsp;
