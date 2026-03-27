@@ -5,6 +5,17 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.1 — 2026-03-27
+
+### Updated
+- FI-002 + FI-003 merged into single card — prototype now covers full supplier invoice workflow
+- FI-002 spec updated to reflect prototype v0.7.7: Claude Vision parser, split-pane Bill Detail, PO line items table, code matching, per-supplier markup, sync to PO/Job, Bill Markup card
+- Added ⚡ AI Powered badge to FI-002/003 card
+- Added link to full spec + AI prompts in PROTOTYPES.md
+- Last updated date corrected to 27 March 2026
+
+---
+
 ## v0.3.0 — 2026-03-16
 
 ### Added
