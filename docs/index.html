@@ -190,6 +190,114 @@
     footer { text-align: center; padding: 2rem; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
+
+    /* ── Strategy page ── */
+    .strat-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+    .strat-hero { margin-bottom: 2.5rem; }
+    .strat-hero h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+    .strat-hero p  { color: var(--muted); margin-top: 0.4rem; font-size: 0.9rem; }
+
+    /* Goal banners */
+    .goal-banner {
+      border-radius: 14px; padding: 1.6rem 2rem; margin-bottom: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .goal-banner.au {
+      background: linear-gradient(135deg, rgba(0,229,176,0.07), rgba(0,229,176,0.02));
+      border: 1px solid rgba(0,229,176,0.35);
+    }
+    .goal-banner.us {
+      background: linear-gradient(135deg, rgba(61,126,255,0.08), rgba(124,107,240,0.05));
+      border: 1px solid rgba(61,126,255,0.35);
+    }
+    .goal-flag  { font-size: 2rem; margin-right: 0.6rem; }
+    .goal-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .goal-label.au { color: var(--now); }
+    .goal-label.us { color: #60a5fa; }
+    .goal-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .goal-deadline {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.5px;
+      padding: 3px 10px; border-radius: 20px; margin-left: 0.5rem;
+    }
+    .goal-deadline.au { background: rgba(0,229,176,0.15); color: var(--now); border: 1px solid rgba(0,229,176,0.4); }
+    .goal-deadline.us { background: rgba(61,126,255,0.15); color: #60a5fa; border: 1px solid rgba(61,126,255,0.4); }
+    .goal-sub  { color: var(--muted); font-size: 0.82rem; margin-top: 0.5rem; line-height: 1.6; }
+
+    /* Section heading */
+    .strat-section { margin-bottom: 2.5rem; }
+    .strat-section-title {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--border); border-radius: 2px; }
+    .tl-item { position: relative; padding: 0 0 1.8rem 1.4rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -1.4rem; top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center;
+    }
+    .tl-dot.done   { background: var(--done); }
+    .tl-dot.active { background: var(--active); box-shadow: 0 0 8px var(--active); }
+    .tl-dot.next   { background: var(--next); }
+    .tl-dot.future { background: var(--border); }
+    .tl-date  { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 0.2rem; }
+    .tl-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .tl-desc  { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+    .tl-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .tl-chip  {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3px;
+      padding: 2px 8px; border-radius: 20px;
+      background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+    }
+    .tl-chip.gate  { background: rgba(255,107,107,0.12); color: var(--high); border-color: rgba(255,107,107,0.35); }
+    .tl-chip.green { background: rgba(0,229,176,0.1);    color: var(--now);  border-color: rgba(0,229,176,0.3); }
+    .tl-chip.blue  { background: rgba(61,126,255,0.12);  color: #60a5fa;     border-color: rgba(61,126,255,0.3); }
+    .tl-chip.amber { background: rgba(255,169,77,0.12);  color: var(--med);  border-color: rgba(255,169,77,0.3); }
+
+    /* Budget table */
+    .budget-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) { .budget-grid { grid-template-columns: 1fr; } }
+    .budget-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+    }
+    .budget-card-title { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.85rem; }
+    .budget-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.8rem; }
+    .budget-row:last-child { border-bottom: none; }
+    .budget-role { color: var(--text); }
+    .budget-type { font-size: 0.67rem; color: var(--muted); margin-left: 0.4rem; }
+    .budget-cost { font-weight: 700; color: var(--now); white-space: nowrap; }
+    .budget-total { display: flex; justify-content: space-between; align-items: baseline; padding: 0.6rem 0 0; margin-top: 0.4rem; border-top: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; }
+    .budget-total-label { color: var(--muted); }
+    .budget-total-val   { color: var(--text); }
+
+    /* Risk / open questions */
+    .question-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .question-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.85rem 1rem; font-size: 0.8rem;
+    }
+    .q-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .q-text { color: var(--text); line-height: 1.5; }
+    .q-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* Progress bar */
+    .progress-wrap { margin: 0.5rem 0 1.2rem; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .progress-track { height: 8px; background: var(--surface2); border-radius: 8px; overflow: hidden; }
+    .progress-fill  { height: 100%; border-radius: 8px; transition: width 1s ease; }
+    .progress-fill.au { background: linear-gradient(90deg, var(--now), #00b890); }
+    .progress-fill.us { background: linear-gradient(90deg, #60a5fa, var(--accent)); }
   </style>
 </head>
 <body>
@@ -202,6 +310,7 @@
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
+    <button class="tab" onclick="switchView('strategy', event)">🎯 Strategic Targets</button>
   </div>
 </nav>
 
@@ -1057,6 +1166,225 @@
   &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/customer-ideas.html" target="_blank">💡 Share an Idea</a>
 </footer>
+
+<!-- ════════════════════════════════════════════════════════════
+     STRATEGIC TARGETS
+     ════════════════════════════════════════════════════════════ -->
+<div id="view-strategy" class="view">
+<div class="strat-wrap">
+
+  <div class="strat-hero">
+    <h1>Strategic Targets</h1>
+    <p>Growth goals, market entry plans, and budget for AU scale &amp; US launch.</p>
+  </div>
+
+  <!-- ── Goal Banners ── -->
+  <div class="goal-banner au">
+    <div class="goal-label au">🇦🇺 Australia — Primary Market</div>
+    <div class="goal-title">
+      <span class="goal-flag">🎯</span>
+      10 Sales per Month
+      <span class="goal-deadline au">Target: June 2026</span>
+    </div>
+    <div class="goal-sub">Scale the AU business to 10 closed/won deals per month. Tim + Jay SDR team, improved demo conversion, and onboarding efficiency are the key levers. Currently tracking ~5–6/month.</div>
+    <div class="progress-wrap" style="margin-top:1rem">
+      <div class="progress-label"><span>Current pace ~5–6/mo</span><span>Target 10/mo · June 2026</span></div>
+      <div class="progress-track"><div class="progress-fill au" style="width:55%"></div></div>
+    </div>
+  </div>
+
+  <div class="goal-banner us">
+    <div class="goal-label us">🇺🇸 United States — New Market</div>
+    <div class="goal-title">
+      <span class="goal-flag">🚀</span>
+      10 Sales per Month (US)
+      <span class="goal-deadline us">Target: Dec 2027</span>
+    </div>
+    <div class="goal-sub">Enter the US field service market — HVAC, refrigeration, electrical. Sane, staged entry: SOC 2 certification, outsourced SDR test, US-based onboarding &amp; support, then scale. 12-month ramp to 10/month.</div>
+    <div class="progress-wrap" style="margin-top:1rem">
+      <div class="progress-label"><span>Planning phase</span><span>Target 10/mo · Dec 2027</span></div>
+      <div class="progress-track"><div class="progress-fill us" style="width:8%"></div></div>
+    </div>
+  </div>
+
+  <!-- ── AU Milestone Timeline ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">🇦🇺 AU Scale — Milestones to 10/Month</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-date">Q1 2026 — Jan–Mar</div>
+        <div class="tl-title">SDR Machine Running</div>
+        <div class="tl-desc">Tim &amp; Jay hitting cadence. Kyle Tracking live. Feb: 5 wins, Mar: 2 wins. Pipeline attribution and CAC tracking active in Sales Summary.</div>
+        <div class="tl-chips"><span class="tl-chip green">✅ Done</span><span class="tl-chip">Tim + Jay SDR</span><span class="tl-chip">CAC Tracking</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">Q2 2026 — Apr–Jun</div>
+        <div class="tl-title">Hit 10 Sales / Month</div>
+        <div class="tl-desc">Increase disco → trial conversion. Tighten offer timing. Reach consistent 10 closed/won per month. CAC below $1,000. Payback under 3 months.</div>
+        <div class="tl-chips"><span class="tl-chip amber">🔥 Active Goal</span><span class="tl-chip">10/mo target</span><span class="tl-chip gate">Jun 2026 deadline</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot next"></div>
+        <div class="tl-date">Q3–Q4 2026 — Jul–Dec</div>
+        <div class="tl-title">Optimise &amp; Prepare US Foundation</div>
+        <div class="tl-desc">AU running at 10+/month. Begin SOC 2 observation period (6-month clock). Research US market fit — accounting integrations (Sage?), US-specific workflows, pricing in USD.</div>
+        <div class="tl-chips"><span class="tl-chip blue">SOC 2 starts</span><span class="tl-chip">US research</span><span class="tl-chip">AU 10/mo hold</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── US Entry Timeline ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">🇺🇸 US Entry Plan — Phased Approach</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot next"></div>
+        <div class="tl-date">Phase 1 — Jul–Dec 2026 · Pre-Launch</div>
+        <div class="tl-title">Foundations &amp; Compliance</div>
+        <div class="tl-desc">Everything needed before taking a US dollar. SOC 2 Type II observation period running. US demo environment. Legal entity or use existing AU entity with US tax advice. Research Sage integration requirement — check what accounting software US field service businesses use (QuickBooks? Sage Intacct?).</div>
+        <div class="tl-chips">
+          <span class="tl-chip gate">🔒 SOC 2 Type II — FI-020</span>
+          <span class="tl-chip gate">Legal structure</span>
+          <span class="tl-chip amber">Sage/QB research</span>
+          <span class="tl-chip blue">US demo env</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-date">Phase 2 — Jan–Jun 2027 · Soft Launch</div>
+        <div class="tl-title">Test &amp; Prove — 2–3 Sales/Month US</div>
+        <div class="tl-desc">SOC 2 report received. Begin controlled US sales motion: outsourced SDR team (2 reps, US-based, HVAC/field service experience). One US onboarding person (contractor initially). Shared AU support with US hours overlap. Target Sun Belt states — Florida, Texas, California where HVAC is year-round.</div>
+        <div class="tl-chips">
+          <span class="tl-chip gate">SOC 2 report required</span>
+          <span class="tl-chip">Outsourced SDR × 2</span>
+          <span class="tl-chip">US onboarding hire</span>
+          <span class="tl-chip amber">2–3 wins/mo target</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-date">Phase 3 — Jul–Dec 2027 · Scale</div>
+        <div class="tl-title">Scale to 10 Sales/Month US</div>
+        <div class="tl-desc">Validated playbook from Phase 2. Expand SDR team. Dedicated US support. Consider US AE if deal size warrants. Localised content, US case studies, G2/Capterra presence. Full US go-to-market running.</div>
+        <div class="tl-chips">
+          <span class="tl-chip blue">10/mo target</span>
+          <span class="tl-chip">US AE (TBD)</span>
+          <span class="tl-chip">US support hire</span>
+          <span class="tl-chip green">G2 / Capterra</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── US Budget ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">💰 US Entry Budget Estimate</div>
+    <div class="budget-grid">
+
+      <div class="budget-card">
+        <div class="budget-card-title">Phase 2 — Soft Launch (Jan–Jun 2027)</div>
+        <div class="budget-row"><span class="budget-role">Outsourced SDR Team <span class="budget-type">(2 reps, US)</span></span><span class="budget-cost">$6–10k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Onboarding Person <span class="budget-type">(contractor)</span></span><span class="budget-cost">$5–8k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Support <span class="budget-type">(AU overlap hrs)</span></span><span class="budget-cost">$2–3k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">SOC 2 Tool <span class="budget-type">(Vanta/Drata)</span></span><span class="budget-cost">~$1k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Demo + Infra <span class="budget-type"></span></span><span class="budget-cost">~$0.5k/mo</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. monthly burn</span><span class="budget-total-val">$14–22k / mo</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">One-Time Setup Costs</div>
+        <div class="budget-row"><span class="budget-role">SOC 2 Audit <span class="budget-type">(AICPA auditor)</span></span><span class="budget-cost">$20–40k</span></div>
+        <div class="budget-row"><span class="budget-role">Legal / US Entity <span class="budget-type">(Delaware LLC)</span></span><span class="budget-cost">$5–15k</span></div>
+        <div class="budget-row"><span class="budget-role">US-specific Design <span class="budget-type">(demo, collateral)</span></span><span class="budget-cost">$5–10k</span></div>
+        <div class="budget-row"><span class="budget-role">Sage / QB Integration <span class="budget-type">(if required)</span></span><span class="budget-cost">TBD</span></div>
+        <div class="budget-row"><span class="budget-role">Pen Testing <span class="budget-type">(SOC 2 req)</span></span><span class="budget-cost">$5–10k</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. one-time</span><span class="budget-total-val">$35–75k</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">Phase 3 — Scale (Jul–Dec 2027)</div>
+        <div class="budget-row"><span class="budget-role">SDR Team <span class="budget-type">(expand to 4)</span></span><span class="budget-cost">$12–20k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US AE <span class="budget-type">(if deal size warrants)</span></span><span class="budget-cost">$8–12k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Onboarding <span class="budget-type">(full-time)</span></span><span class="budget-cost">$6–8k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Dedicated Support</span><span class="budget-cost">$4–6k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">Marketing / Content <span class="budget-type">(US)</span></span><span class="budget-cost">$2–4k/mo</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. monthly burn at scale</span><span class="budget-total-val">$32–50k / mo</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">CAC Target — US Market</div>
+        <div class="budget-row"><span class="budget-role">Phase 2 target CAC <span class="budget-type">(2–3 wins/mo)</span></span><span class="budget-cost">&lt; $6,000</span></div>
+        <div class="budget-row"><span class="budget-role">Phase 3 target CAC <span class="budget-type">(10 wins/mo)</span></span><span class="budget-cost">&lt; $3,500</span></div>
+        <div class="budget-row"><span class="budget-role">Target avg US MRR <span class="budget-type">(USD)</span></span><span class="budget-cost">$500–800</span></div>
+        <div class="budget-row"><span class="budget-role">Target payback <span class="budget-type">(Phase 3)</span></span><span class="budget-cost">&lt; 8 months</span></div>
+        <div class="budget-row"><span class="budget-role">Break-even MRR <span class="budget-type">(Phase 2)</span></span><span class="budget-cost">~$20k MRR</span></div>
+        <div class="budget-total"><span class="budget-total-label">US break-even</span><span class="budget-total-val">~25–30 customers</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Open Questions ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">❓ Open Questions &amp; Decisions Required</div>
+    <div class="question-list">
+
+      <div class="question-item">
+        <span class="q-icon">🔗</span>
+        <div>
+          <div class="q-text"><strong>Sage Integration — is it a gate for US entry?</strong></div>
+          <div class="q-sub">US mid-market field service businesses commonly use QuickBooks, Sage 50, or Sage Intacct. FieldInsight likely has Xero/MYOB (AU-focused). Need to validate: what % of US HVAC/field service prospects use Sage vs QuickBooks? QuickBooks may be more critical. Decision: integrate before launch or sell without accounting integration initially?</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">👥</span>
+        <div>
+          <div class="q-text"><strong>Outsourced SDR team — which vendor and vertical expertise?</strong></div>
+          <div class="q-sub">Need US-based SDR team with field service / HVAC industry knowledge. Options: specialist sales outsourcers (e.g. memoryBlue, Operatix, Belkins) vs generalist BDR agencies. Must be able to speak to tradespeople and service managers. Test with 2 reps for 90 days before expanding.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🏛️</span>
+        <div>
+          <div class="q-text"><strong>US entity structure — Delaware LLC or use AU entity?</strong></div>
+          <div class="q-sub">Selling into US under AU entity is possible initially (especially for software SaaS) but creates friction with larger prospects and payroll for any US hires. Delaware LLC is cheap (~$500/yr) and standard. Decision needed before Phase 2 hiring.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🎯</span>
+        <div>
+          <div class="q-text"><strong>Target segment — which US state/vertical first?</strong></div>
+          <div class="q-sub">Recommended: Sun Belt HVAC (Florida, Texas, California) — year-round work, high volume, strong field service culture. Avoid cold-climate states initially. Size: 5–50 technicians, owner-operated or family business. Same ICP as AU.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">💵</span>
+        <div>
+          <div class="q-text"><strong>US pricing — same as AU or adjusted?</strong></div>
+          <div class="q-sub">AU pricing ~$420/mo avg MRR. US market typically supports 20–40% premium for B2B SaaS. Consider USD pricing at $499–699/mo base. Run pricing discovery in Phase 2 soft launch before locking in.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🔐</span>
+        <div>
+          <div class="q-text"><strong>SOC 2 Type II — hard gate for US enterprise, soft gate for SMB</strong></div>
+          <div class="q-sub">US SMB (&lt;50 staff) won't always ask for SOC 2. US mid-market and enterprise will require it. Decision: can we start selling to US SMB before SOC 2 report is complete (Jan 2027 soft launch without report)? Risk: lose enterprise deals. Mitigation: focus Phase 2 on SMB, pursue enterprise after report.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="updated" style="text-align:right">Last updated: 16 March 2026 &nbsp;·&nbsp; v1.0.0</div>
+</div>
+</div>
 
 <script>
   let currentView = 'fi';
