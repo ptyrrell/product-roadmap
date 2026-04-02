@@ -197,7 +197,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.8.1</span>
+    <span class="version">v1.0.0</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -224,7 +224,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 27 March 2026 &nbsp;·&nbsp; v0.8.1</div>
+    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.8.0</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -282,30 +282,42 @@
       </div>
 
       <div class="card" data-cat="design product">
-        <div class="ticket-id">FI-002 + FI-003</div>
-        <div class="card-title">PO Multi-Supplier Price Books &amp; Bill Importer</div>
-        <div class="card-desc">Full supplier invoice workflow — drag &amp; drop a PDF bill, Claude Vision parses it, line items are matched to internal codes, then synced to the linked PO and Job with markup applied. Prototype live at v0.7.7.</div>
+        <div class="ticket-id">FI-002</div>
+        <div class="card-title">PO Multi-Supplier Price Books</div>
+        <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
         <div class="card-meta">
           <span class="badge badge-active">🔥 Active</span>
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
           <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
-          <span class="badge" style="background:rgba(139,92,246,0.15);color:#a78bfa">⚡ AI Powered</span>
         </div>
         <div class="outcomes"><ul>
-          <li><strong>Core workflow:</strong> PO raised → supplier invoice received → drag &amp; drop PDF → Claude Vision parses → codes matched → sync to PO → sync to Job</li>
-          <li><strong>Bill Detail — split-pane UI:</strong> draggable left/right pane resize. Left: PO line items table ↔ Bill PDF preview (sub-tabs: PDF | Summary). Right: editable bill with full line items</li>
-          <li><strong>Claude Vision parser:</strong> auto-processes on drag &amp; drop — extracts invoice #, date, supplier, all line items, GST treatment, totals</li>
-          <li><strong>Code matching:</strong> supplier codes fuzzy-matched against internal inventory codes — Exact / Partial / No match badges per line</li>
-          <li><strong>PO tab:</strong> shows full PO line items table (Code, Description, Qty, Rcvd ✓, Unit $, Total). After "Copy to PO" — table refreshes with received items in real time</li>
-          <li><strong>Bill line items table:</strong> PO Qty, Rcvd, Outstg, Bill Qty columns side-by-side for instant variance visibility. Over-billed lines flagged in red</li>
-          <li><strong>Per-supplier default markup %:</strong> editable in Supplier Price Books. Pre-fills "Bill Markup" card on each bill — overridable per bill</li>
-          <li><strong>GST treatment:</strong> global Ex/Inc toggle + per-line override. Handles mixed invoices</li>
-          <li><strong>Internal Code field:</strong> on all products — used for supplier code matching and displayed in bill line items</li>
-          <li><strong>Sync actions (above tabs):</strong> Copy to PO (purple) · Copy to Job (orange) — with dollar totals shown after each sync</li>
-          <li><strong>Bill status flow:</strong> Draft → Approved → Paid. Disputed for price variances</li>
-          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype v0.7.7</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po/blob/main/PROTOTYPES.md" target="_blank" style="color:#00e5b0">Full Spec + AI Prompts</a></li>
+          <li>Supplier selector at PO level</li>
+          <li>Price book management screen</li>
+          <li>Margin visibility per line item</li>
+          <li>Switching supplier mid-PO flow</li>
+          <li>API to attach multiple price books per trade type</li>
+          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product">
+        <div class="ticket-id">FI-003</div>
+        <div class="card-title">Bill Importer</div>
+        <div class="card-desc">Import supplier bills and invoices directly into FieldInsight from email, PDF, or CSV. Auto-match to jobs and purchase orders. Reduce manual data entry for the office team.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Import via email attachment (PDF/CSV)</li>
+          <li>OCR + AI field extraction (supplier, amount, date, line items)</li>
+          <li>Auto-match to open POs and jobs</li>
+          <li>Exception queue for unmatched bills</li>
+          <li>Xero / MYOB sync on approval</li>
+          <li>Audit trail — original bill stored against job</li>
         </ul></div>
       </div>
 
@@ -418,6 +430,34 @@
     <!-- NEXT -->
     <div class="col-next">
       <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
+
+      <div class="card" data-cat="infra product ceo">
+        <div class="ticket-id">FI-020</div>
+        <div class="card-title">SOC 2 Type II Compliance — US Market Launch</div>
+        <div class="card-desc">Security &amp; compliance audit required to sell into US enterprise and mid-market field service businesses. SOC 2 Type II certifies that FieldInsight's infrastructure, data handling, and access controls meet the Trust Services Criteria (Security, Availability, Confidentiality) over a sustained observation period — typically 6–12 months. Critical gate for US logo acquisition and procurement approvals.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge" style="background:rgba(255,200,61,0.15);color:#fbbf24;border:1px solid rgba(255,200,61,0.35)">🇺🇸 US Launch</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>What SOC 2 Type II covers:</strong></li>
+          <li>✅ <strong>Security</strong> — access controls, encryption at rest &amp; in transit, vulnerability management, intrusion detection</li>
+          <li>✅ <strong>Availability</strong> — uptime SLAs, incident response, disaster recovery, monitoring</li>
+          <li>✅ <strong>Confidentiality</strong> — data classification, retention policies, NDA enforcement, data deletion procedures</li>
+          <li><strong>Key workstreams:</strong></li>
+          <li>📋 Readiness gap assessment — map current controls to TSC criteria</li>
+          <li>🔐 Identity &amp; access management — MFA enforcement, least-privilege review, offboarding audit</li>
+          <li>🛡️ Penetration testing — engage third-party pen tester on fieldinsight.com codebase</li>
+          <li>📝 Policy library — write / formalise: Information Security, Incident Response, Change Management, Vendor Risk, Business Continuity policies</li>
+          <li>📊 Continuous monitoring — tooling for log aggregation, alerting, anomaly detection (e.g. Datadog, Vanta, Drata)</li>
+          <li>🏢 Auditor engagement — select AICPA-accredited auditor for observation period + Type II report</li>
+          <li>⏱️ Timeline: ~6 months observation period + 2–4 months audit → target report by Q1 2027</li>
+          <li>💡 Suggested tooling: <strong>Vanta</strong> or <strong>Drata</strong> for compliance automation (maps to AWS/Heroku/GitHub controls automatically)</li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="product infra">
         <div class="ticket-id">FI-008</div>
@@ -646,7 +686,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 25 March 2026 &nbsp;·&nbsp; v0.9.9</div>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v1.0.0</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
