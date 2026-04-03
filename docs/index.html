@@ -333,7 +333,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 23 March 2026 &nbsp;·&nbsp; v0.8.0</div>
+    <div class="updated">Last updated: 16 March 2026 &nbsp;·&nbsp; v1.0.1</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -539,6 +539,61 @@
     <!-- NEXT -->
     <div class="col-next">
       <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
+
+      <div class="card" data-cat="product ai mobile">
+        <div class="ticket-id">FI-021</div>
+        <div class="card-title">AI Technician CoPilot — On-Device Gemma 4 (Edge Intelligence)</div>
+        <div class="card-desc">Embed a lightweight Gemma 4 2B/4B model directly into the FieldInsight mobile app (Android-first, iOS follow) via a Capacitor native plugin wrapping llama.cpp or Google's MediaPipe LLM Inference API. Technicians get a real-time AI assistant that works fully offline — in plant rooms, rooftops, and basements where connectivity is dead. The same open-weights model powers backend predictive analytics on the server fleet using the 26B/31B variants, and lays the groundwork for future autonomous robotic maintenance coordination.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+          <span class="badge" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.35)">📱 Mobile</span>
+          <span class="badge" style="background:rgba(168,85,247,0.15);color:#c084fc;border:1px solid rgba(168,85,247,0.35)">🤖 On-Device</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Why on-device, not cloud:</strong></li>
+          <li>📵 <strong>Offline-first</strong> — plant rooms, rooftops, basements are dead zones; cloud AI is unavailable when it matters most</li>
+          <li>⚡ <strong>Near-zero latency</strong> — no 1–3s round-trips per step in a 10-point diagnostic checklist; on-device is instant</li>
+          <li>💰 <strong>Free at scale</strong> — 20 techs × 8 jobs/day × every photo/voice/report = significant API cost; local inference is free after deploy</li>
+          <li>🔒 <strong>Data sovereignty</strong> — customer asset data, fault photos, maintenance history never leaves the device; critical for enterprise and government clients</li>
+
+          <li><strong>Phase 1 — On-Device Mobile CoPilot (Android-first, Samsung ideal):</strong></li>
+          <li>📱 Capacitor native plugin wrapping <strong>llama.cpp</strong> or <strong>Google MediaPipe LLM Inference API</strong> (targets Android NPU for hardware-accelerated inference)</li>
+          <li>📷 Technician scans QR code or photographs unit/serial plate → Gemma 4 vision + OCR reads error codes, visible defects (leaks, corrosion, fan issues)</li>
+          <li>🗂️ Offline SQLite/PouchDB asset history injected as context (existing FI data layer, no rebuild)</li>
+          <li>🔧 Real-time step-by-step troubleshooting guidance with safety/compliance checklists auto-populated</li>
+          <li>🛒 Part recommendations with on-device inventory cache check</li>
+          <li>📝 One-tap generation of professional service reports, defect notices, and quotes</li>
+          <li>🎙️ Voice (hands-free) interaction — tech speaks, AI responds, works while hands are on the unit</li>
+          <li>📲 Plugin interface: <code>FIAIPlugin.diagnose({ photo, assetHistory })</code> → structured JSON response back to web layer — no UI rebuild required</li>
+          <li><em>Start text-only (asset context + fault codes), prove workflow, then layer in multimodal vision</em></li>
+
+          <li><strong>Phase 2 — Backend Predictive Asset Intelligence (26B/31B models on server):</strong></li>
+          <li>📊 Analyse entire asset fleet overnight — predict failures before they happen using maintenance logs, usage patterns, environmental data</li>
+          <li>📅 Auto-generate optimised preventive maintenance schedules and dispatch jobs</li>
+          <li>🛣️ Route optimisation factoring in predicted urgent repairs</li>
+          <li>📄 Auto-populate customer reports with AI insights ("Unit X — 87% probability of compressor failure in next 6 months")</li>
+
+          <li><strong>Phase 3 — Optimus / Autonomous Robot Ready (Future):</strong></li>
+          <li>🤖 Fine-tune "HVAC Specialist" Gemma 4 on aggregated anonymised FieldInsight asset + procedure data</li>
+          <li>Same model powers robot reasoning: "Given this error code + photo, execute standard refrigerant recharge protocol while logging compliance"</li>
+          <li>Bots handle repetitive tasks (filter changes, visual inspections, basic diagnostics) coordinated through existing FI job/asset workflow</li>
+          <li>Apache 2.0 licence → commercial fine-tuning, local hosting, no recurring API costs</li>
+
+          <li><strong>Model selection:</strong></li>
+          <li>🟢 <strong>2B / 4B edge variants</strong> → technician phones/tablets (low latency, offline)</li>
+          <li>🔵 <strong>26B MoE / 31B dense</strong> → server-side analytics and scheduling</li>
+          <li>Source: <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank">Gemma 4 announcement (Google)</a></li>
+
+          <li><strong>Business outcomes:</strong></li>
+          <li>✅ Reduce "phone-a-friend" calls to office — junior techs operate at senior level</li>
+          <li>✅ Cut average job time + repeat callouts (most costly outcome in HVAC)</li>
+          <li>✅ Improve first-time fix rate and technician confidence</li>
+          <li>✅ Higher-quality data back into asset database → continuous model improvement flywheel</li>
+          <li>✅ Turns FI from job management tool into AI-augmented platform that scales human techs today, robotic ones tomorrow</li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="infra product ceo">
         <div class="ticket-id">FI-020</div>
