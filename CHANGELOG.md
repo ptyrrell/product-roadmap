@@ -67,3 +67,4 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 ---
 
 <!-- New entries go at the top -->
+
