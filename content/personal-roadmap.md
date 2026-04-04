@@ -1,6 +1,6 @@
 # Paul Tyrrell — Personal Roadmap
 
-Version: 0.3.0  
+Version: 0.4.0  
 Last Updated: 2026-04-03
 
 ---
@@ -8,17 +8,33 @@ Last Updated: 2026-04-03
 ## Now — Active Focus
 
 ### Ben's School Project — Australian Wars (20th Century)
-**Status:** To Discuss  
+**Status:** In Progress  
+**Format:** Hand-written workbook (lined pages)
+
 Help Ben research Australia's involvement in 20th century wars.
 
-Topics to cover:
+**Key Topics:**
 - [ ] Boer War (1899-1902) — Australia's first overseas conflict
 - [ ] World War I (1914-1918) — Gallipoli, Western Front, ANZACs
 - [ ] World War II (1939-1945) — Pacific Theatre, Kokoda, North Africa
+- [ ] **Rats of Tobruk** (1941) — Aussie soldiers who defended Tobruk for 241 days
 - [ ] Korean War (1950-1953)
 - [ ] Vietnam War (1962-1973) — conscription, protests
 - [ ] Malayan Emergency (1948-1960)
 - [ ] Indonesian Confrontation (1963-1966)
+
+**Workbook Structure (Hand-written, Lined):**
+1. Title page — "Australian Wars of the 20th Century"
+2. Timeline of conflicts (double-page spread)
+3. One page per war:
+   - When & where
+   - Why Australia was involved
+   - Key battles / events
+   - How many Australians served / casualties
+   - One personal story or quote
+4. The Rats of Tobruk — special feature page
+5. Reflection: What did Australia learn?
+6. Sources / bibliography
 
 **Left of field ideas:**
 - [ ] Visit Shrine of Remembrance (Melbourne)
@@ -27,6 +43,41 @@ Topics to cover:
 - [ ] Family history — did any Tyrrells serve?
 - [ ] Documentary: "Gallipoli" (1981 film) or "The Pacific" (HBO)
 - [ ] Primary sources: letters, diaries from Trove (NLA)
+- [ ] Holbrook NSW — HMAS Otway submarine park (if road trip!)
+
+---
+
+### AI Researcher — Lead Gen Automation
+**Priority:** High  
+**Status:** Planned
+
+Auto-generate and qualify leads like Chinju/Veera/Mohanapriya do today.
+
+**Key outcomes:**
+- [ ] Auto-scrape Apollo, LinkedIn, directories for trade businesses
+- [ ] Score and filter leads by ICP fit
+- [ ] Enrich with contact info, tech stack, revenue estimates
+- [ ] Auto-assign qualified leads to SDRs
+- [ ] Target: 60 leads/day/researcher equivalent
+- [ ] Track lead source → SDR dial → outcome for audit trail
+
+**Standard Lead Sources:**
+- Apollo, LinkedIn, Google Maps
+- Yellow Pages, True Local
+- ABN Lookup, Facebook Business Pages
+
+**Job Boards (growth signals):**
+- [ ] Seek.com.au — companies hiring field techs
+- [ ] Indeed, Jora
+- [ ] Hipages, ServiceSeeking
+
+**Left of field ideas:**
+- [ ] Council permits/tenders (new projects = new contractors)
+- [ ] Fleet registrations (more trucks = growing business)
+- [ ] Trade show exhibitor lists
+- [ ] Gumtree "services offered"
+- [ ] Airtasker high-volume tradies
+- [ ] Google Ads transparency (who's spending on FSM keywords)
 
 ---
 
