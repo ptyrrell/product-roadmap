@@ -7,6 +7,22 @@ Last Updated: 2026-04-03
 
 ## Now — Active Focus
 
+### Cursor Tasks — Researcher & Invoice Audit
+
+**1. Audit Researcher Lead Flow**
+Track where leads go after researchers create them.
+- [ ] Map flow: Researcher → Lead Created → SDR Assigned → Dialed → Outcome
+- [ ] Add audit trail columns to Google Sheet
+- [ ] Find where leads are lost or stalled
+
+**2. Investigate Token Usage for Bill/Supplier Invoice Importing**
+Find actual token metrics for the AI invoice import feature.
+- [ ] Check codebase or OpenAI dashboard for token logs
+- [ ] Document cost per invoice import
+- [ ] Add to feature specs
+
+---
+
 ### Alfred (Personal AI Assistant)
 Build and deploy Alfred to Mac Studio. Connect to WhatsApp via Twilio. 
 Give Alfred access to Apple Notes, NocoDB Fountain of Truth, and the ability to brief me daily.
@@ -15,10 +31,7 @@ Give Alfred access to Apple Notes, NocoDB Fountain of Truth, and the ability to 
 - [x] Twilio WhatsApp sandbox configured
 - [x] Anthropic API key added
 - [x] Deployed + live
-- [x] Daily SDR briefing via SMS
-- [ ] Daily Sales Pipeline briefing (colour coded)
-- [ ] Daily Onboarding briefing (colour coded)
-- [ ] Daily Researcher briefing (60 leads target)
+- [x] Daily Sales Briefing SMS (SDR, Sales Pipeline, Onboarding, Researchers)
 
 ### Product Roadmap (this)
 A living, versioned, served roadmap for personal and FieldInsight planning.
@@ -37,21 +50,6 @@ Daily sync of all Apple Notes into Fountain of Truth for searchability and AI ac
 
 ## Next — Planned
 
-### 🔧 Cursor Tasks (Paul to action)
-
-**1. Audit Researcher Lead Flow**
-- Track where leads go after researchers create them
-- Map: Researcher → Lead Created → SDR Assigned → Dialed → Outcome
-- Add audit trail columns to Google Sheet
-- Find where the handoff happens and if leads are being lost
-
-**2. Investigate Token Usage for Bill/Supplier Invoice Importing**
-- Find actual token metrics in FieldInsight codebase or OpenAI dashboard
-- Document cost per invoice import
-- Add to feature specs for pricing decisions
-
----
-
 ### Fountain of Truth — Data Completeness
 Enrich NocoDB with more sources:
 - HubSpot contacts + deals
@@ -64,11 +62,10 @@ Rename and consolidate the Jeeves transcript processing into Alfred.
 Alfred becomes the single intelligent agent for all personal + business tasks.
 
 ### Mac Studio Always-On Setup
-- [x] Remote login enabled
-- [x] Tailscale always running
-- [x] Alfred serving on port 8080
-- [x] Cloudflare tunnel for public HTTPS
-- [ ] Watchdog auto-restart on failure
+- Remote login enabled
+- Tailscale always running
+- Alfred serving on port 8080
+- Cloudflare tunnel for public HTTPS
 
 ### Marketing Automation
 Build on the existing Marketing Automation pipeline:
