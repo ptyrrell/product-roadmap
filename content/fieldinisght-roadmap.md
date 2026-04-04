@@ -1,7 +1,7 @@
 # FieldInsight Product Roadmap
 
-Version: 0.2.0  
-Last Updated: 2026-03-20  
+Version: 0.3.0  
+Last Updated: 2026-04-03  
 Status: Active
 
 ---
@@ -63,13 +63,34 @@ Key outcomes:
 **Status:** Planned  
 AI agent that automates lead research and qualification, replacing or augmenting manual researchers. Finds trade businesses matching ICP, enriches data, and feeds qualified leads to SDRs.
 
-Key outcomes:
-- Auto-scrape Apollo, LinkedIn, directories for trade businesses (electricians, plumbers, HVAC, diesel mechanics)
+**Lead Sources to Scrape:**
+- [ ] Apollo.io — contact data, company signals
+- [ ] LinkedIn Sales Navigator — company profiles, employee count
+- [ ] Google Maps — local trade businesses, reviews, phone numbers
+- [ ] Seek.com.au — job ads (hiring = growth signal)
+- [ ] Indeed / Jora — job ads for field service roles
+- [ ] Hipages — active tradies listing
+- [ ] ServiceSeeking — trade business profiles
+- [ ] Yellow Pages / True Local — business directories
+- [ ] ABN Lookup — verify Australian businesses
+- [ ] Facebook Business Pages — local trade presence
+- [ ] Google Ads transparency — who's spending on "field service software"
+- [ ] Industry associations (Master Electricians, MPAQ, etc.)
+
+**Left of Field Ideas:**
+- [ ] Monitor council permits/tenders — who's winning work?
+- [ ] Track fleet registrations — growing truck count = growing business
+- [ ] Scrape trade show exhibitor lists
+- [ ] Monitor Gumtree "services offered" section
+- [ ] Watch Airtasker for high-volume tradies
+
+**Key Outcomes:**
 - Score and filter leads by ICP fit (company size, location, tech signals)
 - Enrich with contact info, tech stack, revenue estimates
 - Auto-assign qualified leads to SDRs in Google Sheet
 - Target: 60 leads/day/researcher equivalent
 - Track lead source → SDR dial → outcome for audit trail
+- A/B test lead sources — which convert best?
 
 ---
 

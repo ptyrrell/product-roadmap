@@ -1,11 +1,34 @@
 # Paul Tyrrell — Personal Roadmap
 
-Version: 0.2.0  
+Version: 0.3.0  
 Last Updated: 2026-04-03
 
 ---
 
 ## Now — Active Focus
+
+### Ben's School Project — Australian Wars (20th Century)
+**Status:** To Discuss  
+Help Ben research Australia's involvement in 20th century wars.
+
+Topics to cover:
+- [ ] Boer War (1899-1902) — Australia's first overseas conflict
+- [ ] World War I (1914-1918) — Gallipoli, Western Front, ANZACs
+- [ ] World War II (1939-1945) — Pacific Theatre, Kokoda, North Africa
+- [ ] Korean War (1950-1953)
+- [ ] Vietnam War (1962-1973) — conscription, protests
+- [ ] Malayan Emergency (1948-1960)
+- [ ] Indonesian Confrontation (1963-1966)
+
+**Left of field ideas:**
+- [ ] Visit Shrine of Remembrance (Melbourne)
+- [ ] Interview a veteran (RSL connection?)
+- [ ] AWM (Australian War Memorial) virtual tour
+- [ ] Family history — did any Tyrrells serve?
+- [ ] Documentary: "Gallipoli" (1981 film) or "The Pacific" (HBO)
+- [ ] Primary sources: letters, diaries from Trove (NLA)
+
+---
 
 ### Cursor Tasks — Researcher & Invoice Audit
 
