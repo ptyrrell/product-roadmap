@@ -1,7 +1,7 @@
 # FieldInsight Product Roadmap
 
-Version: 0.1.0  
-Last Updated: 2026-03-16  
+Version: 0.2.0  
+Last Updated: 2026-03-20  
 Status: Active
 
 ---
@@ -55,6 +55,21 @@ Key outcomes:
 - Industry benchmarks (HVAC, electrical, plumbing, etc.)
 - Actionable insights: "Your average job completion time is 23% slower on Fridays"
 - Exportable reports for business owners
+
+---
+
+### AI Researcher — Lead Gen Automation
+**Priority:** High  
+**Status:** Planned  
+AI agent that automates lead research and qualification, replacing or augmenting manual researchers. Finds trade businesses matching ICP, enriches data, and feeds qualified leads to SDRs.
+
+Key outcomes:
+- Auto-scrape Apollo, LinkedIn, directories for trade businesses (electricians, plumbers, HVAC, diesel mechanics)
+- Score and filter leads by ICP fit (company size, location, tech signals)
+- Enrich with contact info, tech stack, revenue estimates
+- Auto-assign qualified leads to SDRs in Google Sheet
+- Target: 60 leads/day/researcher equivalent
+- Track lead source → SDR dial → outcome for audit trail
 
 ---
 
