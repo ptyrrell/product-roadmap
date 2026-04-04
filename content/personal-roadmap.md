@@ -1,7 +1,7 @@
 # Paul Tyrrell — Personal Roadmap
 
-Version: 0.1.0  
-Last Updated: 2026-03-16
+Version: 0.2.0  
+Last Updated: 2026-04-03
 
 ---
 
@@ -11,16 +11,20 @@ Last Updated: 2026-03-16
 Build and deploy Alfred to Mac Studio. Connect to WhatsApp via Twilio. 
 Give Alfred access to Apple Notes, NocoDB Fountain of Truth, and the ability to brief me daily.
 - [x] Alfred codebase built
-- [ ] Mac Studio online + SSH enabled
-- [ ] Twilio WhatsApp sandbox configured
-- [ ] Anthropic API key added
-- [ ] Deployed + live
+- [x] Mac Studio online + SSH enabled
+- [x] Twilio WhatsApp sandbox configured
+- [x] Anthropic API key added
+- [x] Deployed + live
+- [x] Daily SDR briefing via SMS
+- [ ] Daily Sales Pipeline briefing (colour coded)
+- [ ] Daily Onboarding briefing (colour coded)
+- [ ] Daily Researcher briefing (60 leads target)
 
 ### Product Roadmap (this)
 A living, versioned, served roadmap for personal and FieldInsight planning.
 - [x] Repo created
 - [x] Initial content written
-- [ ] GitHub Pages live
+- [x] GitHub Pages live
 - [ ] Custom domain
 
 ### Apple Notes → NocoDB Sync
@@ -32,6 +36,21 @@ Daily sync of all Apple Notes into Fountain of Truth for searchability and AI ac
 ---
 
 ## Next — Planned
+
+### 🔧 Cursor Tasks (Paul to action)
+
+**1. Audit Researcher Lead Flow**
+- Track where leads go after researchers create them
+- Map: Researcher → Lead Created → SDR Assigned → Dialed → Outcome
+- Add audit trail columns to Google Sheet
+- Find where the handoff happens and if leads are being lost
+
+**2. Investigate Token Usage for Bill/Supplier Invoice Importing**
+- Find actual token metrics in FieldInsight codebase or OpenAI dashboard
+- Document cost per invoice import
+- Add to feature specs for pricing decisions
+
+---
 
 ### Fountain of Truth — Data Completeness
 Enrich NocoDB with more sources:
@@ -45,10 +64,11 @@ Rename and consolidate the Jeeves transcript processing into Alfred.
 Alfred becomes the single intelligent agent for all personal + business tasks.
 
 ### Mac Studio Always-On Setup
-- Remote login enabled
-- Tailscale always running
-- Alfred serving on port 8080
-- Cloudflare tunnel for public HTTPS
+- [x] Remote login enabled
+- [x] Tailscale always running
+- [x] Alfred serving on port 8080
+- [x] Cloudflare tunnel for public HTTPS
+- [ ] Watchdog auto-restart on failure
 
 ### Marketing Automation
 Build on the existing Marketing Automation pipeline:
