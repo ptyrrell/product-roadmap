@@ -1,13 +1,31 @@
 # Paul Tyrrell — Personal Roadmap
 
-Version: 0.4.0  
+Version: 0.7.0  
 Last Updated: 2026-04-03
 
 ---
 
 ## Now — Active Focus
 
-### Ben's School Project — Australian Wars (20th Century)
+### 🐐 Dargo Primary Goat Farm
+**Status:** Planning
+
+A future project exploring goat farming in the Dargo region.
+
+**Reference channels:**
+- https://youtube.com/@dalsconefarm — Dalscone Farm (goat farming inspiration)
+
+**To research:**
+- [ ] Land requirements & availability (Dargo area)
+- [ ] Goat breeds (dairy vs meat vs fibre)
+- [ ] Fencing & infrastructure costs
+- [ ] Water supply / pasture management
+- [ ] Regulations & permits (Vic)
+- [ ] Visit existing goat farms
+
+---
+
+### 📚 Ben's School Project — Australian Wars (20th Century)
 **Status:** In Progress  
 **Format:** Hand-written workbook (lined pages)
 
@@ -36,6 +54,11 @@ Help Ben research Australia's involvement in 20th century wars.
 5. Reflection: What did Australia learn?
 6. Sources / bibliography
 
+**Workbook to order:**
+- [ ] Find printer (Officeworks, PixArt, local)
+- [ ] A4, lined pages, ~40 pages, spiral bound
+- [ ] Custom cover: "Ben's History of Australian Wars"
+
 **Left of field ideas:**
 - [ ] Visit Shrine of Remembrance (Melbourne)
 - [ ] Interview a veteran (RSL connection?)
@@ -47,11 +70,25 @@ Help Ben research Australia's involvement in 20th century wars.
 
 ---
 
-### AI Researcher — Lead Gen Automation
+### 📐 Ben's Maths Book
+**Status:** To Order
+
+**Workbook to order:**
+- [ ] Find printer (Officeworks, PixArt, local)
+- [ ] A4, grid/lined pages, ~60 pages (plenty of practice room)
+- [ ] Spiral bound
+- [ ] Custom cover: "Ben's Maths Book"
+
+---
+
+### 🤖 AI Researcher — Lead Gen Automation
 **Priority:** High  
 **Status:** Planned
 
 Auto-generate and qualify leads like Chinju/Veera/Mohanapriya do today.
+
+**Reference links:**
+- https://x.com/om_patel5/status/2040295631793635465 — AI lead gen automation thread
 
 **Key outcomes:**
 - [ ] Auto-scrape Apollo, LinkedIn, directories for trade businesses
@@ -166,5 +203,6 @@ Build on the existing Marketing Automation pipeline:
 3. AI assists, Paul decides
 4. Simple over complex — if it needs maintaining, it's too complicated
 5. Named after family — Alfred, not Jeeves
+6. Never Apple Notes for projects — Personal Roadmap only
 
 ---
