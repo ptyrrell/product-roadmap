@@ -5,6 +5,14 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v1.0.2 — 2026-03-24
+
+### Added
+- FI-002: PDF Parsing Spec page (`fi-02-pdf-parsing-spec.html`) — full visual HTML spec covering Claude Vision architecture, invoice + statement parsers, tiered matching logic, cost model, error handling, security, and roadmap
+- FI-002 card: added 📐 PDF Parsing Spec link alongside Live Prototype + GitHub
+
+---
+
 ## v0.8.1 — 2026-03-27
 
 ### Updated
