@@ -5,6 +5,14 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v1.0.3 — 2026-03-24
+
+### Added
+- FI-003: Batch Bill Import spec page (`fi-03-multi-bill-import-spec.html`) — covers multi-file upload, single PDF multi-invoice detection, processing queue, batch review split-panel UI mockup, matching rules, bulk apply flow, API changes, edge cases, and build phases
+- FI-003 card: added 📐 Batch Bill Import Spec link
+
+---
+
 ## v1.0.2 — 2026-03-24
 
 ### Added
