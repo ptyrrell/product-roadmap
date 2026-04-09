@@ -305,7 +305,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v1.0.3</span>
+    <span class="version">v1.0.4</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -790,8 +790,8 @@
 
       <div class="card" data-cat="design product">
         <div class="ticket-id">FI-019</div>
-        <div class="card-title">Gmail Inbox — Job Request Monitor &amp; Thread Reply</div>
-        <div class="card-desc">Gmail OAuth2 integration to monitor a nominated address (e.g. jobs@fieldinsight.com) for inbound job requests. AI classifies each thread — urgency, job type, one-line summary — and suggests a reply. Full thread view with reply composer stays in the same Gmail thread. Prototype live.</div>
+        <div class="card-title">Email Threaded Conversations — Job Management</div>
+        <div class="card-desc">Gmail OAuth2 live. Threads linked to jobs invisibly via RFC 2822 Message-ID headers — no job IDs in subject or body. AI classifies each thread (urgency, job type, summary) and suggests replies. Next: PostgreSQL job-thread mapping layer, auto-associate by contact email, and Outlook via Microsoft Graph API.</div>
         <div class="card-meta">
           <span class="badge badge-active">🔥 Active</span>
           <span class="badge badge-high">High</span>
@@ -801,15 +801,15 @@
           <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
         </div>
         <div class="outcomes"><ul>
-          <li>Google OAuth2 — connect any Gmail account in one click</li>
-          <li>Watch a nominated address for inbound job-request emails</li>
-          <li>AI classification: is it a job request? urgency? job type? 1-line summary</li>
-          <li>Full thread view — all messages collapsed/expanded, read receipts</li>
-          <li>Reply composer — stays threaded in Gmail (correct In-Reply-To headers)</li>
-          <li>⚡ AI Suggest Reply — Claude drafts a warm professional response</li>
-          <li>Filter: All · Unread · Job Requests · Sent</li>
-          <li>Auto-refresh every 60 seconds</li>
-          <li>Settings: configure watch address per deployment</li>
+          <li>✅ Gmail OAuth2 connected — Google credentials configured on Heroku</li>
+          <li>✅ Thread read + reply via Gmail API (proper RFC 2822 threading — invisible to customers)</li>
+          <li>✅ AI classification: urgency, job type, 1-line summary + suggested reply (Claude Haiku)</li>
+          <li>✅ Full thread view — all messages, read receipts, filter by All · Unread · Job Requests · Sent</li>
+          <li>🔨 PostgreSQL job-thread mapping (threadId → jobId, no IDs in email)</li>
+          <li>🔨 Auto-associate threads to jobs by contact email address</li>
+          <li>🔨 Thread panel within job record UI (inline, not modal)</li>
+          <li>⏳ Gmail Pub/Sub push notifications (real-time inbound alerts)</li>
+          <li>⏳ Outlook OAuth via Microsoft Graph API (conversationId threading)</li>
           <li>🔗 <a href="https://fi-gmail-inbox-08bff4b3a7ed.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/fi-gmail-inbox" target="_blank" style="color:#00e5b0">GitHub</a></li>
         </ul></div>
       </div>

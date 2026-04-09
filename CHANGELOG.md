@@ -5,30 +5,22 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
-## v1.0.3 — 2026-03-24
+## v1.0.4 — 2026-04-09
 
-### Added
-- FI-003: Batch Bill Import spec page (`fi-03-multi-bill-import-spec.html`) — covers multi-file upload, single PDF multi-invoice detection, processing queue, batch review split-panel UI mockup, matching rules, bulk apply flow, API changes, edge cases, and build phases
-- FI-003 card: added 📐 Batch Bill Import Spec link
-
----
-
-## v1.0.2 — 2026-03-24
-
-### Added
-- FI-002: PDF Parsing Spec page (`fi-02-pdf-parsing-spec.html`) — full visual HTML spec covering Claude Vision architecture, invoice + statement parsers, tiered matching logic, cost model, error handling, security, and roadmap
-- FI-002 card: added 📐 PDF Parsing Spec link alongside Live Prototype + GitHub
+### Changed
+- FI-019: Renamed to "Email Threaded Conversations — Job Management" — reflects the true scope of this feature (not just a Gmail inbox, but full job-linked thread management)
+- FI-019: Updated description to reflect Gmail OAuth live, RFC 2822 invisible threading approach, and next build steps
+- FI-019: Outcomes updated with ✅ completed, 🔨 in-progress, and ⏳ upcoming milestones
+- FieldInsight roadmap date updated to 9 April 2026, v1.0.4
 
 ---
 
-## v0.8.1 — 2026-03-27
+## v0.7.0 — 2026-04-09
 
-### Updated
-- FI-002 + FI-003 merged into single card — prototype now covers full supplier invoice workflow
-- FI-002 spec updated to reflect prototype v0.7.7: Claude Vision parser, split-pane Bill Detail, PO line items table, code matching, per-supplier markup, sync to PO/Job, Bill Markup card
-- Added ⚡ AI Powered badge to FI-002/003 card
-- Added link to full spec + AI prompts in PROTOTYPES.md
-- Last updated date corrected to 27 March 2026
+### Changed
+- Two-Way Chat via Email Threads: marked **In Development** — Gmail OAuth live on Heroku, thread-to-job mapping layer in build
+- Updated card outcomes to reflect completed (✅), in progress (🔨), and upcoming (⏳) milestones
+- FieldInsight roadmap date updated to 9 April 2026
 
 ---
 
@@ -83,4 +75,3 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 ---
 
 <!-- New entries go at the top -->
-
