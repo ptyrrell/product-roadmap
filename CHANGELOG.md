@@ -5,6 +5,19 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.8 — 2026-04-12
+
+### Added
+- Hero market stats bar: $6.21B FSM market · 93% AI adoption · 34% productivity gain · TTAN -57.9%
+- FI-032: AI Labour Replacement Index — per-agent headcount replacement table, 20-tech TCO comparison, ROI Guarantee pilot framework, SDR calculator concept
+- FI-023: Major pricing rewrite — full 2026 market pricing comparison (TTAN / Fieldproxy / Jobber / FieldCommerce / Service Fusion / FieldInsight), FI-Token cost-per-action breakdown, TCO head-to-head, 2026 hybrid pricing research citations
+
+### Changed
+- FI-013: Expanded from stub to full AI Dispatch spec — 20+ dispatch variables, route optimisation, ANZ-specific routing, FI-Token cost, headcount replacement case
+- FI-023: Title updated to reflect pricing innovation leadership; expanded with competitor data, token economics, TCO numbers
+
+---
+
 ## v0.8.7 — 2026-04-12
 
 ### Added

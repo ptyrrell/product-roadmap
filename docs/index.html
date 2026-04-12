@@ -200,7 +200,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.8.7</span>
+    <span class="version">v0.8.8</span>
   <div class="spacer"></div>
   <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" class="nav-meridian-btn">📊 Meridian Dashboard</a>
   <a href="fi-advantage.html" target="_blank" class="nav-meridian-btn" style="background:rgba(61,126,255,0.12);border-color:rgba(61,126,255,0.35);color:#6c8fff">⚡ Why FieldInsight</a>
@@ -230,7 +230,13 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 12 April 2026 &nbsp;·&nbsp; v0.8.7</div>
+    <div class="updated">Last updated: 12 April 2026 &nbsp;·&nbsp; v0.8.8</div>
+    <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.25rem;padding:1rem 1.5rem;background:rgba(0,229,176,0.05);border:1px solid rgba(0,229,176,0.15);border-radius:10px;font-size:0.78rem;">
+      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">$6.21B</span><span style="color:var(--muted)">FSM market 2026 · 12.5% CAGR to $9.17B by 2030</span></div>
+      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">93%</span><span style="color:var(--muted)">of service orgs have implemented AI — it is the new operating standard</span></div>
+      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">34%</span><span style="color:var(--muted)">more jobs per technician with AI-first FSM · 10–15% margin expansion</span></div>
+      <div><span style="font-size:1.1rem;font-weight:800;color:#ff6b6b;display:block">-57.9%</span><span style="color:var(--muted)">TTAN from ATH · market pricing in AI-native displacement risk</span></div>
+    </div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -525,12 +531,33 @@
 
       <div class="card" data-cat="product">
         <div class="ticket-id">FI-013</div>
-        <div class="card-title">AI-Optimised Routing</div>
-        <div class="card-desc">Advanced scheduling using AI to optimise technician routes and reduce drive time.</div>
+        <div class="card-title">⚡ AI Dispatch — Auto-Assign + Optimised Routing Engine</div>
+        <div class="card-desc">The AI dispatcher that eliminates the need for a human dispatcher entirely. Auto-assigns jobs to technicians in real-time across 20+ variables — skills, location, live traffic, job urgency, tech capacity, and parts availability. Fieldproxy claims 34% more jobs/tech from AI dispatching. This is FieldInsight's direct counter — with ANZ-specific routing intelligence no global platform has.</div>
         <div class="card-meta">
-          <span class="badge badge-low">Low</span>
+          <span class="badge badge-high">High</span>
           <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
         </div>
+        <div class="outcomes"><ul>
+          <li><strong>What it replaces:</strong> 0.5–1.0 full-time dispatcher · AU $60K–$80K/year salary · 5–15 min manual decision per job assignment → 0.3 sec AI decision</li>
+          <li><strong>Core dispatch variables (20+):</strong></li>
+          <li>Tech skills match (certification, licence, trade competency per job type)</li>
+          <li>Real-time location + live traffic (Apple Maps / Google Maps routing)</li>
+          <li>Current job queue depth per tech</li>
+          <li>Estimated job duration + buffer time</li>
+          <li>Parts availability — only assigns tech who has required parts or is near a supplier</li>
+          <li>Job urgency classification (P1 Emergency / P2 Same-day / P3 Scheduled)</li>
+          <li>Customer preference (preferred tech, tech history at this site)</li>
+          <li>Tech shift hours remaining + fatigue compliance (WHS)</li>
+          <li>SLA deadline for contract customers (body corporate, government)</li>
+          <li><strong>Route optimisation:</strong></li>
+          <li>Daily route sequencing: orders jobs to minimise total drive time across full day</li>
+          <li>Dynamic resequencing: when a P1 job arrives, recalculates remaining route for all affected techs</li>
+          <li>Traffic-aware: morning peak routing vs afternoon — avoids Sydney/Melbourne CBD at school hours</li>
+          <li>ANZ-specific: postcode-to-suburb time matrix trained on AU driving patterns, not US defaults</li>
+          <li><strong>FI-Token cost:</strong> ~150 tokens per auto-assignment (~AU $0.00075) · 50 dispatches/day/10 techs = ~7,500 tokens/day</li>
+          <li><strong>Market benchmark:</strong> Fieldproxy claims 34% more jobs/tech · ServiceTitan Dispatch Pro at $100+/tech/month · FieldInsight delivers this in the base Growth plan</li>
+        </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
@@ -781,8 +808,8 @@
 
       <div class="card" data-cat="product ceo salesops">
         <div class="ticket-id">FI-023</div>
-        <div class="card-title">Pricing Innovation — AU $500 Flat + FI-Token AI Consumption Model</div>
-        <div class="card-desc">Per-seat SaaS is structurally broken. FieldInsight's answer: one flat AU price for unlimited users, with FI-Tokens powering all AI features — included in every plan, top up when needed. Removes growth friction entirely while creating a fair, usage-based revenue lever on AI consumption.</div>
+        <div class="card-title">💰 Pricing Innovation — AU $500 Flat + FI-Token AI Consumption Model</div>
+        <div class="card-desc">Per-seat SaaS is structurally broken and the market knows it — TTAN is down 57.9% from ATH. FieldInsight's answer: one flat AU price for unlimited users, with FI-Tokens powering every AI action. Removes growth friction entirely. Creates a transparent, usage-based AI revenue lever that compounds with customer success.</div>
         <div class="card-meta">
           <span class="badge badge-high">High</span>
           <span class="badge badge-product">🏗 Product</span>
@@ -790,30 +817,48 @@
           <span class="badge badge-salesops">📊 Sales Ops</span>
         </div>
         <div class="outcomes"><ul>
-          <li><strong>Why per-seat is broken:</strong></li>
-          <li>Fieldproxy: USD $649/month flat unlimited users vs TTAN ~$10,000/month at 20 techs</li>
-          <li>Adding a technician triggers $3,000–$6,000/year cost increase on TTAN — growth anxiety</li>
-          <li>AI agents cost less than additional licences — per-seat model looks increasingly punitive</li>
-          <li>Threat timeline: flat-fee likely becomes category expectation within 6–18 months</li>
-          <li><strong>The FieldInsight pricing model:</strong></li>
-          <li>🏷️ <strong>Starter:</strong> AU $299/month · up to 10 technicians · unlimited admin seats · 25,000 FI-Tokens/month</li>
-          <li>🏷️ <strong>Growth:</strong> AU $500/month · unlimited technicians · unlimited admin · 100,000 FI-Tokens/month · all 8 AI agents</li>
-          <li>🏷️ <strong>Enterprise:</strong> Custom · multi-branch · custom AI training · unlimited tokens · SLA</li>
-          <li><strong>What are FI-Tokens?</strong></li>
-          <li>🪙 FI-Tokens are the AI consumption currency — each AI action burns a small number of tokens</li>
-          <li>Voice Agent note transcription: ~200 tokens</li>
-          <li>Booking Agent inbound call (full booking): ~800 tokens</li>
-          <li>Document Agent invoice parse (PDF): ~500 tokens</li>
-          <li>Dispatch Agent auto-assignment: ~150 tokens</li>
-          <li>Inbox Agent email classify + reply draft: ~300 tokens</li>
-          <li>Top-ups available at AU $0.005/token when monthly allocation is exceeded</li>
-          <li><strong>Why this model wins:</strong></li>
-          <li>Removes per-seat anxiety entirely — hire more techs, cost stays flat</li>
-          <li>Creates a revenue lever on AI usage — heavy AI users create ARPU growth naturally</li>
-          <li>Defensible vs Fieldproxy: we're comparable on price but have ANZ compliance + local data moat</li>
-          <li>Outcome-linked pilots: select 3–5 customers for "AI ROI Guarantee" — if AI scheduler doesn't save X hours/month, credits apply</li>
-          <li>Token model converts abstract AI claims into auditable, documented results</li>
-          <li><strong>Positioning message:</strong> "Pay per business, not per head. Your growth shouldn't cost you more." — directly counters TTAN/simPRO per-seat anxiety</li>
+          <li><strong>— 2026 FSM Pricing Landscape —</strong></li>
+          <li>🔴 <strong>ServiceTitan:</strong> ~$350/tech/month (hidden, quote-only) · 20 techs = $84K/year software + $5K–$50K implementation · 12–36 month contracts · no public pricing · annual increases locked in</li>
+          <li>🔴 <strong>simPRO:</strong> per-user, enterprise pricing · implementation consultant required · 3–6 month sales cycle · no flat option</li>
+          <li>🟡 <strong>Fieldproxy:</strong> $19–$39/user/month USD (per-user, still scales with headcount) · Basic = $19/user, Growth = $39/user · 20 users = $380–$780/month USD = AU $600–$1,260/month · Also markets AU $649/month flat (unverified current pricing)</li>
+          <li>🟡 <strong>Jobber:</strong> $29–$149/month flat tiers · no AI agents · best for &lt;5 tech solo operators</li>
+          <li>🟡 <strong>FieldCommerce (2026 entrant):</strong> $82–$249/month + per-user add-ons · 50–500 AI assists/month capped by tier · interesting token-adjacent model but capped, not unlimited</li>
+          <li>🟡 <strong>Service Fusion:</strong> $225/month flat unlimited users · no meaningful AI · feature-lite</li>
+          <li>🟢 <strong>FieldInsight:</strong> AU $299–500 flat unlimited · 25K–100K FI-Tokens included · all 8 AI agents · ANZ compliance built-in · local data moat</li>
+
+          <li><strong>— The FieldInsight Pricing Model —</strong></li>
+          <li>🏷️ <strong>Starter — AU $299/month:</strong> up to 10 technicians · unlimited admin seats · 25,000 FI-Tokens/month · Core AI agents (Inbox, Voice Notes, Document Parser)</li>
+          <li>🏷️ <strong>Growth — AU $500/month:</strong> unlimited technicians · unlimited admin · 100,000 FI-Tokens/month · All 8 AI agents · IoT fault monitoring · ANZ compliance layer · Priority support</li>
+          <li>🏷️ <strong>Enterprise — Custom:</strong> multi-branch · dedicated AI model fine-tuned on your data · unlimited tokens · SLA · white-label option · direct API access</li>
+          <li>🪙 <strong>FI-Token top-ups:</strong> AU $0.005/token when monthly allocation exceeded — pay only for what you use</li>
+
+          <li><strong>— FI-Token: What Each AI Action Costs —</strong></li>
+          <li>🗣️ Voice note transcription + AI enhance: <strong>~200 tokens</strong> (AU $0.001)</li>
+          <li>📞 Booking Agent full inbound call (book/reschedule): <strong>~800 tokens</strong> (AU $0.004)</li>
+          <li>📄 Document Agent invoice parse (PDF): <strong>~500 tokens</strong> (AU $0.0025)</li>
+          <li>🚐 Dispatch Agent auto-job-assignment: <strong>~150 tokens</strong> (AU $0.00075)</li>
+          <li>📬 Inbox Agent email classify + reply draft: <strong>~300 tokens</strong> (AU $0.0015)</li>
+          <li>📊 Insights Agent weekly report generation: <strong>~2,000 tokens</strong> (AU $0.01)</li>
+          <li>Growth plan 100K tokens/month → handles ~125 calls + 200 invoices + 333 dispatches + 333 emails + 4 weekly reports — <strong>typical 20-tech business uses 60–80K tokens/month</strong></li>
+
+          <li><strong>— Head-to-Head: 20 Techs, 12 Months, Total Cost of Ownership —</strong></li>
+          <li>ServiceTitan: $84,000/yr software + $15K implementation + AI add-ons = <strong>$100K+ Year 1</strong> — and still needs CSR + dispatcher staff</li>
+          <li>Fieldproxy (Growth, 20 users): $39 × 20 × 12 = AU ~$14,976/yr — no ANZ compliance, no local data, no offline AI, no CCEW</li>
+          <li>FieldCommerce Professional: $249 × 12 = AU $2,988/yr + add-ons — but 500 AI assists/month is often insufficient; overages unpredictable</li>
+          <li>FieldInsight Growth: AU $500 × 12 = <strong>$6,000/yr</strong> · AI eliminates $145K–$200K in staff cost · FI-Token overage typically under $200/month for heavy users</li>
+          <li>🔥 <strong>FieldInsight Total Cost of Ownership advantage: ~14x cheaper than TTAN on software alone. With AI labour replacement factored in: 30x+ TCO advantage.</strong></li>
+
+          <li><strong>— Why This Pricing Model Wins (2026 SaaS Research) —</strong></li>
+          <li>2026 AI SaaS consensus: hybrid flat subscription + consumption = the dominant winning model (per Monetizely, OpenView, Saaslogic 2026 research)</li>
+          <li>Pure per-seat: punishes growth, creates churn trigger every time headcount adds up</li>
+          <li>Pure consumption: unpredictable bills, enterprise buyers hate it</li>
+          <li>Hybrid flat + tokens: predictable baseline cost, fair AI scaling, aligns revenue with value delivered</li>
+          <li>FI-Token audit trail: every AI action is logged → makes "the AI saved you X hours" provable → creates upsell motion naturally</li>
+          <li>Token model converts abstract AI claims into documented, auditable ROI — the "AI ROI Guarantee" pilot becomes possible (see FI-032)</li>
+
+          <li><strong>— Positioning Message —</strong></li>
+          <li>"Pay per business, not per head. Your growth shouldn't cost you more."</li>
+          <li>"The AI that replaces your $75,000/year CSR costs $0.004 per call. That's not a feature — that's a structural business model change."</li>
           <li>🔗 <a href="fi-advantage.html" target="_blank" style="color:#00e5b0">FieldInsight AI Page (pricing section) →</a></li>
         </ul></div>
       </div>
@@ -1013,6 +1058,58 @@
           <li>🔗 <a href="ai-conquest.html#onboarding" target="_blank" style="color:#ff6b6b">Full detail in AI Conquest Hub →</a></li>
         </ul></div>
       </div>
+
+      <div class="card" data-cat="product ceo salesops">
+        <div class="ticket-id">FI-032</div>
+        <div class="card-title">🤖 AI Labour Replacement Index — The ROI Case</div>
+        <div class="card-desc">The single most powerful sales conversation in 2026: AI doesn't just save time — it directly replaces high-cost operational roles. FieldInsight's 8 AI agents collectively eliminate $145K–$210K AUD in annual headcount cost per business. This is the ROI calculator, the case study template, and the "AI ROI Guarantee" pilot framework that closes deals.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>— The Market Context (April 2026) —</strong></li>
+          <li>FSM market: $6.21B in 2026 → $9.17B by 2030 · growth driven entirely by AI labour substitution</li>
+          <li>93% of service orgs now have AI implemented — those without it are already behind</li>
+          <li>AI-first FSM delivers: 34% more jobs/tech · 60% fewer missed calls · 10–15% margin expansion · 5–10% COGS reduction</li>
+          <li>The market re-rating: HUBS -64% · TTAN -57.9% from ATH · PLTR +36% — investors pricing AI labour replacement as the winner, not workflow SaaS</li>
+
+          <li><strong>— What Each AI Agent Replaces —</strong></li>
+          <li>🎙️ <strong>Booking Agent (VOIP IVR):</strong> replaces 0.5–1.0 CSR · AU $55K–$75K/year salary saved · handles 24/7 inbound bookings, rescheduling, status queries</li>
+          <li>📬 <strong>Inbox Agent (Email/Gmail):</strong> replaces 0.5 admin · AU $30K–$45K/year · classifies, prioritises, and drafts replies for 100% of job-request emails</li>
+          <li>🚐 <strong>Dispatch Agent (Auto-Assign):</strong> replaces 0.5–1.0 dispatcher · AU $60K–$80K/year · assigns jobs across 20+ variables in real-time vs human dispatcher taking 5–15 min per decision</li>
+          <li>📄 <strong>Document Agent (Bill Parser):</strong> replaces 0.25–0.5 accounts admin · AU $25K–$40K/year · processes 100% of supplier invoices with zero manual data entry</li>
+          <li>🗣️ <strong>Voice Agent (Job Notes):</strong> saves 12–18 min per job in note-writing · at 8 jobs/day/tech = 96–144 min/day/tech · 10 techs = $40K–$60K/year in admin time recaptured</li>
+          <li>📊 <strong>Insights Agent:</strong> replaces monthly business reporting + KPI analysis · AU $10K–$20K/year in consultant/analyst time</li>
+          <li>🔧 <strong>IoT Fault Agent (FI-008):</strong> proactive outreach before customer calls = $15K–$25K/year in reactive callout revenue uplift</li>
+          <li>🌐 <strong>Gemini Local (FI-027):</strong> eliminates 30–40% of "call the office" interruptions per job · tech resolves on-site independently</li>
+
+          <li><strong>— The Numbers: 20-Tech Business, 12 Months —</strong></li>
+          <li>TTAN software: $84,000/year (20 × $350/month) + $15K implementation + $5K training = <strong>$104K Year 1</strong></li>
+          <li>TTAN + staffing (CSR + dispatcher + admin): $104K + $170K salaries = <strong>$274K/year operational cost</strong></li>
+          <li>FieldInsight Growth plan: $500/month = $6,000/year — <strong>AI replaces $145K–$200K in roles</strong></li>
+          <li>FieldInsight total cost (software + retained lean team): ~$6K + $60K = <strong>$66K/year</strong></li>
+          <li>🔥 <strong>Net saving vs TTAN full-stack: $208K/year — 208x the FieldInsight subscription cost</strong></li>
+          <li>vs Fieldproxy ($19–39/user/month, per-user): 20 users = $4,560–$9,360/year — but no ANZ compliance, no local data moat, no offline AI, no CCEW documentation</li>
+
+          <li><strong>— AI ROI Guarantee Pilot Framework —</strong></li>
+          <li>Offer 3–5 customers a 90-day "AI ROI Guarantee": if our AI agents don't save X hours/month → credits applied</li>
+          <li>Measurement: FI-Token log = auditable record of every AI action performed, time saved calculated per action type</li>
+          <li>Target metrics per pilot: ≥30% reduction in manual booking/scheduling time · ≥20% reduction in admin hours/job · ≥15% increase in jobs per tech per month</li>
+          <li>Case study output: each pilot produces a signed ROI report → primary sales collateral for that industry vertical</li>
+          <li>FI-Token audit trail: transparent log of every AI call — makes "the AI did X" provable, not a marketing claim</li>
+
+          <li><strong>— Product Actions Required —</strong></li>
+          <li>Build FI-Token usage dashboard — per-customer breakdown of AI actions vs time saved</li>
+          <li>Auto-generate monthly "AI Savings Report" per account — shows ROI in hours and AUD equivalent</li>
+          <li>In-app ROI widget: running total of "Hours saved this month by AI" visible on home screen</li>
+          <li>SDR tool: pre-built ROI calculator using prospect's tech count + salary data → generates a personalised "FieldInsight vs current stack" savings projection</li>
+        </ul></div>
+      </div>
+
     </div>
 
     <!-- DONE -->
