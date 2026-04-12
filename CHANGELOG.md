@@ -5,6 +5,18 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.2 — 2026-04-12
+
+### Added
+- FI-020: The AI Threat — Greenfield Disruption (competitive intel card)
+  - Documents AI-native competitor model (Fieldproxy) and threat to traditional FSM software
+  - Fieldproxy claims: 34% more jobs/tech, 60% fewer missed calls, 40–60% lower operational cost vs TTAN
+  - Maps FieldInsight's current in-flight work (FI-001, FI-009, FI-016, FI-017, FI-018) against the threat
+  - Identifies gaps: AI dispatching/auto-assign engine, zero-touch invoicing, AI pricing suggestions
+  - Strategic read: speed is the risk — greenfield SMB customers may default to AI-native tools
+
+---
+
 ## v0.8.1 — 2026-03-27
 
 ### Updated
