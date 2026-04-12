@@ -5,6 +5,17 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.3 — 2026-04-12
+
+### Updated
+- FI-020: Expanded with full competitive analysis
+  - Added "complexity liability" problem — TTAN depth becoming a liability, 30% feature usage, 1–2 week vs 2–3 month onboarding
+  - Added SMB budget squeeze — same segment as HubSpot, ROI case for $250–350k/year weakens with AI tools
+  - Added TTAN counter-moat section — Atlas AI, Pro Products (Contact Center Pro, Dispatch Pro, Field Pro), industry data argument
+  - Added verdict: structural and accelerating threat, 58% TTAN drawdown, execution speed is the question
+
+---
+
 ## v0.8.2 — 2026-04-12
 
 ### Added
