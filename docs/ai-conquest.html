@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FieldInsight — AI Conquest · Internal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg:       #07090d;
+      --surface:  #0e1117;
+      --surface2: #141820;
+      --surface3: #1a1f2b;
+      --border:   #1e2533;
+      --text:     #e8eaf6;
+      --muted:    #6b7394;
+      --accent:   #ff4d2e;
+      --accent2:  #ff8c42;
+      --green:    #00d4a8;
+      --blue:     #3d7eff;
+      --purple:   #a78bfa;
+      --gold:     #f5a623;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── LOGIN GATE ── */
+    #login-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,77,46,0.06) 0%, transparent 60%);
+    }
+    .login-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3rem 3.5rem; max-width: 440px; width: 90%;
+      text-align: center;
+    }
+    .login-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; margin-bottom: 0.4rem; }
+    .login-badge { display: inline-block; font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; background: rgba(255,77,46,0.12); color: var(--accent); border: 1px solid rgba(255,77,46,0.3); padding: 2px 10px; border-radius: 20px; margin-bottom: 2rem; }
+    .login-title { font-family: 'Syne', sans-serif; font-size: 1.7rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 0.5rem; line-height: 1.15; }
+    .login-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.65; margin-bottom: 2rem; }
+    .login-google-wrap { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+    .login-error { font-size: 0.78rem; color: var(--accent); background: rgba(255,77,46,0.08); border: 1px solid rgba(255,77,46,0.25); border-radius: 8px; padding: 0.65rem 1rem; margin-top: 1rem; display: none; }
+    .login-note { font-size: 0.7rem; color: var(--muted); margin-top: 1.5rem; }
+    .login-note strong { color: var(--green); }
+
+    /* ── MAIN APP (hidden until auth) ── */
+    #app { display: none; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.75rem 2rem; position: sticky; top: 0; z-index: 100;
+      background: rgba(7,9,13,0.95); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-logo { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
+    .topbar-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); letter-spacing: 0.5px; }
+    .topbar-spacer { flex: 1; }
+    .topbar-nav { display: flex; gap: 0.25rem; }
+    .topbar-nav a { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-decoration: none; padding: 5px 12px; border-radius: 6px; transition: all 0.15s; white-space: nowrap; }
+    .topbar-nav a:hover { background: var(--surface2); color: var(--text); }
+    .topbar-user { display: flex; align-items: center; gap: 0.6rem; margin-left: 0.5rem; }
+    .topbar-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface2); }
+    .topbar-email { font-size: 0.72rem; color: var(--muted); }
+    .topbar-signout { font-size: 0.7rem; font-weight: 700; color: var(--muted); background: none; border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+    .topbar-signout:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--surface); border-right: 1px solid var(--border);
+      padding: 1.5rem 0; position: sticky; top: 49px; height: calc(100vh - 49px);
+      overflow-y: auto; flex-shrink: 0;
+    }
+    @media (max-width: 900px) { .sidebar { display: none; } }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-label { font-size: 0.6rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0 1.25rem; margin-bottom: 0.4rem; }
+    .sidebar a { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1.25rem; font-size: 0.78rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: all 0.12s; border-left: 2px solid transparent; }
+    .sidebar a:hover { color: var(--text); background: var(--surface2); }
+    .sidebar a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(255,77,46,0.06); }
+    .sidebar a .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── CONTENT ── */
+    .content { padding: 0; overflow: hidden; }
+
+    /* ── HERO ── */
+    .conquest-hero {
+      padding: 3.5rem 3rem 2.5rem;
+      background: linear-gradient(135deg, rgba(255,77,46,0.06) 0%, rgba(255,140,66,0.03) 50%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .conquest-hero::after {
+      content: 'AI CONQUEST';
+      position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+      font-family: 'Syne', sans-serif; font-size: 8rem; font-weight: 800;
+      color: rgba(255,77,46,0.04); letter-spacing: -4px; pointer-events: none; white-space: nowrap;
+    }
+    .ch-eyebrow { font-size: 0.62rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
+    .ch-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 0.75rem; }
+    .ch-title em { font-style: normal; color: var(--accent); }
+    .ch-sub { font-size: 0.9rem; color: var(--muted); max-width: 640px; line-height: 1.75; }
+    .ch-stats { display: flex; gap: 2rem; margin-top: 2rem; flex-wrap: wrap; }
+    .ch-stat { }
+    .ch-stat-n { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+    .ch-stat-l { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── SECTION WRAPPERS ── */
+    .feat-section { padding: 3rem; border-bottom: 1px solid var(--border); }
+    .feat-section:last-child { border-bottom: none; }
+    .feat-eyebrow { font-size: 0.62rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .feat-title { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; letter-spacing: -0.75px; line-height: 1.15; margin-bottom: 0.6rem; }
+    .feat-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; max-width: 680px; margin-bottom: 2rem; }
+
+    /* ── PRIORITY TABLE ── */
+    .priority-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .priority-table th { font-size: 0.62rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); text-align: left; background: var(--surface2); }
+    .priority-table th:first-child { border-radius: 8px 0 0 0; }
+    .priority-table th:last-child { border-radius: 0 8px 0 0; }
+    .priority-table td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted); vertical-align: middle; }
+    .priority-table td:first-child { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--accent); font-size: 0.9rem; width: 40px; text-align: center; }
+    .priority-table td:nth-child(2) { font-weight: 600; color: var(--text); }
+    .priority-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .effort-badge { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .effort-low { background: rgba(0,212,168,0.12); color: var(--green); border: 1px solid rgba(0,212,168,0.3); }
+    .effort-med { background: rgba(245,166,35,0.12); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+    .effort-low-med { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+    .impact-text { font-size: 0.78rem; line-height: 1.5; }
+
+    /* ── PLATFORM CARDS ── */
+    .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+    @media (max-width: 1100px) { .platform-grid { grid-template-columns: repeat(2, 1fr); } }
+    .platform-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; transition: all 0.15s; }
+    .platform-card:hover { border-color: rgba(255,77,46,0.3); }
+    .platform-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; }
+    .platform-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
+    .platform-method { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--blue); background: rgba(61,126,255,0.08); border: 1px solid rgba(61,126,255,0.2); padding: 2px 8px; border-radius: 4px; display: inline-block; }
+
+    /* ── FEATURE CARDS ── */
+    .feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .feat-grid { grid-template-columns: 1fr; } }
+    .feat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.6rem; transition: all 0.15s; position: relative; overflow: hidden; }
+    .feat-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .feat-card.c-red::before { background: var(--accent); }
+    .feat-card.c-green::before { background: var(--green); }
+    .feat-card.c-blue::before { background: var(--blue); }
+    .feat-card.c-gold::before { background: var(--gold); }
+    .feat-card.c-purple::before { background: var(--purple); }
+    .feat-card.c-orange::before { background: var(--accent2); }
+    .feat-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); }
+    .fc-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+    .fc-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem; }
+    .fc-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.75rem; }
+    .fc-bullets { list-style: none; }
+    .fc-bullets li { font-size: 0.75rem; color: var(--muted); padding: 0.2rem 0; display: flex; gap: 0.5rem; line-height: 1.45; }
+    .fc-bullets li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-weight: 700; }
+    .fc-status { margin-top: 0.75rem; }
+    .status-badge { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+    .s-live { background: rgba(0,212,168,0.12); color: var(--green); border: 1px solid rgba(0,212,168,0.3); }
+    .s-active { background: rgba(255,140,66,0.15); color: var(--accent2); border: 1px solid rgba(255,140,66,0.4); }
+    .s-next { background: rgba(61,126,255,0.12); color: var(--blue); border: 1px solid rgba(61,126,255,0.3); }
+    .s-planned { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+
+    /* ── AGENT ROW ── */
+    .agent-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+    @media (max-width: 1100px) { .agent-row { grid-template-columns: repeat(2, 1fr); } }
+    .agent-mini { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+    .agent-mini-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .agent-mini-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.25rem; }
+    .agent-mini-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── COMPARISON TABLE ── */
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 1.5rem; }
+    .comp-table th { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--border); background: var(--surface2); text-align: center; }
+    .comp-table th:first-child { text-align: left; }
+    .comp-table td { padding: 0.75rem 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: center; }
+    .comp-table td:first-child { font-weight: 600; color: var(--text); text-align: left; }
+    .comp-table .fi-col { color: var(--green); font-weight: 700; }
+    .comp-table .no { color: rgba(255,95,87,0.7); }
+    .comp-table .partial { color: var(--gold); }
+
+    /* ── PPM CALENDAR MOCK ── */
+    .ppm-calendar { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-top: 1.5rem; }
+    .ppm-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .ppm-cal-title { font-weight: 700; font-size: 0.95rem; }
+    .ppm-cal-sub { font-size: 0.72rem; color: var(--muted); }
+    .ppm-week { display: grid; grid-template-columns: 80px repeat(5, 1fr); gap: 4px; margin-bottom: 4px; }
+    .ppm-day-header { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); text-align: center; padding: 0.3rem; }
+    .ppm-tech-label { font-size: 0.72rem; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0; }
+    .ppm-cell { border-radius: 6px; padding: 0.25rem 0.4rem; font-size: 0.65rem; font-weight: 600; text-align: center; min-height: 28px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; cursor: pointer; }
+    .ppm-cell:hover { opacity: 0.8; transform: scale(1.02); }
+    .ppm-cell.empty { background: rgba(255,255,255,0.03); color: transparent; }
+    .ppm-cell.job-hvac { background: rgba(0,212,168,0.15); color: var(--green); border: 1px solid rgba(0,212,168,0.25); }
+    .ppm-cell.job-elec { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.25); }
+    .ppm-cell.job-fire { background: rgba(255,77,46,0.15); color: var(--accent); border: 1px solid rgba(255,77,46,0.25); }
+    .ppm-cell.job-plumb { background: rgba(61,126,255,0.15); color: var(--blue); border: 1px solid rgba(61,126,255,0.25); }
+    .ppm-cell.ai-suggest { border: 1px dashed rgba(167,139,250,0.5); color: var(--purple); background: rgba(167,139,250,0.06); }
+    .ppm-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+    .ppm-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.68rem; color: var(--muted); }
+    .ppm-legend-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ── FLOW DIAGRAM ── */
+    .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 1.5rem 0; }
+    .flow-step { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.7rem 1rem; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+    .flow-arrow { font-size: 0.9rem; color: var(--muted); padding: 0 0.5rem; }
+    .flow-step.highlight { border-color: rgba(0,212,168,0.4); color: var(--green); background: rgba(0,212,168,0.06); }
+    .flow-step.ai-step { border-color: rgba(167,139,250,0.4); color: var(--purple); background: rgba(167,139,250,0.06); }
+
+    /* ── GEMINI OFFLINE INDICATOR ── */
+    .gemini-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .gemini-mode { border-radius: 12px; padding: 1.25rem 1.5rem; }
+    .gemini-mode.online { background: rgba(61,126,255,0.07); border: 1px solid rgba(61,126,255,0.2); }
+    .gemini-mode.offline { background: rgba(0,212,168,0.06); border: 1px solid rgba(0,212,168,0.2); }
+    .gm-badge { font-size: 0.62rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; margin-bottom: 0.6rem; display: inline-block; }
+    .gm-badge.online { background: rgba(61,126,255,0.15); color: var(--blue); border: 1px solid rgba(61,126,255,0.3); }
+    .gm-badge.offline { background: rgba(0,212,168,0.12); color: var(--green); border: 1px solid rgba(0,212,168,0.3); }
+    .gm-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .gm-list { list-style: none; }
+    .gm-list li { font-size: 0.76rem; color: var(--muted); padding: 0.2rem 0; display: flex; gap: 0.5rem; }
+    .gm-list li::before { content: '✓'; font-weight: 700; flex-shrink: 0; }
+    .gm-list.online li::before { color: var(--blue); }
+    .gm-list.offline li::before { color: var(--green); }
+
+    /* ── FOOTER ── */
+    .feat-footer { text-align: center; padding: 2rem; font-size: 0.7rem; color: var(--muted); border-top: 1px solid var(--border); }
+    .feat-footer a { color: var(--muted); text-decoration: none; }
+    .feat-footer a:hover { color: var(--text); }
+
+    /* ── SCROLLSPY ── */
+    .section-anchor { position: relative; top: -60px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LOGIN GATE
+     ══════════════════════════════════════════════ -->
+<div id="login-gate">
+  <div class="login-box">
+    <div class="login-logo">FieldInsight</div>
+    <div class="login-badge">🔒 Internal — Team Only</div>
+    <h1 class="login-title">AI Conquest<br>Command Centre</h1>
+    <p class="login-sub">This page is restricted to FieldInsight team members. Sign in with your <strong style="color:var(--green)">@fieldinsight.com</strong> Google account to continue.</p>
+    <div class="login-google-wrap">
+      <div id="g_id_onload"
+           data-client_id="REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false"
+           data-hosted_domain="fieldinsight.com">
+      </div>
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-shape="rectangular"
+           data-logo_alignment="left">
+      </div>
+    </div>
+    <div id="login-error" class="login-error"></div>
+    <p class="login-note">Only <strong>@fieldinsight.com</strong> accounts are permitted access.<br>Contact your admin if you need access.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN APP
+     ══════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a href="index.html" class="topbar-logo">FieldInsight</a>
+    <span class="topbar-title">/ AI Conquest</span>
+    <div class="topbar-spacer"></div>
+    <nav class="topbar-nav">
+      <a href="#onboarding">Onboarding</a>
+      <a href="#ai-expansion">AI Expansion</a>
+      <a href="#core">Core</a>
+      <a href="#gemini">Gemini Local</a>
+      <a href="#phone">Phone Reception</a>
+      <a href="#ppm">PPM</a>
+      <a href="#allocation">Allocation</a>
+    </nav>
+    <div class="topbar-user">
+      <img id="user-avatar" class="topbar-avatar" src="" alt="">
+      <span id="user-email" class="topbar-email"></span>
+      <button class="topbar-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Overview</div>
+        <a href="#hero"><span class="dot" style="background:var(--accent)"></span>AI Conquest</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Migration</div>
+        <a href="#onboarding"><span class="dot" style="background:var(--gold)"></span>Onboarding Conquest</a>
+        <a href="#platforms"><span class="dot" style="background:var(--gold)"></span>Platform Extraction</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">AI Agents</div>
+        <a href="#ai-expansion"><span class="dot" style="background:var(--accent)"></span>AI Expansion vs Fieldproxy</a>
+        <a href="#job-requests"><span class="dot" style="background:var(--green)"></span>Auto Job Requests</a>
+        <a href="#gemini"><span class="dot" style="background:var(--blue)"></span>Gemini Local (Offline)</a>
+        <a href="#phone"><span class="dot" style="background:var(--purple)"></span>Phone Reception + NEC</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Core Features</div>
+        <a href="#core"><span class="dot" style="background:var(--green)"></span>CRM + Bills + Insights</a>
+        <a href="#ppm"><span class="dot" style="background:var(--accent2)"></span>PPM Scheduling</a>
+        <a href="#allocation"><span class="dot" style="background:var(--purple)"></span>Allocation Engine</a>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Resources</div>
+        <a href="index.html">← Roadmap</a>
+        <a href="fi-advantage.html" target="_blank">Why FieldInsight ↗</a>
+        <a href="fieldinsight_thesis.pdf" target="_blank">Thesis PDF ↗</a>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+      <!-- HERO -->
+      <div id="hero" class="conquest-hero">
+        <div class="section-anchor"></div>
+        <div class="ch-eyebrow">FieldInsight · Internal Strategy · April 2026</div>
+        <h1 class="ch-title">AI Conquest:<br><em>Own ANZ. Neutralise the threat.</em></h1>
+        <p class="ch-sub">Migration, AI expansion, core platform, and the automation features that eliminate the ROI case for every competitor in the market. This is the full product and competitive playbook — migrate them in fast, make leaving impossible.</p>
+        <div class="ch-stats">
+          <div class="ch-stat">
+            <div class="ch-stat-n">7</div>
+            <div class="ch-stat-l">Migration sources covered</div>
+          </div>
+          <div class="ch-stat">
+            <div class="ch-stat-n">8</div>
+            <div class="ch-stat-l">AI Agents deployed</div>
+          </div>
+          <div class="ch-stat">
+            <div class="ch-stat-n">12–18</div>
+            <div class="ch-stat-l">Month window to dominate</div>
+          </div>
+          <div class="ch-stat">
+            <div class="ch-stat-n">$70k+</div>
+            <div class="ch-stat-l">AUD headcount saving per customer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ONBOARDING CONQUEST ── -->
+      <div id="onboarding" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--gold)">Migration · Priority 1–7</div>
+        <h2 class="feat-title">Onboarding Conquest</h2>
+        <p class="feat-desc">The fastest path to market domination is frictionless migration. Operators who can't get their data out of simPRO or ServiceM8 in under a week will not switch. This is the ranked build plan — start at P1, unlock the market as you go.</p>
+
+        <table class="priority-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Component</th>
+              <th>Effort</th>
+              <th>Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>CSV import top-up for Tradify + generic platforms</td>
+              <td><span class="effort-badge effort-low">Low</span></td>
+              <td class="impact-text">Immediate — covers the gap where no API exists. Tradify has 10,000+ ANZ installs. Generic CSV covers any platform FieldInsight doesn't have an extractor for yet.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>simPRO API extraction microservice</td>
+              <td><span class="effort-badge effort-med">Medium</span></td>
+              <td class="impact-text">Highest value — simPRO is the dominant ANZ platform. A one-click "Extract from simPRO" wizard converts the migration from a blocker into a differentiator. Target: reactive maintenance operators frustrated by simPRO's project-centric workflow.</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>ServiceM8 extraction</td>
+              <td><span class="effort-badge effort-low-med">Low–Medium</span></td>
+              <td class="impact-text">Second largest ANZ install base — popular with small residential trades (HVAC, plumbing, electrical). Their API is well-documented. Captures the segment graduating from basic tools.</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Outbound AI enrichment pipeline</td>
+              <td><span class="effort-badge effort-med">Medium</span></td>
+              <td class="impact-text">Multiplier on existing outbound. Enriches imported data with AI-inferred fields — typical job durations, common parts by trade/postcode, pricing benchmarks. Makes FieldInsight smarter from day one of import, not after 6 months of use.</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Pre-demo migration preview flow</td>
+              <td><span class="effort-badge effort-med">Medium</span></td>
+              <td class="impact-text">Highest conversion impact. Prospect connects their existing system before the demo. They see their own jobs, assets, and customers inside FieldInsight before they've committed. Turns "we need to think about it" into "when can we go live?"</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>AroFlo + Fergus extraction</td>
+              <td><span class="effort-badge effort-med">Medium</span></td>
+              <td class="impact-text">Completes the ANZ market. AroFlo is strong in commercial/industrial. Fergus is popular in NZ and growing in AU. Together they cover the long tail of mid-market ANZ trades operators.</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>AI outreach generation (LLM email drafts)</td>
+              <td><span class="effort-badge effort-low">Low</span></td>
+              <td class="impact-text">Quick win on top of enrichment. After migration data is imported, Claude generates a personalised outreach email per prospect — referencing their specific platform, trade type, business size, and a calculated ROI projection. SDR sends in one click.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div id="platforms" style="margin-top:2rem">
+          <h3 style="font-size:0.95rem;font-weight:700;margin-bottom:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:0.7rem">Platform Extraction Matrix</h3>
+          <div class="platform-grid">
+            <div class="platform-card">
+              <div class="platform-name">🔵 simPRO <span style="font-size:0.7rem;color:var(--accent);font-weight:800">P2 · HIGHEST VALUE</span></div>
+              <div class="platform-desc">Dominant ANZ incumbent. REST API available. Extract customers, jobs, assets, quotes, invoices, contacts, and recurring maintenance schedules.</div>
+              <span class="platform-method">REST API + OAuth2</span>
+            </div>
+            <div class="platform-card">
+              <div class="platform-name">🟢 ServiceM8</div>
+              <div class="platform-desc">Second largest ANZ install. Well-documented API. Strong in small residential HVAC, plumbing, electrical. Jobs, customers, assets, invoices.</div>
+              <span class="platform-method">ServiceM8 API v4</span>
+            </div>
+            <div class="platform-card">
+              <div class="platform-name">🟡 Tradify</div>
+              <div class="platform-desc">10,000+ ANZ micro-trades. Limited API — CSV export as primary path. Jobs, customers, quotes, invoices. No asset history.</div>
+              <span class="platform-method">CSV Export</span>
+            </div>
+            <div class="platform-card">
+              <div class="platform-name">🟣 AroFlo</div>
+              <div class="platform-desc">Strong in commercial/industrial ANZ. SOAP/REST API. Captures complex multi-site project data, asset registers, compliance docs.</div>
+              <span class="platform-method">AroFlo REST API</span>
+            </div>
+            <div class="platform-card">
+              <div class="platform-name">🔴 Fergus</div>
+              <div class="platform-desc">Popular NZ-origin, growing AU install. API available. Jobs, customers, timesheets, invoices. Especially strong in residential trades NZ.</div>
+              <span class="platform-method">Fergus API + CSV fallback</span>
+            </div>
+            <div class="platform-card">
+              <div class="platform-name">⚪ Generic / Any</div>
+              <div class="platform-desc">FieldInsight standard CSV template. Any platform with export capability. Maps to FieldInsight data model via column matching + AI field inference.</div>
+              <span class="platform-method">CSV + AI field mapping</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AI EXPANSION ── -->
+      <div id="ai-expansion" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--accent)">Competitive Response · Neutralise Fieldproxy</div>
+        <h2 class="feat-title">AI Expansion — FI-Token Powered</h2>
+        <p class="feat-desc">Fieldproxy has 8 AI agents and a flat $649/month price. FieldInsight's response: 8 agents at AU $500/month with a data moat Fieldproxy can't replicate — 10+ years of ANZ electrical contracting data making every recommendation more accurate than a generic AI competitor.</p>
+
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th style="color:var(--green)">FieldInsight</th>
+              <th>Fieldproxy</th>
+              <th>TTAN Atlas</th>
+              <th>simPRO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>AI Voice Booking (24/7 inbound)</td><td class="fi-col">✅ FI-001/017</td><td class="partial">✅ Calling Agent</td><td class="partial">✅ Contact Center Pro</td><td class="no">❌</td></tr>
+            <tr><td>AI Dispatch / Auto-Assign</td><td class="fi-col">🔨 Building</td><td class="partial">✅ Dispatch Agent</td><td class="partial">✅ Dispatch Pro</td><td class="no">❌</td></tr>
+            <tr><td>AI Document / Invoice Parse</td><td class="fi-col">✅ FI-002/003 Live</td><td class="partial">✅ Doc Intelligence</td><td class="no">⚠ Limited</td><td class="no">❌</td></tr>
+            <tr><td>AI Voice Job Notes</td><td class="fi-col">✅ FI-009 Building</td><td class="partial">✅ Voice Agent</td><td class="partial">✅ Field Pro</td><td class="no">❌</td></tr>
+            <tr><td>Visual Inbox / Email AI</td><td class="fi-col">✅ FI-019 Live</td><td class="no">❌</td><td class="no">⚠ Limited</td><td class="no">❌</td></tr>
+            <tr><td>Business Insights / Benchmarking</td><td class="fi-col">🔨 Building</td><td class="no">❌</td><td class="partial">⚠ Some</td><td class="no">❌</td></tr>
+            <tr><td>Offline Local AI (field device)</td><td class="fi-col">🔨 Gemini Local</td><td class="no">❌</td><td class="no">❌</td><td class="no">❌</td></tr>
+            <tr><td>ANZ Compliance Integration</td><td class="fi-col">🔨 FI-022</td><td class="no">❌</td><td class="no">❌</td><td class="partial">⚠ Partial</td></tr>
+            <tr><td>ANZ Proprietary Data Moat</td><td class="fi-col">✅ Building</td><td class="no">❌ No local data</td><td class="no">❌ US data only</td><td class="no">❌ No AI layer</td></tr>
+            <tr><td>FI-Token consumption pricing</td><td class="fi-col">✅ AU $500 flat</td><td class="partial">USD $649 flat</td><td class="no">❌ Per-seat USD</td><td class="no">❌ Per-user AUD</td></tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:2rem">
+          <h3 style="font-size:0.78rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">FI-Token AI Pricing Model</h3>
+          <div class="agent-row">
+            <div class="agent-mini">
+              <div class="agent-mini-icon">🎙️</div>
+              <div class="agent-mini-name">Voice Note</div>
+              <div class="agent-mini-desc">~200 tokens per job note transcription</div>
+            </div>
+            <div class="agent-mini">
+              <div class="agent-mini-icon">📞</div>
+              <div class="agent-mini-name">Booking Call</div>
+              <div class="agent-mini-desc">~800 tokens per full inbound booking</div>
+            </div>
+            <div class="agent-mini">
+              <div class="agent-mini-icon">📄</div>
+              <div class="agent-mini-name">Invoice Parse</div>
+              <div class="agent-mini-desc">~500 tokens per PDF supplier bill</div>
+            </div>
+            <div class="agent-mini">
+              <div class="agent-mini-icon">🚦</div>
+              <div class="agent-mini-name">Auto Dispatch</div>
+              <div class="agent-mini-desc">~150 tokens per AI job assignment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── AUTO JOB REQUESTS ── -->
+      <div id="job-requests" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--green)">Automation · Inbound Processing</div>
+        <h2 class="feat-title">Auto Processing of Job Requests</h2>
+        <p class="feat-desc">Every inbound job request — email, SMS, web form, phone call — automatically classified, enriched, job-created, and assigned. Zero manual triage. The AI does the reception work.</p>
+
+        <div class="flow">
+          <div class="flow-step">Email / SMS / Form / Call</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step ai-step">🤖 AI Classification</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step ai-step">Job Type · Urgency · Customer ID</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Job Created</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step ai-step">AI Dispatch → Assign Tech</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Customer Confirmed</div>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card c-green">
+            <div class="fc-icon">📧</div>
+            <div class="fc-title">Gmail / Outlook Inbox Agent</div>
+            <div class="fc-desc">Monitors nominated @fieldinsight customer email. Classifies every inbound message — job request, enquiry, complaint, invoice query. Creates job records automatically.</div>
+            <ul class="fc-bullets">
+              <li>OAuth2 connected — Gmail + Outlook</li>
+              <li>AI urgency scoring: Critical / High / Normal</li>
+              <li>Auto-links to customer CRM record by email</li>
+              <li>Drafts AI reply — one-click send</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-live">🟢 Live — FI-019</span></div>
+          </div>
+          <div class="feat-card c-blue">
+            <div class="fc-icon">💬</div>
+            <div class="fc-title">SMS Job Request Intake</div>
+            <div class="fc-desc">Customer sends SMS to FieldInsight number. AI parses intent, creates job, confirms via SMS reply. Twilio Conversations — one thread per booking.</div>
+            <ul class="fc-bullets">
+              <li>Twilio SMS webhook → Claude intent extraction</li>
+              <li>Job type, address, preferred time extracted from natural SMS</li>
+              <li>Scheduler-triggered outbound: "Your next service is due — reply to book"</li>
+              <li>Job status triggers: "Job complete — book follow-up service"</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-active">🔥 Active Build — FI-018</span></div>
+          </div>
+          <div class="feat-card c-red">
+            <div class="fc-icon">🌐</div>
+            <div class="fc-title">Web Form + API Intake</div>
+            <div class="fc-desc">FieldInsight embeddable booking widget for customer websites. AI validates and enriches submissions. Creates job and sends customer confirmation automatically.</div>
+            <ul class="fc-bullets">
+              <li>Embeddable booking form (iFrame or JS widget)</li>
+              <li>AI field validation and address normalisation</li>
+              <li>Webhook API for custom integrations</li>
+              <li>Auto-confirmation email/SMS to customer</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-next">Next</span></div>
+          </div>
+          <div class="feat-card c-purple">
+            <div class="fc-icon">📞</div>
+            <div class="fc-title">VOIP AI Booking Agent (Inbound)</div>
+            <div class="fc-desc">AI answers the phone, qualifies the job, selects a time slot, and creates the job record — without a human CSR. Handles overflow when staff are busy.</div>
+            <ul class="fc-bullets">
+              <li>Twilio Voice IVR + Claude STT/TTS</li>
+              <li>Natural language job booking — no menu trees</li>
+              <li>Hands off to human for complex requests</li>
+              <li>Full call transcript logged to job record</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-active">🔥 Active Build — FI-017</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CORE FEATURES ── -->
+      <div id="core" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--green)">Core Platform</div>
+        <h2 class="feat-title">CRM · Bill Processing · Business Insights</h2>
+        <p class="feat-desc">The three platform pillars that make FieldInsight the system of record — and make every competitor's AI irrelevant without the data that lives here.</p>
+
+        <div class="feat-grid">
+          <div class="feat-card c-green">
+            <div class="fc-icon">👥</div>
+            <div class="fc-title">CRM — Customer Intelligence</div>
+            <div class="fc-desc">Full customer relationship layer: contact history, job records, asset registers, compliance docs, communication threads — all linked to every job and invoice.</div>
+            <ul class="fc-bullets">
+              <li>Customer + site + contact hierarchy</li>
+              <li>Full job and invoice history per customer</li>
+              <li>Asset register per site with service history</li>
+              <li>Communication log: email threads, SMS, call transcripts</li>
+              <li>AI insights: "Last service 14 months ago — overdue for inspection"</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-live">🟢 Core Feature</span></div>
+          </div>
+          <div class="feat-card c-gold">
+            <div class="fc-icon">📄</div>
+            <div class="fc-title">Bill Processing — Claude Vision Parser</div>
+            <div class="fc-desc">Drag-and-drop supplier invoice. Claude Vision parses every line item, matches internal codes, applies markup, syncs to PO and Job. Zero admin touch on supplier bills.</div>
+            <ul class="fc-bullets">
+              <li>Auto-extract: invoice #, date, supplier, all line items, GST, totals</li>
+              <li>Fuzzy code matching: supplier code → internal inventory code</li>
+              <li>Per-supplier default markup — editable per bill</li>
+              <li>Bill status flow: Draft → Approved → Paid</li>
+              <li>Over-billed lines flagged in red automatically</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-active">🔥 Active Build — FI-002/003</span></div>
+          </div>
+          <div class="feat-card c-blue">
+            <div class="fc-icon">📊</div>
+            <div class="fc-title">Business Insights — Weekly AI Digest</div>
+            <div class="fc-desc">Actionable intelligence from operational data — jobs, technicians, invoices, assets. Weekly digest. Benchmarked against anonymised ANZ peers. Identifies gaps before they compound.</div>
+            <ul class="fc-bullets">
+              <li>Jobs/day per technician vs ANZ average (4.2 vs 3.8)</li>
+              <li>Invoice-to-completion lag — cash flow risk flags</li>
+              <li>Stale asset maintenance alerts</li>
+              <li>Top 5 actions this week from AI analysis</li>
+              <li>Exportable PDF/CSV for owners</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned — FI-006</span></div>
+          </div>
+          <div class="feat-card c-purple">
+            <div class="fc-icon">🧠</div>
+            <div class="fc-title">AI Quick Answer Agent</div>
+            <div class="fc-desc">Chat interface inside FieldInsight for instant answers. "What did we charge for a 3-phase switchboard fault at body corporate last year?" — answers in seconds from your own job history.</div>
+            <ul class="fc-bullets">
+              <li>Natural language query over all job + invoice history</li>
+              <li>Compliance reference: "What's the CCEW requirement for commercial switchboard work?"</li>
+              <li>Pricing benchmarks: "Typical labour rate for HVAC fault diagnosis in VIC?"</li>
+              <li>Powered by Claude with RAG over FieldInsight customer data</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── GEMINI LOCAL ── -->
+      <div id="gemini" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--blue)">Field AI · Offline Capable</div>
+        <h2 class="feat-title">Gemini Local — AI on the Phone, Offline</h2>
+        <p class="feat-desc">Fieldproxy has no equivalent. A Gemini-powered local AI client running on the technician's phone — diagnoses faults, captures voice notes, references compliance standards, and works on-site with zero internet. Syncs when back online.</p>
+
+        <div class="gemini-modes">
+          <div class="gemini-mode online">
+            <span class="gm-badge online">📶 Online Mode</span>
+            <div class="gm-title">Full Gemini — Cloud Powered</div>
+            <ul class="gm-list online">
+              <li>Full job history context from FieldInsight CRM</li>
+              <li>Live ANZ fault library + compliance standards</li>
+              <li>Parts pricing from supplier price books</li>
+              <li>Real-time dispatch updates + job reassignment</li>
+              <li>Voice note transcription synced instantly</li>
+              <li>Photo upload for defect documentation</li>
+              <li>AI-drafted quote from voice description</li>
+            </ul>
+          </div>
+          <div class="gemini-mode offline">
+            <span class="gm-badge offline">📵 Offline Mode — On Device</span>
+            <div class="gm-title">Gemini Nano — Zero Internet Required</div>
+            <ul class="gm-list offline">
+              <li>Fault diagnosis from downloaded fault library</li>
+              <li>AS/NZS 3000 compliance reference (locally cached)</li>
+              <li>Voice capture for job notes — syncs on reconnect</li>
+              <li>Cached customer + asset data for today's jobs</li>
+              <li>Job checklist completion — saved locally</li>
+              <li>Photo capture for defects — uploaded when online</li>
+              <li>Offline invoice draft from job completion data</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feat-grid" style="margin-top:1.5rem">
+          <div class="feat-card c-blue">
+            <div class="fc-icon">🔍</div>
+            <div class="fc-title">On-Site Fault Diagnosis</div>
+            <div class="fc-desc">Tech describes the fault: "Daikin VRV unit throwing E7 fault code, outdoor unit not starting." Gemini diagnoses cause, suggests remediation, lists required parts — offline if needed.</div>
+            <ul class="fc-bullets">
+              <li>Supports Daikin, Mitsubishi, Panasonic fault codes</li>
+              <li>AS/NZS 3000 reference for electrical compliance</li>
+              <li>Parts list with estimated quantities from job history</li>
+              <li>Severity assessment: safe to continue / isolate immediately</li>
+            </ul>
+          </div>
+          <div class="feat-card c-green">
+            <div class="fc-icon">🎤</div>
+            <div class="fc-title">Voice Capture — Hands Free</div>
+            <div class="fc-desc">Tech speaks while working. "Replaced contactor on zone 3, customer mentioned intermittent tripping for 3 weeks prior." Gemini structures this into a professional service note in real time.</div>
+            <ul class="fc-bullets">
+              <li>Continuous listening mode — no need to tap between sentences</li>
+              <li>Auto-structures into FieldInsight note format</li>
+              <li>Prompts: Service Notes · Quote · Defect · Follow-up</li>
+              <li>Works offline — transcribed on-device, structured when reconnected</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PHONE RECEPTION ── -->
+      <div id="phone" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--purple)">AI Reception · NEC Integration</div>
+        <h2 class="feat-title">CRM Phone Reception — AI Overflow + NEC</h2>
+        <p class="feat-desc">When the phone rings and your staff are busy — AI answers, handles the booking, and logs everything to the CRM. NEC phone systems are already used by many FieldInsight customers for internal call routing. FieldInsight hooks into NEC's overflow and queue events.</p>
+
+        <div class="flow">
+          <div class="flow-step">Inbound Call</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">NEC PBX</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">Staff Available?</div>
+          <div class="flow-arrow">→ No →</div>
+          <div class="flow-step ai-step">🤖 AI Reception Agent</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">Job Created + CRM Updated</div>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card c-purple">
+            <div class="fc-icon">📟</div>
+            <div class="fc-title">NEC Phone System Integration</div>
+            <div class="fc-desc">NEC UNIVERGE SV9100/SV9300 are widely deployed across ANZ trades businesses and body corporate operators. FieldInsight integrates via SIP/TAPI to receive overflow and after-hours calls.</div>
+            <ul class="fc-bullets">
+              <li>SIP trunk integration — NEC routes overflow to FieldInsight VOIP</li>
+              <li>After-hours toggle: AI takes all calls outside business hours</li>
+              <li>Queue overflow: AI steps in when wait time exceeds threshold</li>
+              <li>All AI-handled calls logged to CRM with transcript + recording</li>
+              <li>Morning summary: overnight calls handled, jobs created, follow-ups needed</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned</span></div>
+          </div>
+          <div class="feat-card c-orange">
+            <div class="fc-icon">🤖</div>
+            <div class="fc-title">AI Receptionist Logic</div>
+            <div class="fc-desc">Not a menu tree — a natural AI conversation. "Hi, this is the FieldInsight booking assistant for ABC Electrical. How can I help?" Handles bookings, status queries, and urgent fault reports.</div>
+            <ul class="fc-bullets">
+              <li>New booking: captures job type, address, preferred time, contact details</li>
+              <li>Existing job status: looks up customer record, reads back job status</li>
+              <li>Urgent fault: escalates immediately to on-call tech via SMS</li>
+              <li>Anything else: takes a message, creates CRM activity for morning follow-up</li>
+              <li>Speaks naturally — no "press 1 for…" menus</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PPM SCHEDULING ── -->
+      <div id="ppm" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--accent2)">Preventive Maintenance · Compliance Driven</div>
+        <h2 class="feat-title">PPM Scheduling — Planned Preventive Maintenance</h2>
+        <p class="feat-desc">Body corporate and government facility operators run on PPM schedules — quarterly HVAC services, annual electrical inspections, monthly fire safety checks. FieldInsight's PPM module generates, schedules, and auto-dispatches these jobs from asset-linked maintenance plans.</p>
+
+        <div class="feat-grid">
+          <div class="feat-card c-orange">
+            <div class="fc-icon">📅</div>
+            <div class="fc-title">Asset-Linked Maintenance Plans</div>
+            <div class="fc-desc">Each asset (HVAC unit, switchboard, fire panel) carries a maintenance schedule. When the next service is due, FieldInsight automatically generates the job — no manual intervention.</div>
+            <ul class="fc-bullets">
+              <li>Service frequency: monthly / quarterly / bi-annual / annual / custom</li>
+              <li>Compliance-triggered: AS/NZS 3000 inspection intervals for electrical</li>
+              <li>Asset age and warranty tracking: flag assets approaching warranty expiry</li>
+              <li>Last service date + outcome linked to next schedule</li>
+            </ul>
+          </div>
+          <div class="feat-card c-red">
+            <div class="fc-icon">🔁</div>
+            <div class="fc-title">Recurring Job Templates</div>
+            <div class="fc-desc">Save a job as a PPM template — checklist, parts, estimated duration, required certifications. Every generated PPM job inherits the template and pre-populates the tech's mobile app before they arrive.</div>
+            <ul class="fc-bullets">
+              <li>Template includes: task checklist, required parts, compliance sign-off fields</li>
+              <li>Certification requirements: CCEW, WHS, RCD test record</li>
+              <li>Photo evidence points built into checklist</li>
+              <li>Auto-generate quote from template for customer approval before work</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- PPM Calendar Mock -->
+        <div class="ppm-calendar">
+          <div class="ppm-cal-header">
+            <div>
+              <div class="ppm-cal-title">April 2026 — PPM Schedule</div>
+              <div class="ppm-cal-sub">4 technicians · 23 scheduled PPM jobs · 3 AI suggestions pending</div>
+            </div>
+            <div style="display:flex;gap:0.5rem">
+              <button style="background:rgba(167,139,250,0.15);color:var(--purple);border:1px solid rgba(167,139,250,0.3);border-radius:6px;padding:5px 12px;font-size:0.72rem;font-weight:700;cursor:pointer">🤖 Auto-Fill Gaps</button>
+              <button style="background:var(--surface3);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:0.72rem;font-weight:600;cursor:pointer">Export PDF</button>
+            </div>
+          </div>
+          <div class="ppm-week">
+            <div></div>
+            <div class="ppm-day-header">Mon 7</div>
+            <div class="ppm-day-header">Tue 8</div>
+            <div class="ppm-day-header">Wed 9</div>
+            <div class="ppm-day-header">Thu 10</div>
+            <div class="ppm-day-header">Fri 11</div>
+          </div>
+          <div class="ppm-week">
+            <div class="ppm-tech-label">👷 Marcus</div>
+            <div class="ppm-cell job-hvac">HVAC Q2</div>
+            <div class="ppm-cell job-hvac">HVAC Q2</div>
+            <div class="ppm-cell job-elec">Elec Insp</div>
+            <div class="ppm-cell empty">—</div>
+            <div class="ppm-cell ai-suggest">💡 AI suggest</div>
+          </div>
+          <div class="ppm-week">
+            <div class="ppm-tech-label">👷 Sarah</div>
+            <div class="ppm-cell job-fire">Fire Check</div>
+            <div class="ppm-cell job-fire">Fire Check</div>
+            <div class="ppm-cell job-fire">Fire Check</div>
+            <div class="ppm-cell job-elec">Elec Insp</div>
+            <div class="ppm-cell job-elec">Elec Insp</div>
+          </div>
+          <div class="ppm-week">
+            <div class="ppm-tech-label">👷 Dev</div>
+            <div class="ppm-cell job-plumb">Plumb PPM</div>
+            <div class="ppm-cell empty">—</div>
+            <div class="ppm-cell job-hvac">HVAC Q2</div>
+            <div class="ppm-cell job-hvac">HVAC Q2</div>
+            <div class="ppm-cell ai-suggest">💡 AI suggest</div>
+          </div>
+          <div class="ppm-week">
+            <div class="ppm-tech-label">👷 Lisa</div>
+            <div class="ppm-cell empty">—</div>
+            <div class="ppm-cell job-elec">Elec Insp</div>
+            <div class="ppm-cell job-plumb">Plumb PPM</div>
+            <div class="ppm-cell job-fire">Fire Check</div>
+            <div class="ppm-cell ai-suggest">💡 AI suggest</div>
+          </div>
+          <div class="ppm-legend">
+            <div class="ppm-legend-item"><div class="ppm-legend-dot" style="background:rgba(0,212,168,0.5)"></div>HVAC Quarterly</div>
+            <div class="ppm-legend-item"><div class="ppm-legend-dot" style="background:rgba(245,166,35,0.5)"></div>Electrical Inspection</div>
+            <div class="ppm-legend-item"><div class="ppm-legend-dot" style="background:rgba(255,77,46,0.5)"></div>Fire Safety</div>
+            <div class="ppm-legend-item"><div class="ppm-legend-dot" style="background:rgba(61,126,255,0.5)"></div>Plumbing PPM</div>
+            <div class="ppm-legend-item"><div class="ppm-legend-dot" style="background:rgba(167,139,250,0.2);border:1px dashed rgba(167,139,250,0.5)"></div>AI Suggested (unfilled gap)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ALLOCATION ENGINE ── -->
+      <div id="allocation" class="feat-section">
+        <div class="section-anchor"></div>
+        <div class="feat-eyebrow" style="color:var(--purple)">Dispatch Intelligence · Auto + Visual</div>
+        <h2 class="feat-title">Allocation Engine — Auto Allocate + Visual PPM Planning</h2>
+        <p class="feat-desc">Two modes: full AI auto-allocation for urgent reactive jobs, and guided visual drag-and-drop for planning the monthly PPM schedule. Together they eliminate the dispatcher role — or make your existing dispatcher five times faster.</p>
+
+        <div class="feat-grid">
+          <div class="feat-card c-purple">
+            <div class="fc-icon">⚡</div>
+            <div class="fc-title">Auto Allocate — AI-Driven Assignment</div>
+            <div class="fc-desc">A reactive job comes in. AI evaluates all available technicians across 8+ variables and assigns the best fit in under 3 seconds. No human dispatcher needed for standard reactive work.</div>
+            <ul class="fc-bullets">
+              <li>Variables: skill match · proximity · current load · travel time · customer history · asset familiarity</li>
+              <li>ANZ-tuned: trade licensing verification before assignment (CCEW requirements)</li>
+              <li>Confidence score shown — dispatcher can override with one click</li>
+              <li>Learning loop: outcome data (job duration, customer rating) feeds back into next assignment</li>
+              <li>Estimated savings: replaces $70k+ AUD/year dispatcher role at &gt;20 tech scale</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned — FI-021 priority action</span></div>
+          </div>
+          <div class="feat-card c-orange">
+            <div class="fc-icon">📋</div>
+            <div class="fc-title">Visual PPM Allocation — Monthly Planner</div>
+            <div class="fc-desc">Drag-and-drop PPM jobs onto a tech-by-tech monthly calendar. AI fills gaps, balances load, flags compliance deadlines, and suggests optimal sequencing by geography to minimise drive time.</div>
+            <ul class="fc-bullets">
+              <li>Monthly calendar grid: tech rows × working days</li>
+              <li>Unallocated PPM job pool on the left — drag to assign</li>
+              <li>AI "Fill Gaps" button: fills remaining unallocated PPM jobs optimally</li>
+              <li>Compliance countdown: CCEW annual inspection due dates shown as urgency flags</li>
+              <li>Geographic clustering: AI groups nearby sites onto same day to reduce travel</li>
+              <li>Export to PDF for customer scheduling confirmation letters</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned</span></div>
+          </div>
+          <div class="feat-card c-blue">
+            <div class="fc-icon">🗺️</div>
+            <div class="fc-title">Route Optimisation</div>
+            <div class="fc-desc">For PPM-heavy weeks with 8+ sites, AI calculates optimal drive order across the day's jobs to minimise total travel time. Estimated saving: 45–90 mins/tech/day on dense schedules.</div>
+            <ul class="fc-bullets">
+              <li>Day route ordered by geography + job priority</li>
+              <li>Traffic-aware: morning peak routing vs afternoon</li>
+              <li>Tech can override sequence — AI recalculates remaining route</li>
+              <li>Integrates with Apple Maps / Google Maps for turn-by-turn</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-next">FI-013</span></div>
+          </div>
+          <div class="feat-card c-red">
+            <div class="fc-icon">📊</div>
+            <div class="fc-title">Allocation Dashboard</div>
+            <div class="fc-desc">Real-time view of all techs, their current jobs, live location, and queue. Drag-and-drop reassignment when a job runs long or an emergency job arrives.</div>
+            <ul class="fc-bullets">
+              <li>Tech status: En Route / On Site / Job Complete / Available</li>
+              <li>Live ETA calculations from tech GPS</li>
+              <li>Emergency override: drag a new P1 job to available tech</li>
+              <li>Daily load balance score per tech — prevents burnout</li>
+            </ul>
+            <div class="fc-status"><span class="status-badge s-planned">Planned</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="feat-footer">
+        FieldInsight AI Conquest · Internal Use Only · April 2026 &nbsp;·&nbsp;
+        <a href="index.html">Roadmap</a> &nbsp;·&nbsp;
+        <a href="fi-advantage.html">Why FieldInsight</a> &nbsp;·&nbsp;
+        <a href="fieldinsight_thesis.pdf" target="_blank">Competitive Thesis PDF</a>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+</div><!-- /app -->
+
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIG — Replace with real Google Client ID
+  // Create at: console.cloud.google.com → APIs & Services → Credentials
+  // Authorised origins: https://ptyrrell.github.io
+  // Restrict to hosted domain: fieldinsight.com
+  // ─────────────────────────────────────────────
+  const GOOGLE_CLIENT_ID = 'REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  const ALLOWED_DOMAIN = 'fieldinsight.com';
+
+  function handleCredentialResponse(response) {
+    try {
+      // Decode JWT payload (not verifying signature client-side — that's fine for UI gating)
+      const parts = response.credential.split('.');
+      const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+
+      const email = payload.email || '';
+      const domain = email.split('@')[1] || '';
+
+      if (domain !== ALLOWED_DOMAIN) {
+        showError('Access restricted to @' + ALLOWED_DOMAIN + ' accounts. Got: ' + email);
+        return;
+      }
+
+      // Store session
+      const user = { email, name: payload.name || email, picture: payload.picture || '', exp: payload.exp };
+      localStorage.setItem('fi_conquest_user', JSON.stringify(user));
+      showApp(user);
+
+    } catch (e) {
+      showError('Sign-in failed: ' + e.message);
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('login-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function showApp(user) {
+    document.getElementById('login-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('user-email').textContent = user.email;
+    if (user.picture) document.getElementById('user-avatar').src = user.picture;
+    document.title = 'AI Conquest · FieldInsight';
+  }
+
+  function signOut() {
+    localStorage.removeItem('fi_conquest_user');
+    location.reload();
+  }
+
+  // Auto-restore session if still valid
+  (function checkSession() {
+    try {
+      const stored = localStorage.getItem('fi_conquest_user');
+      if (!stored) return;
+      const user = JSON.parse(stored);
+      if (!user.email || !user.email.endsWith('@' + ALLOWED_DOMAIN)) return;
+      const now = Math.floor(Date.now() / 1000);
+      if (user.exp && user.exp < now) {
+        localStorage.removeItem('fi_conquest_user');
+        return;
+      }
+      showApp(user);
+    } catch (e) { /* session invalid */ }
+  })();
+
+  // Active sidebar link on scroll
+  const sections = document.querySelectorAll('.feat-section');
+  const sidebarLinks = document.querySelectorAll('.sidebar a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.querySelector('.section-anchor')?.parentElement?.id
+                || entry.target.id;
+        sidebarLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

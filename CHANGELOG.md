@@ -5,6 +5,30 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.6 — 2026-04-12
+
+### Added
+- `ai-conquest.html`: Internal AI Conquest strategy hub — Google OAuth gate (@fieldinsight.com only)
+  - 7-priority migration conquest table with effort/impact ratings
+  - Platform extraction matrix: simPRO (API), ServiceM8 (API), Tradify (CSV), AroFlo, Fergus, Generic
+  - AI Expansion vs Fieldproxy 10-row comparison table with FI-Token pricing
+  - Auto Job Request Processing: Email / SMS / Web Form / VOIP flows
+  - Gemini Local: offline AI client — online + offline mode comparison
+  - CRM Phone Reception + NEC PBX SIP integration
+  - PPM Scheduling: visual monthly calendar mock with 4 techs
+  - Allocation Engine: Auto Allocate AI + visual drag-and-drop PPM planner
+  - Sidebar navigation + sticky topbar + scrollspy active states
+  - Session persistence via localStorage with JWT expiry check
+- FI-026: AI Conquest Hub card (live, auth-gated)
+- FI-027: Gemini Local offline AI client for field techs
+- FI-028: CRM Phone Reception + NEC PBX integration
+- FI-029: PPM Scheduling + visual monthly calendar
+- FI-030: Allocation Engine (Auto Allocate + Visual PPM Planner)
+- FI-031: Migration Conquest (simPRO/ServiceM8/Tradify/AroFlo/Fergus)
+- Nav: "⚔️ AI Conquest" button added to roadmap header
+
+---
+
 ## v0.8.5 — 2026-04-12
 
 ### Added

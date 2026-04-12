@@ -199,10 +199,11 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.8.5</span>
+    <span class="version">v0.8.6</span>
   <div class="spacer"></div>
   <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" class="nav-meridian-btn">📊 Meridian Dashboard</a>
   <a href="fi-advantage.html" target="_blank" class="nav-meridian-btn" style="background:rgba(61,126,255,0.12);border-color:rgba(61,126,255,0.35);color:#6c8fff">⚡ Why FieldInsight</a>
+  <a href="ai-conquest.html" target="_blank" class="nav-meridian-btn" style="background:rgba(255,77,46,0.1);border-color:rgba(255,77,46,0.35);color:#ff6b6b">⚔️ AI Conquest</a>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
@@ -228,7 +229,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 12 April 2026 &nbsp;·&nbsp; v0.8.5</div>
+    <div class="updated">Last updated: 12 April 2026 &nbsp;·&nbsp; v0.8.6</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -872,6 +873,143 @@
           <li>FI-Tokens model explained with per-action token costs</li>
           <li>CTA: "Ditch the dinosaur. Run a smarter business."</li>
           <li>🔗 <a href="fi-advantage.html" target="_blank" style="color:#00e5b0">Live Page →</a> &nbsp;·&nbsp; <a href="fieldinsight_thesis.pdf" target="_blank" style="color:#00e5b0">Competitive Thesis PDF →</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product ceo salesops">
+        <div class="ticket-id">FI-026</div>
+        <div class="card-title">⚔️ AI Conquest — Migration + Feature Internal Hub</div>
+        <div class="card-desc">Internal strategy page covering the full AI conquest playbook: migration from simPRO/ServiceM8/Tradify/AroFlo/Fergus, AI agent expansion vs Fieldproxy, Gemini Local offline client, NEC phone reception, PPM scheduling, and the auto-allocation engine. Protected by Google OAuth — @fieldinsight.com only.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Live</span>
+          <span class="badge" style="background:rgba(255,77,46,0.1);color:#ff6b6b;border:1px solid rgba(255,77,46,0.3)">🔒 Auth Required</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>7-priority migration conquest table (simPRO API → ServiceM8 → Tradify CSV → AroFlo → Fergus → AI enrichment → LLM outreach)</li>
+          <li>AI Expansion vs Fieldproxy 10-row comparison table</li>
+          <li>Auto Job Request Processing (Email / SMS / VOIP / Web Form)</li>
+          <li>Gemini Local: offline AI client for field techs (on-device fault diagnosis, voice capture)</li>
+          <li>CRM Phone Reception + NEC PBX integration for overflow AI handling</li>
+          <li>PPM Scheduling with visual monthly calendar mock</li>
+          <li>Allocation Engine: Auto Allocate AI + visual drag-and-drop PPM planner</li>
+          <li>Google OAuth login gate — restricted to @fieldinsight.com accounts</li>
+          <li>🔗 <a href="ai-conquest.html" target="_blank" style="color:#ff6b6b">AI Conquest Hub →</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product infra">
+        <div class="ticket-id">FI-027</div>
+        <div class="card-title">Gemini Local — Offline AI Client for Field Technicians</div>
+        <div class="card-desc">Gemini-powered local AI running on the technician's phone. Diagnoses faults, captures voice notes, references AS/NZS 3000 and compliance standards — with zero internet required on site. Syncs all captured data when reconnected.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Offline mode (Gemini Nano on-device):</strong></li>
+          <li>Fault diagnosis from downloaded fault library (Daikin / Mitsubishi / Panasonic + electrical)</li>
+          <li>AS/NZS 3000 compliance reference — locally cached</li>
+          <li>Voice capture for job notes — transcribed on-device, structured when reconnected</li>
+          <li>Cached customer + asset data for today's scheduled jobs</li>
+          <li>Job checklist completion saved locally, uploaded on reconnect</li>
+          <li><strong>Online mode (full Gemini Cloud):</strong></li>
+          <li>Full job history context from FieldInsight CRM</li>
+          <li>Real-time parts pricing from supplier price books</li>
+          <li>AI-drafted quote from voice description</li>
+          <li>Live dispatch updates + job reassignment notifications</li>
+          <li>No competitor has this — Fieldproxy, TTAN, and simPRO all require internet</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product infra salesops">
+        <div class="ticket-id">FI-028</div>
+        <div class="card-title">CRM Phone Reception — AI Overflow + NEC PBX Integration</div>
+        <div class="card-desc">AI answers the phone when staff are busy. Handles bookings, job status queries, and urgent fault reports. NEC UNIVERGE SV9100/SV9300 integration routes overflow and after-hours calls to FieldInsight's AI reception agent via SIP trunk.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>SIP trunk integration — NEC routes queue overflow to FieldInsight VOIP</li>
+          <li>After-hours mode: AI takes all calls outside business hours</li>
+          <li>Queue overflow threshold: AI steps in when wait time &gt;X seconds</li>
+          <li>AI handles: new booking · job status query · urgent fault escalation · message taking</li>
+          <li>Urgent faults: escalates to on-call tech via SMS immediately</li>
+          <li>All AI-handled calls logged to CRM with transcript + recording</li>
+          <li>Morning summary report: overnight calls handled, jobs created, follow-ups needed</li>
+          <li>NEC is already widely deployed across ANZ trades and body corporate — no hardware change needed</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product design">
+        <div class="ticket-id">FI-029</div>
+        <div class="card-title">PPM Scheduling — Asset-Linked Maintenance Plans + Visual Calendar</div>
+        <div class="card-desc">Planned Preventive Maintenance module for body corporate, industrial, and government facility operators. Asset-linked maintenance schedules auto-generate recurring jobs. Visual monthly calendar shows all PPM jobs per technician with compliance deadline flags.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Asset maintenance plans: frequency (monthly/quarterly/bi-annual/annual), compliance-triggered</li>
+          <li>Auto-generate PPM jobs when maintenance is due — no manual intervention</li>
+          <li>Recurring job templates: checklist, parts, compliance fields, photo evidence points</li>
+          <li>CCEW annual inspection countdowns: flags assets approaching compliance deadline</li>
+          <li>Visual monthly PPM calendar: tech rows × working days grid</li>
+          <li>Export monthly schedule as PDF for customer scheduling letters</li>
+          <li>Critical for body corporate and government facility contracts — high-value repeat revenue</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product design">
+        <div class="ticket-id">FI-030</div>
+        <div class="card-title">Allocation Engine — Auto Allocate AI + Visual PPM Planner</div>
+        <div class="card-desc">Two-mode allocation system: AI Auto Allocate for reactive jobs (assigns best-fit tech in &lt;3 seconds across 8 variables), and a visual drag-and-drop PPM planner for monthly schedule building. Together they eliminate the dispatcher role.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Auto Allocate (reactive jobs):</strong></li>
+          <li>Variables: skill match · proximity · current load · travel time · customer history · asset familiarity · licence requirements</li>
+          <li>ANZ-tuned: CCEW licence verification before assignment</li>
+          <li>Confidence score displayed — dispatcher can override with one click</li>
+          <li>Learning loop: job outcome data feeds back into next assignment</li>
+          <li>Estimated saving: replaces $70k+/year dispatcher at &gt;20 tech scale</li>
+          <li><strong>Visual PPM Planner:</strong></li>
+          <li>Drag PPM jobs from unallocated pool onto tech/day grid</li>
+          <li>AI "Fill Gaps" button: fills remaining unallocated jobs optimally</li>
+          <li>Geographic clustering: AI groups nearby sites on same day to reduce drive time</li>
+          <li>Real-time allocation dashboard: tech status, live ETA, drag-and-drop reassignment</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product salesops">
+        <div class="ticket-id">FI-031</div>
+        <div class="card-title">Migration Conquest — simPRO + ServiceM8 + Tradify Extraction</div>
+        <div class="card-desc">Frictionless data migration from the top 5 ANZ FSM platforms. One-click extraction wizard imports customers, jobs, assets, quotes, invoices, and recurring maintenance schedules. Pre-demo migration preview converts prospects before they've committed to switching.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-salesops">📊 Sales Ops</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>P1:</strong> CSV import for Tradify + generic — immediate, covers the gap</li>
+          <li><strong>P2:</strong> simPRO API extraction microservice — highest value ANZ target (REST API + OAuth2)</li>
+          <li><strong>P3:</strong> ServiceM8 extraction — second largest ANZ install (ServiceM8 API v4)</li>
+          <li><strong>P4:</strong> Outbound AI enrichment — enriches imported data with AI-inferred fields from day one</li>
+          <li><strong>P5:</strong> Pre-demo migration preview — prospect sees their own data in FieldInsight before committing</li>
+          <li><strong>P6:</strong> AroFlo + Fergus extraction — completes ANZ market coverage</li>
+          <li><strong>P7:</strong> AI outreach generation — Claude drafts personalised SDR emails from migration data</li>
+          <li>🔗 <a href="ai-conquest.html#onboarding" target="_blank" style="color:#ff6b6b">Full detail in AI Conquest Hub →</a></li>
         </ul></div>
       </div>
     </div>
