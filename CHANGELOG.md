@@ -5,6 +5,27 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.5 — 2026-04-12
+
+### Added
+- `fi-advantage.html` — FieldInsight "Why FieldInsight" competitive marketing page (live at /fi-advantage.html)
+  - Hero with AU $500 flat pricing headline, proof stats, CTAs
+  - Pain points: Per-User Fees, Six-Month Onboarding, Rigid Workflows, Growth Penalties
+  - 8 AI Agents with status badges (Scheduler, Booking, Voice, Dispatch, Document, Inbox, Knowledge, Insights)
+  - 16-item solutions grid covering full FSM lifecycle
+  - ANZ competitive advantage section: data moat, stitched intelligence, compounding accuracy
+  - Head-to-head comparison table: FieldInsight vs TTAN vs simPRO vs Fieldproxy
+  - 14 industries inc. Electrical (primary)
+  - Pricing: AU $299 Starter / AU $500 Growth (unlimited users) / Enterprise custom
+  - FI-Tokens model explained with per-action token costs
+- `fieldinsight_thesis.pdf` + `fieldinsight_thesis.md` added to docs (links from FI-020)
+- FI-025: FieldInsight AI Positioning Page card
+- FI-023: Updated with full FI-Tokens pricing model (AU $500 flat + consumption-based AI tokens)
+- FI-020: Fieldproxy confirmed full profile (solutions, AI agents, industries, "Ditch the Dinosaurs" tagline)
+- Nav: "Why FieldInsight" button added to roadmap nav
+
+---
+
 ## v0.8.4 — 2026-04-12
 
 ### Added

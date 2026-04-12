@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why FieldInsight — AI Built for Australian Trades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #080b10;
+      --surface:  #0f1318;
+      --surface2: #151a22;
+      --border:   #1e2533;
+      --text:     #eef0f7;
+      --muted:    #7a829e;
+      --accent:   #00d4a8;
+      --accent2:  #3d7eff;
+      --warn:     #ff5f57;
+      --gold:     #f5a623;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem; position: sticky; top: 0; z-index: 100;
+      background: rgba(8,11,16,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { font-size: 0.82rem; font-weight: 600; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #000 !important; padding: 7px 18px; border-radius: 8px; font-weight: 700 !important; }
+    .nav-cta:hover { background: #00f0c0 !important; color: #000 !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 88vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 5rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,168,0.07) 0%, transparent 70%),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(61,126,255,0.06) 0%, transparent 60%);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300d4a8' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none; opacity: 0.5;
+    }
+    .hero-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: ''; display: block; width: 32px; height: 1px; background: var(--accent); opacity: 0.5; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.8rem); font-weight: 800; line-height: 1.08; letter-spacing: -2px; max-width: 900px; margin: 0 auto 1.5rem; }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub { font-size: clamp(1rem, 2vw, 1.2rem); color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+    .btn-primary { background: var(--accent); color: #000; font-weight: 700; font-size: 0.9rem; padding: 13px 28px; border-radius: 10px; text-decoration: none; transition: all 0.15s; letter-spacing: -0.2px; }
+    .btn-primary:hover { background: #00f0c0; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,212,168,0.25); }
+    .btn-secondary { background: transparent; color: var(--text); font-weight: 600; font-size: 0.9rem; padding: 13px 28px; border-radius: 10px; text-decoration: none; border: 1px solid var(--border); transition: all 0.15s; }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-proof { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; }
+    .proof-item { text-align: center; }
+    .proof-num { font-family: 'Syne', sans-serif; font-size: 1.9rem; font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+    .proof-label { font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .section-eyebrow { font-size: 0.68rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 620px; }
+
+    /* ── PAIN POINTS ── */
+    .pain-section { background: var(--surface); padding: 5rem 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .pain-inner { max-width: 1200px; margin: 0 auto; }
+    .pain-headline { font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -1px; text-align: center; margin-bottom: 0.75rem; }
+    .pain-sub { text-align: center; color: var(--muted); margin-bottom: 3rem; font-size: 0.95rem; }
+    .pain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    @media (max-width: 640px) { .pain-grid { grid-template-columns: 1fr; } }
+    .pain-card {
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.5rem 1.75rem; display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.15s;
+    }
+    .pain-card:hover { border-color: rgba(255,95,87,0.4); }
+    .pain-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,95,87,0.12); border: 1px solid rgba(255,95,87,0.25); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .pain-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .pain-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── ADVANTAGE STRIP ── */
+    .advantage-strip {
+      background: linear-gradient(135deg, rgba(0,212,168,0.07) 0%, rgba(61,126,255,0.05) 100%);
+      border-top: 1px solid rgba(0,212,168,0.15); border-bottom: 1px solid rgba(0,212,168,0.15);
+      padding: 3rem 2rem;
+    }
+    .adv-inner { max-width: 1200px; margin: 0 auto; }
+    .adv-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+    .adv-headline { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; max-width: 760px; line-height: 1.2; }
+    .adv-headline em { font-style: normal; color: var(--accent); }
+    .adv-body { color: var(--muted); font-size: 0.95rem; line-height: 1.8; max-width: 680px; margin-bottom: 2rem; }
+    .adv-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+    @media (max-width: 768px) { .adv-pillars { grid-template-columns: 1fr; } }
+    .adv-pillar { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,168,0.15); border-radius: 12px; padding: 1.25rem 1.5rem; }
+    .adv-pillar-title { font-weight: 700; font-size: 0.92rem; color: var(--accent); margin-bottom: 0.45rem; }
+    .adv-pillar-body { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── AGENTS ── */
+    .agents-section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .agents-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+    .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 900px) { .agents-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .agents-grid { grid-template-columns: 1fr; } }
+    .agent-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.4rem 1.6rem; transition: all 0.18s; position: relative; overflow: hidden;
+    }
+    .agent-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .agent-card.a1::before { background: var(--accent); }
+    .agent-card.a2::before { background: var(--accent2); }
+    .agent-card.a3::before { background: var(--gold); }
+    .agent-card.a4::before { background: #c084fc; }
+    .agent-card.a5::before { background: #fb7185; }
+    .agent-card.a6::before { background: #34d399; }
+    .agent-card.a7::before { background: #60a5fa; }
+    .agent-card.a8::before { background: #f97316; }
+    .agent-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.12); box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+    .agent-icon { font-size: 1.5rem; margin-bottom: 0.7rem; }
+    .agent-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .agent-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.75rem; }
+    .agent-status { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; display: inline-block; }
+    .status-live { background: rgba(0,212,168,0.15); color: var(--accent); border: 1px solid rgba(0,212,168,0.3); }
+    .status-active { background: rgba(255,140,66,0.15); color: #ff8c42; border: 1px solid rgba(255,140,66,0.4); }
+    .status-next { background: rgba(61,126,255,0.15); color: #6c8fff; border: 1px solid rgba(61,126,255,0.35); }
+
+    /* ── SOLUTIONS ── */
+    .solutions-section { background: var(--surface); padding: 5rem 2rem; border-top: 1px solid var(--border); }
+    .solutions-inner { max-width: 1200px; margin: 0 auto; }
+    .sol-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 2.5rem; }
+    @media (max-width: 900px) { .sol-grid { grid-template-columns: repeat(2, 1fr); } }
+    .sol-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; font-size: 0.82rem; font-weight: 600; transition: all 0.15s; cursor: default; display: flex; align-items: center; gap: 0.6rem; }
+    .sol-item:hover { border-color: var(--accent); color: var(--accent); }
+    .sol-item span { font-size: 1rem; }
+
+    /* ── DATA MOAT ── */
+    .moat-section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .moat-split { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    @media (max-width: 768px) { .moat-split { grid-template-columns: 1fr; } }
+    .moat-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .moat-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; }
+    .moat-stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); letter-spacing: -1px; }
+    .moat-stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+    .vs-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .vs-table th { font-size: 0.68rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); text-align: left; }
+    .vs-table td { font-size: 0.8rem; padding: 0.75rem 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted); }
+    .vs-table td:first-child { font-weight: 600; color: var(--text); }
+    .vs-table td.fi { color: var(--accent); font-weight: 700; }
+    .vs-table td.bad { color: var(--warn); }
+    .vs-table td.ok { color: var(--gold); }
+
+    /* ── PRICING ── */
+    .pricing-section { background: var(--surface); padding: 5rem 2rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .pricing-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+    .pricing-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+    @media (max-width: 768px) { .pricing-cards { grid-template-columns: 1fr; } }
+    .pricing-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; text-align: left; transition: all 0.18s; position: relative; }
+    .pricing-card.featured { border-color: rgba(0,212,168,0.5); background: linear-gradient(145deg, rgba(0,212,168,0.05) 0%, var(--surface2) 100%); }
+    .pricing-card.featured::before { content: 'Most Popular'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%); font-size: 0.62rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #000; background: var(--accent); padding: 3px 12px; border-radius: 20px; white-space: nowrap; }
+    .plan-name { font-size: 0.75rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .plan-price { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: -2px; color: var(--text); margin-bottom: 0.2rem; }
+    .plan-price span { font-size: 1rem; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+    .plan-desc { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.5; }
+    .plan-features { list-style: none; margin-bottom: 1.75rem; }
+    .plan-features li { font-size: 0.8rem; padding: 0.45rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: flex-start; gap: 0.5rem; color: var(--muted); line-height: 1.4; }
+    .plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .plan-features li.token { color: var(--text); }
+    .plan-btn { display: block; text-align: center; padding: 11px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: all 0.15s; }
+    .plan-btn-primary { background: var(--accent); color: #000; }
+    .plan-btn-primary:hover { background: #00f0c0; }
+    .plan-btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .plan-btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .token-explainer { margin-top: 2.5rem; background: rgba(61,126,255,0.07); border: 1px solid rgba(61,126,255,0.2); border-radius: 14px; padding: 1.5rem 2rem; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .token-explainer h3 { font-weight: 700; font-size: 0.95rem; color: #6c8fff; margin-bottom: 0.75rem; }
+    .token-explainer p { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    .token-explainer ul { margin-top: 0.75rem; padding-left: 1rem; }
+    .token-explainer ul li { font-size: 0.8rem; color: var(--muted); line-height: 1.75; }
+
+    /* ── INDUSTRIES ── */
+    .industries-section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .industry-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
+    .industry-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 0.78rem; font-weight: 600; color: var(--muted); transition: all 0.15s; cursor: default; }
+    .industry-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .industry-pill.primary { border-color: rgba(0,212,168,0.4); color: var(--accent); background: rgba(0,212,168,0.06); }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 6rem 2rem; text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(0,212,168,0.08) 0%, transparent 70%);
+    }
+    .cta-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; letter-spacing: -1.5px; margin-bottom: 1rem; line-height: 1.1; }
+    .cta-title em { font-style: normal; color: var(--accent); }
+    .cta-sub { color: var(--muted); font-size: 1rem; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; padding: 2rem; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-logo">FieldInsight</a>
+  <div class="nav-links">
+    <a href="#agents">AI Agents</a>
+    <a href="#solutions">Solutions</a>
+    <a href="#advantage">The ANZ Edge</a>
+    <a href="#pricing">Pricing</a>
+    <a href="index.html">Roadmap →</a>
+    <a href="#pricing" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">AI-Native Field Service Management · Built for Australia</div>
+  <h1>Your trades business,<br>powered by <em>AI that knows</em><br>how Australia works.</h1>
+  <p class="hero-sub">FieldInsight doesn't just organise your workflows — it learns from every job, every technician, every invoice across Australian electrical contracting. The result: AI recommendations that no generic platform can match.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">Start Free — AU $500/month</a>
+    <a href="#agents" class="btn-secondary">See the AI Agents →</a>
+  </div>
+  <div class="hero-proof">
+    <div class="proof-item">
+      <div class="proof-num">AU $500</div>
+      <div class="proof-label">Flat / month · unlimited users</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">1–2 wk</div>
+      <div class="proof-label">Average onboarding time</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">$70k+</div>
+      <div class="proof-label">AUD saved per dispatcher role replaced</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-num">100%</div>
+      <div class="proof-label">ANZ-built, ANZ-compliant</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PAIN POINTS ── -->
+<section class="pain-section">
+  <div class="pain-inner">
+    <h2 class="pain-headline">Why trades businesses are leaving the dinosaurs behind</h2>
+    <p class="pain-sub">Sound familiar? These are the four reasons customers switch to FieldInsight.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <div>
+          <div class="pain-name">Per-User Fees</div>
+          <div class="pain-desc">Getting charged for every technician, every admin seat, every new hire. Growth punished by the platform that's supposed to help you grow.</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🐌</div>
+        <div>
+          <div class="pain-name">Six-Month Implementations</div>
+          <div class="pain-desc">Months of onboarding, consultants, and six-figure projects just to change a workflow. You need to run your business today, not in Q3.</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🔒</div>
+        <div>
+          <div class="pain-name">Rigid Workflows Built for Someone Else</div>
+          <div class="pain-desc">Forced into US residential workflows or commercial-project templates when you run reactive maintenance in Melbourne. The software never fits.</div>
+        </div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📈</div>
+        <div>
+          <div class="pain-name">Success Penalised</div>
+          <div class="pain-desc">Every new technician triggers a cost spike. Every feature you actually want requires an upgrade. Your growth makes the invoice worse, not better.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMPETITIVE ADVANTAGE ── -->
+<section class="advantage-strip" id="advantage">
+  <div class="adv-inner">
+    <div class="adv-label">The FieldInsight AI Difference</div>
+    <h2 class="adv-headline">Generic AI doesn't know your industry.<br><em>Ours does.</em></h2>
+    <p class="adv-body">
+      Any platform can bolt on a chatbot. What makes FieldInsight's AI different is what it's built on: the operational data and workflow structure of Australian electrical contracting — jobs, technicians, compliance documentation, parts, pricing, and fault histories across years of real ANZ trade work.
+      <br><br>
+      We understand the data and the workflows. We stitch them together and give you AI that leverages that structure — making your AI smarter than the average, improving your savings, and compounding your accuracy with every job completed.
+    </p>
+    <div class="adv-pillars">
+      <div class="adv-pillar">
+        <div class="adv-pillar-title">🧠 Smarter AI from ANZ Data</div>
+        <div class="adv-pillar-body">Our AI is trained on Australian electrical contracting workflows — not generic service data from US residential trades. "A 3-phase fault at a Melbourne body corporate typically takes X hours" — that's only possible with proprietary local data.</div>
+      </div>
+      <div class="adv-pillar">
+        <div class="adv-pillar-title">🔗 Stitched-Together Intelligence</div>
+        <div class="adv-pillar-body">FieldInsight connects job records, technician skills, compliance history, parts usage, and invoice data into a single decision loop. Every AI recommendation has full context — not just a fragment of your workflow.</div>
+      </div>
+      <div class="adv-pillar">
+        <div class="adv-pillar-title">📈 Accuracy That Compounds</div>
+        <div class="adv-pillar-body">Every completed job makes the next recommendation more accurate. Your pricing suggestions improve. Your dispatch gets faster. Your compliance flags get smarter. No other platform compounds accuracy on ANZ electrical data the way FieldInsight does.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AI AGENTS ── -->
+<section class="agents-section" id="agents">
+  <div class="agents-header">
+    <div>
+      <div class="section-eyebrow">AI Agents</div>
+      <h2 class="section-title">Eight agents.<br>One platform.</h2>
+    </div>
+    <p style="color:var(--muted);font-size:0.85rem;max-width:320px;text-align:right;line-height:1.65">Each agent handles a distinct part of your trades workflow — from answering the phone to processing invoices — all powered by the same underlying ANZ job data.</p>
+  </div>
+  <div class="agents-grid">
+
+    <div class="agent-card a1">
+      <div class="agent-icon">🎛️</div>
+      <div class="agent-name">Scheduler Agent</div>
+      <div class="agent-desc">AI-powered multi-channel scheduling across Email, SMS, and VOIP. Customers book, reschedule, and communicate through their preferred channel. Unified intent model — book / reschedule / confirm / query — without a human coordinator.</div>
+      <span class="agent-status status-active">🔥 Active Build</span>
+    </div>
+
+    <div class="agent-card a2">
+      <div class="agent-icon">📞</div>
+      <div class="agent-name">Booking Agent</div>
+      <div class="agent-desc">Answers inbound calls 24/7. Qualifies the job, selects a time slot, confirms the booking, and creates the job record — without a CSR. Powered by Claude voice STT/TTS via Twilio IVR.</div>
+      <span class="agent-status status-active">🔥 Active Build</span>
+    </div>
+
+    <div class="agent-card a3">
+      <div class="agent-icon">🎙️</div>
+      <div class="agent-name">Voice Agent</div>
+      <div class="agent-desc">Field techs speak naturally on the job — service notes, defect findings, quotes, follow-up actions. AI structures it into professional notes with selectable prompt types: Service Notes, Quote, Defect, Defect+Quote, Follow-up.</div>
+      <span class="agent-status status-next">Next</span>
+    </div>
+
+    <div class="agent-card a4">
+      <div class="agent-icon">🚦</div>
+      <div class="agent-name">Dispatch Agent</div>
+      <div class="agent-desc">AI-powered job assignment and route optimisation. Matches jobs to technicians based on skills, proximity, current load, and job history. Eliminates the dispatcher role — or makes your dispatcher 5× faster.</div>
+      <span class="agent-status status-next">Next</span>
+    </div>
+
+    <div class="agent-card a5">
+      <div class="agent-icon">📄</div>
+      <div class="agent-name">Document Agent</div>
+      <div class="agent-desc">Drag-and-drop a supplier invoice PDF. Claude Vision parses it, matches line items to your internal codes, applies markup, and syncs to the linked PO and job. Zero admin touch on supplier bills.</div>
+      <span class="agent-status status-active">🔥 Active Build</span>
+    </div>
+
+    <div class="agent-card a6">
+      <div class="agent-icon">📧</div>
+      <div class="agent-name">Inbox Agent</div>
+      <div class="agent-desc">Monitors your nominated email address for inbound job requests. Classifies urgency and job type, threads messages to the right job record, and drafts AI replies — all without leaving FieldInsight.</div>
+      <span class="agent-status status-active">🟢 Live</span>
+    </div>
+
+    <div class="agent-card a7">
+      <div class="agent-icon">🔍</div>
+      <div class="agent-name">Knowledge Agent</div>
+      <div class="agent-desc">AI-powered troubleshooting and diagnostics. Draws on your job history, fault library, and ANZ electrical standards to suggest fault causes, remediation steps, and required parts — before the tech arrives on site.</div>
+      <span class="agent-status status-next">Planned</span>
+    </div>
+
+    <div class="agent-card a8">
+      <div class="agent-icon">📊</div>
+      <div class="agent-name">Insights Agent</div>
+      <div class="agent-desc">Weekly business intelligence from your operational data. "Your techs complete 4.2 jobs/day vs ANZ average 3.8." Benchmarks your performance against anonymised industry peers. Identifies margin, productivity, and compliance gaps before they compound.</div>
+      <span class="agent-status status-next">Planned</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SOLUTIONS ── -->
+<section class="solutions-section" id="solutions">
+  <div class="solutions-inner">
+    <div class="section-eyebrow">Platform</div>
+    <h2 class="section-title" style="margin-bottom:0.5rem">Everything your trades business needs.</h2>
+    <p class="section-sub" style="font-size:0.9rem">One platform covering the full job lifecycle — from first call to paid invoice. No bolt-ons. No hidden modules.</p>
+    <div class="sol-grid">
+      <div class="sol-item"><span>📱</span> Technician Mobile App</div>
+      <div class="sol-item"><span>💬</span> Two-Way Customer Comms</div>
+      <div class="sol-item"><span>📅</span> Dispatching &amp; Scheduling</div>
+      <div class="sol-item"><span>✅</span> Job Checklists</div>
+      <div class="sol-item"><span>📋</span> Custom Estimates &amp; Quotes</div>
+      <div class="sol-item"><span>🧾</span> Contracts &amp; Invoices</div>
+      <div class="sol-item"><span>🏢</span> Customer Portals</div>
+      <div class="sol-item"><span>📦</span> Purchase Orders</div>
+      <div class="sol-item"><span>🔁</span> Recurring Jobs</div>
+      <div class="sol-item"><span>🔧</span> Asset Management</div>
+      <div class="sol-item"><span>🛒</span> Spare Parts Management</div>
+      <div class="sol-item"><span>📊</span> Dashboards &amp; Reporting</div>
+      <div class="sol-item"><span>📜</span> CCEW &amp; Compliance Docs</div>
+      <div class="sol-item"><span>⚙️</span> Work Order Management</div>
+      <div class="sol-item"><span>🏗️</span> Multi-Site Projects</div>
+      <div class="sol-item"><span>🤖</span> AI Workflow Automation</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ANZ DATA MOAT ── -->
+<section class="moat-section">
+  <div class="moat-split">
+    <div>
+      <div class="section-eyebrow">The ANZ Advantage</div>
+      <h2 class="section-title">How FieldInsight compares to the alternatives</h2>
+      <p class="section-sub" style="font-size:0.88rem;margin-bottom:1.5rem">No other platform is purpose-built for the Australian electrical contracting market. TTAN can't get here at their price. simPRO can't get there on AI. Fieldproxy can't get there on compliance or local data.</p>
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th>Factor</th>
+            <th style="color:var(--accent)">FieldInsight</th>
+            <th>TTAN</th>
+            <th>simPRO</th>
+            <th>Fieldproxy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ANZ Pricing</td><td class="fi">AU $500 flat</td><td class="bad">USD $500/tech</td><td class="ok">AUD ~$200/user</td><td class="ok">USD $649 flat</td></tr>
+          <tr><td>Unlimited Users</td><td class="fi">✅ Yes</td><td class="bad">❌ Per seat</td><td class="bad">❌ Per user</td><td class="fi">✅ Yes</td></tr>
+          <tr><td>ANZ Compliance</td><td class="fi">✅ Native</td><td class="bad">❌ None</td><td class="ok">⚠ Partial</td><td class="bad">❌ None</td></tr>
+          <tr><td>AI Agents</td><td class="fi">8 agents</td><td class="ok">Atlas AI</td><td class="bad">❌ Minimal</td><td class="ok">6 agents</td></tr>
+          <tr><td>Local data moat</td><td class="fi">✅ ANZ-specific</td><td class="ok">US data only</td><td class="bad">No AI data layer</td><td class="bad">No proprietary data</td></tr>
+          <tr><td>Onboarding time</td><td class="fi">1–2 weeks</td><td class="bad">3–12 months</td><td class="bad">2–6 months</td><td class="ok">1–2 weeks</td></tr>
+          <tr><td>Reactive workflows</td><td class="fi">✅ Native</td><td class="ok">Yes</td><td class="bad">⚠ Project-biased</td><td class="ok">Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="moat-stats">
+      <div class="moat-stat">
+        <div class="moat-stat-num">12–18</div>
+        <div class="moat-stat-label">months until flat-fee becomes the category norm in ANZ FSM</div>
+      </div>
+      <div class="moat-stat">
+        <div class="moat-stat-num">$70k</div>
+        <div class="moat-stat-label">AUD average coordinator salary replaced by FieldInsight's AI Dispatch Agent</div>
+      </div>
+      <div class="moat-stat">
+        <div class="moat-stat-num">10×</div>
+        <div class="moat-stat-label">ROI on software investment in year one when the dispatcher role is replaced</div>
+      </div>
+      <div class="moat-stat">
+        <div class="moat-stat-num">0</div>
+        <div class="moat-stat-label">global competitors with native ANZ electrical compliance documentation built in</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INDUSTRIES ── -->
+<section class="industries-section">
+  <div class="section-eyebrow">Industries</div>
+  <h2 class="section-title" style="margin-bottom:0.5rem">Built for the trades that power Australia</h2>
+  <p class="section-sub" style="font-size:0.88rem">FieldInsight's AI is specifically tuned for Australian trade workflows — not retrofitted from US residential software.</p>
+  <div class="industry-pills">
+    <span class="industry-pill primary">⚡ Electrical</span>
+    <span class="industry-pill primary">❄️ HVAC &amp; Refrigeration</span>
+    <span class="industry-pill primary">🔧 Plumbing</span>
+    <span class="industry-pill primary">🔥 Fire &amp; Safety</span>
+    <span class="industry-pill">🏢 Facilities Management</span>
+    <span class="industry-pill">🏗 Mechanical</span>
+    <span class="industry-pill">🔐 Security Systems</span>
+    <span class="industry-pill">🏠 Roofing</span>
+    <span class="industry-pill">🌿 Pest Control</span>
+    <span class="industry-pill">🌱 Landscaping</span>
+    <span class="industry-pill">⚡ Energy Services</span>
+    <span class="industry-pill">🏭 Industrial Maintenance</span>
+    <span class="industry-pill">🏢 Body Corporate</span>
+    <span class="industry-pill">🏛 Government Facilities</span>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <div class="section-eyebrow" style="text-align:center">Pricing</div>
+    <h2 class="section-title" style="text-align:center;margin-bottom:0.6rem">Pay per business. Not per head.</h2>
+    <p style="color:var(--muted);font-size:0.9rem;max-width:540px;margin:0 auto">One flat AU price. Unlimited users. FI-Tokens power your AI usage — included in every plan, top up when you need more.</p>
+
+    <div class="pricing-cards">
+
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$299<span>/mo AUD</span></div>
+        <div class="plan-desc">Up to 10 technicians · Unlimited admin seats</div>
+        <ul class="plan-features">
+          <li>All core FSM features</li>
+          <li>Technician mobile app</li>
+          <li>Jobs, quotes, invoices, POs</li>
+          <li class="token">🪙 25,000 FI-Tokens / month</li>
+          <li>Email + SMS customer comms</li>
+          <li>Standard ANZ compliance docs</li>
+          <li>Community support</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn-outline">Get Started</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">$500<span>/mo AUD</span></div>
+        <div class="plan-desc">Unlimited technicians · Unlimited admin seats</div>
+        <ul class="plan-features">
+          <li>Everything in Starter</li>
+          <li>All 8 AI Agents included</li>
+          <li>AI Voice Booking + VOIP IVR</li>
+          <li>AI Dispatch + route optimisation</li>
+          <li class="token">🪙 100,000 FI-Tokens / month</li>
+          <li>Full ANZ compliance layer (CCEW, WHS)</li>
+          <li>Priority support</li>
+          <li>Custom agent prompts</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn-primary">Start Free Trial</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price">Custom</div>
+        <div class="plan-desc">Multi-branch · White-label · API access</div>
+        <ul class="plan-features">
+          <li>Everything in Growth</li>
+          <li>Multi-branch management</li>
+          <li>Custom AI agent training</li>
+          <li>API + webhook access</li>
+          <li class="token">🪙 Unlimited FI-Tokens</li>
+          <li>Dedicated account manager</li>
+          <li>SLA-backed uptime</li>
+          <li>Custom integrations</li>
+        </ul>
+        <a href="#" class="plan-btn plan-btn-outline">Talk to Us</a>
+      </div>
+
+    </div>
+
+    <div class="token-explainer">
+      <h3>🪙 What are FI-Tokens?</h3>
+      <p>FI-Tokens are the fuel for FieldInsight's AI agents. Every AI action — a Voice Agent transcription, a Document Agent invoice parse, a Booking Agent call, a Dispatch Agent assignment — consumes a small number of tokens. Your plan includes a generous monthly allocation, and if you exceed it you can purchase top-ups at AU $0.005 per token.</p>
+      <ul>
+        <li>Voice Agent note — ~200 tokens per job note</li>
+        <li>Booking Agent inbound call — ~800 tokens per booking</li>
+        <li>Document Agent invoice parse — ~500 tokens per PDF</li>
+        <li>Dispatch Agent auto-assignment — ~150 tokens per job</li>
+        <li>Inbox Agent email classification + reply draft — ~300 tokens</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <h2 class="cta-title">Ready to <em>ditch the dinosaur</em><br>and run a smarter business?</h2>
+  <p class="cta-sub">AU $500/month. Unlimited users. AI built on the data that knows Australian trades.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">Start Free Trial</a>
+    <a href="index.html" class="btn-secondary">View Full Roadmap →</a>
+  </div>
+</section>
+
+<footer>
+  FieldInsight &nbsp;·&nbsp; AI-Native FSM for Australian Trades
+  &nbsp;·&nbsp; <a href="index.html">Roadmap</a>
+  &nbsp;·&nbsp; <a href="https://fieldinsight.com.au" target="_blank">fieldinsight.com.au</a>
+  &nbsp;·&nbsp; <a href="fieldinsight_thesis.pdf" target="_blank">Competitive Thesis PDF</a>
+  &nbsp;·&nbsp; v1.0 · April 2026
+</footer>
+
+</body>
+</html>
