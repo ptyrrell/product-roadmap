@@ -23,6 +23,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%;
+      width: 100%;
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
@@ -50,8 +51,9 @@
 
     /* ── LAYOUT ── */
     .page {
-      position: relative; z-index: 1;
-      height: 100vh;
+      position: fixed;
+      inset: 0;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
