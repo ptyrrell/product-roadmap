@@ -1,26 +1,154 @@
 # Paul Tyrrell — Personal Roadmap
 
-Version: 0.1.0  
-Last Updated: 2026-03-16
+Version: 0.7.0  
+Last Updated: 2026-04-03
 
 ---
 
 ## Now — Active Focus
 
+### 🐐 Dargo Primary Goat Farm
+**Status:** Planning
+
+A future project exploring goat farming in the Dargo region.
+
+**Reference channels:**
+- https://youtube.com/@dalsconefarm — Dalscone Farm (goat farming inspiration)
+
+**To research:**
+- [ ] Land requirements & availability (Dargo area)
+- [ ] Goat breeds (dairy vs meat vs fibre)
+- [ ] Fencing & infrastructure costs
+- [ ] Water supply / pasture management
+- [ ] Regulations & permits (Vic)
+- [ ] Visit existing goat farms
+
+---
+
+### 📚 Ben's School Project — Australian Wars (20th Century)
+**Status:** In Progress  
+**Format:** Hand-written workbook (lined pages)
+
+Help Ben research Australia's involvement in 20th century wars.
+
+**Key Topics:**
+- [ ] Boer War (1899-1902) — Australia's first overseas conflict
+- [ ] World War I (1914-1918) — Gallipoli, Western Front, ANZACs
+- [ ] World War II (1939-1945) — Pacific Theatre, Kokoda, North Africa
+- [ ] **Rats of Tobruk** (1941) — Aussie soldiers who defended Tobruk for 241 days
+- [ ] Korean War (1950-1953)
+- [ ] Vietnam War (1962-1973) — conscription, protests
+- [ ] Malayan Emergency (1948-1960)
+- [ ] Indonesian Confrontation (1963-1966)
+
+**Workbook Structure (Hand-written, Lined):**
+1. Title page — "Australian Wars of the 20th Century"
+2. Timeline of conflicts (double-page spread)
+3. One page per war:
+   - When & where
+   - Why Australia was involved
+   - Key battles / events
+   - How many Australians served / casualties
+   - One personal story or quote
+4. The Rats of Tobruk — special feature page
+5. Reflection: What did Australia learn?
+6. Sources / bibliography
+
+**Workbook to order:**
+- [ ] Find printer (Officeworks, PixArt, local)
+- [ ] A4, lined pages, ~40 pages, spiral bound
+- [ ] Custom cover: "Ben's History of Australian Wars"
+
+**Left of field ideas:**
+- [ ] Visit Shrine of Remembrance (Melbourne)
+- [ ] Interview a veteran (RSL connection?)
+- [ ] AWM (Australian War Memorial) virtual tour
+- [ ] Family history — did any Tyrrells serve?
+- [ ] Documentary: "Gallipoli" (1981 film) or "The Pacific" (HBO)
+- [ ] Primary sources: letters, diaries from Trove (NLA)
+- [ ] Holbrook NSW — HMAS Otway submarine park (if road trip!)
+
+---
+
+### 📐 Ben's Maths Book
+**Status:** To Order
+
+**Workbook to order:**
+- [ ] Find printer (Officeworks, PixArt, local)
+- [ ] A4, grid/lined pages, ~60 pages (plenty of practice room)
+- [ ] Spiral bound
+- [ ] Custom cover: "Ben's Maths Book"
+
+---
+
+### 🤖 AI Researcher — Lead Gen Automation
+**Priority:** High  
+**Status:** Planned
+
+Auto-generate and qualify leads like Chinju/Veera/Mohanapriya do today.
+
+**Reference links:**
+- https://x.com/om_patel5/status/2040295631793635465 — AI lead gen automation thread
+
+**Key outcomes:**
+- [ ] Auto-scrape Apollo, LinkedIn, directories for trade businesses
+- [ ] Score and filter leads by ICP fit
+- [ ] Enrich with contact info, tech stack, revenue estimates
+- [ ] Auto-assign qualified leads to SDRs
+- [ ] Target: 60 leads/day/researcher equivalent
+- [ ] Track lead source → SDR dial → outcome for audit trail
+
+**Standard Lead Sources:**
+- Apollo, LinkedIn, Google Maps
+- Yellow Pages, True Local
+- ABN Lookup, Facebook Business Pages
+
+**Job Boards (growth signals):**
+- [ ] Seek.com.au — companies hiring field techs
+- [ ] Indeed, Jora
+- [ ] Hipages, ServiceSeeking
+
+**Left of field ideas:**
+- [ ] Council permits/tenders (new projects = new contractors)
+- [ ] Fleet registrations (more trucks = growing business)
+- [ ] Trade show exhibitor lists
+- [ ] Gumtree "services offered"
+- [ ] Airtasker high-volume tradies
+- [ ] Google Ads transparency (who's spending on FSM keywords)
+
+---
+
+### Cursor Tasks — Researcher & Invoice Audit
+
+**1. Audit Researcher Lead Flow**
+Track where leads go after researchers create them.
+- [ ] Map flow: Researcher → Lead Created → SDR Assigned → Dialed → Outcome
+- [ ] Add audit trail columns to Google Sheet
+- [ ] Find where leads are lost or stalled
+
+**2. Investigate Token Usage for Bill/Supplier Invoice Importing**
+Find actual token metrics for the AI invoice import feature.
+- [ ] Check codebase or OpenAI dashboard for token logs
+- [ ] Document cost per invoice import
+- [ ] Add to feature specs
+
+---
+
 ### Alfred (Personal AI Assistant)
 Build and deploy Alfred to Mac Studio. Connect to WhatsApp via Twilio. 
 Give Alfred access to Apple Notes, NocoDB Fountain of Truth, and the ability to brief me daily.
 - [x] Alfred codebase built
-- [ ] Mac Studio online + SSH enabled
-- [ ] Twilio WhatsApp sandbox configured
-- [ ] Anthropic API key added
-- [ ] Deployed + live
+- [x] Mac Studio online + SSH enabled
+- [x] Twilio WhatsApp sandbox configured
+- [x] Anthropic API key added
+- [x] Deployed + live
+- [x] Daily Sales Briefing SMS (SDR, Sales Pipeline, Onboarding, Researchers)
 
 ### Product Roadmap (this)
 A living, versioned, served roadmap for personal and FieldInsight planning.
 - [x] Repo created
 - [x] Initial content written
-- [ ] GitHub Pages live
+- [x] GitHub Pages live
 - [ ] Custom domain
 
 ### Apple Notes → NocoDB Sync
@@ -75,5 +203,6 @@ Build on the existing Marketing Automation pipeline:
 3. AI assists, Paul decides
 4. Simple over complex — if it needs maintaining, it's too complicated
 5. Named after family — Alfred, not Jeeves
+6. Never Apple Notes for projects — Personal Roadmap only
 
 ---

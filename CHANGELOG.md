@@ -14,6 +14,17 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
   - Maps FieldInsight's current in-flight work (FI-001, FI-009, FI-016, FI-017, FI-018) against the threat
   - Identifies gaps: AI dispatching/auto-assign engine, zero-touch invoicing, AI pricing suggestions
   - Strategic read: speed is the risk — greenfield SMB customers may default to AI-native tools
+- Added Meridian Dashboard nav button + FI-007 Meridian link (from v1.0.4 merge)
+
+---
+
+## v1.0.4 — 2026-04-09
+
+### Changed
+- FI-019: Renamed to "Email Threaded Conversations — Job Management" — reflects the true scope of this feature (not just a Gmail inbox, but full job-linked thread management)
+- FI-019: Updated description to reflect Gmail OAuth live, RFC 2822 invisible threading approach, and next build steps
+- FI-019: Outcomes updated with ✅ completed, 🔨 in-progress, and ⏳ upcoming milestones
+- FieldInsight roadmap date updated to 9 April 2026, v1.0.4
 
 ---
 

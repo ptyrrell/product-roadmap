@@ -45,6 +45,8 @@
     .spacer { flex: 1; }
     .tab-bar { display: flex; gap: 4px; }
     .tab { padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
+    .nav-meridian-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; background: rgba(0,229,176,0.12); border: 1px solid rgba(0,229,176,0.35); color: #00e5b0; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-right: 12px; transition: all 0.15s; white-space: nowrap; }
+    .nav-meridian-btn:hover { background: rgba(0,229,176,0.22); border-color: rgba(0,229,176,0.6); color: #fff; }
     .tab:hover { color: var(--text); background: var(--surface2); }
     .tab.active { background: var(--accent); color: #fff; }
 
@@ -199,6 +201,7 @@
   <span class="logo">Roadmap</span>
     <span class="version">v0.8.2</span>
   <div class="spacer"></div>
+  <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" class="nav-meridian-btn">📊 Meridian Dashboard</a>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
@@ -404,12 +407,14 @@
           <span class="badge badge-med">Medium</span>
           <span class="badge badge-salesops">📊 Sales Ops</span>
           <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge" style="background:rgba(0,229,176,0.12);color:#00e5b0;border:1px solid rgba(0,229,176,0.35)">🟢 Live — Meridian</span>
         </div>
         <div class="outcomes"><ul>
           <li>SDR: calls, connects, trials, bookings</li>
           <li>AE: deal age, next action, demos</li>
           <li>Stale deal alerts (&gt;7 days no touch)</li>
           <li>No-next-action alerts (should be 0)</li>
+          <li>🔗 <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" style="color:#00e5b0">Meridian Ops Dashboard →</a></li>
         </ul></div>
       </div>
 

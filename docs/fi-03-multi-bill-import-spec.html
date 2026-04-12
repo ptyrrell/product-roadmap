@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Batch Bill Import Spec — FI-003 Bill Importer</title>
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--surface3:#191d2a;
+  --border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --blue:#6366f1;--blue-light:#a5b4fc;--blue-glow:rgba(99,102,241,.18);
+  --green:#10d990;--green-bg:rgba(16,217,144,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --teal:#06b6d4;--teal-bg:rgba(6,182,212,.08);
+  --purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+  --font:'Inter var',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* HEADER */
+.spec-header{
+  background:linear-gradient(160deg,#07101a 0%,#0b1520 60%,#0f1a24 100%);
+  border-bottom:1px solid var(--border);padding:48px 40px 40px;
+  position:relative;overflow:hidden;
+}
+.spec-header::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(6,182,212,.12) 0%,transparent 70%);pointer-events:none;
+}
+.spec-header::after{
+  content:'';position:absolute;bottom:-80px;left:10%;width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(16,217,144,.05) 0%,transparent 70%);pointer-events:none;
+}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.spec-breadcrumb a{color:var(--teal);text-decoration:none;opacity:.85}.spec-breadcrumb a:hover{opacity:1;text-decoration:underline}
+.spec-title{font-size:32px;font-weight:800;letter-spacing:-.8px;color:#fff;line-height:1.2;position:relative;z-index:1}
+.spec-title span{color:var(--teal)}
+.spec-subtitle{font-size:15px;color:var(--muted);margin-top:8px;position:relative;z-index:1;max-width:640px}
+.spec-meta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.teal{background:var(--teal-bg);border-color:rgba(6,182,212,.3);color:var(--teal)}
+.meta-pill.green{background:var(--green-bg);border-color:rgba(16,217,144,.25);color:var(--green)}
+.meta-pill.amber{background:var(--amber-bg);border-color:rgba(245,158,11,.25);color:var(--amber)}
+
+/* NAV */
+nav.spec-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 40px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100;
+}
+nav.spec-nav a{
+  display:block;padding:14px 16px;font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;
+}
+nav.spec-nav a:hover{color:var(--text);border-bottom-color:var(--border2)}
+nav.spec-nav a.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* LAYOUT */
+.spec-body{max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:56px}
+
+/* SECTION */
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--teal);margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.4px;color:#fff;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);max-width:720px;line-height:1.7;margin-bottom:24px}
+
+/* CALLOUT */
+.callout{border-radius:var(--r);padding:16px 18px;border-left:3px solid;margin:16px 0;font-size:13px}
+.callout.teal{background:var(--teal-bg);border-color:var(--teal);color:#a5f3fc}
+.callout.green{background:var(--green-bg);border-color:var(--green);color:#6ee7b7}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout.blue{background:var(--blue-glow);border-color:var(--blue);color:var(--blue-light)}
+.callout strong{color:inherit;font-weight:700}
+
+/* WORKFLOW STEPS (call-flow style) */
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-step{
+  display:flex;gap:16px;align-items:flex-start;padding:18px 0;
+  border-left:2px solid var(--border);padding-left:20px;margin-left:16px;position:relative;
+}
+.flow-step:last-child{border-left-color:transparent}
+.flow-dot{
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;position:absolute;left:-16px;top:18px;
+}
+.flow-dot.teal{background:var(--teal);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.green{background:var(--green);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.blue{background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.amber{background:var(--amber);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.purple{background:var(--purple);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.red{background:var(--red);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.flow-body{padding-left:4px;flex:1}
+.flow-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.flow-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.flow-code{
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11px;
+  color:#a5f3fc;margin-top:10px;overflow-x:auto;line-height:1.5;
+}
+.flow-code .comment{color:#3d4f6a}
+.flow-code .key{color:#93c5fd}
+.flow-code .val{color:#6ee7b7}
+.flow-code .str{color:#fde68a}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;margin-left:6px;vertical-align:middle}
+.tag.fe{background:rgba(6,182,212,.15);color:#a5f3fc;border:1px solid rgba(6,182,212,.25)}
+.tag.be{background:rgba(251,146,60,.15);color:#fed7aa;border:1px solid rgba(251,146,60,.25)}
+.tag.ai{background:rgba(168,85,247,.15);color:#d8b4fe;border:1px solid rgba(168,85,247,.25)}
+.tag.ux{background:rgba(16,217,144,.15);color:#6ee7b7;border:1px solid rgba(16,217,144,.25)}
+
+/* UI MOCKUP */
+.ui-mockup{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;
+}
+.ui-bar{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:10px 16px;display:flex;align-items:center;gap:8px;
+}
+.ui-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ui-dot.red{background:#f43f5e}.ui-dot.amber{background:#f59e0b}.ui-dot.green{background:#10d990}
+.ui-url{flex:1;background:var(--surface3);border:1px solid var(--border);border-radius:6px;
+  padding:4px 12px;font-size:11px;color:var(--muted);font-family:monospace}
+.ui-body{display:grid;grid-template-columns:340px 1fr;min-height:480px}
+@media(max-width:800px){.ui-body{grid-template-columns:1fr;min-height:auto}}
+.ui-left{border-right:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:8px}
+.ui-right{padding:20px;display:flex;flex-direction:column;gap:14px}
+.ui-section-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.ui-header{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2);
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ui-header-title{font-size:14px;font-weight:700;color:var(--text)}
+.ui-header-sub{font-size:11px;color:var(--muted)}
+
+/* INVOICE LIST ITEM */
+.inv-item{
+  border-radius:8px;border:1px solid var(--border);padding:10px 12px;
+  cursor:pointer;transition:all .15s;position:relative;
+}
+.inv-item:hover,.inv-item.active{border-color:var(--teal);background:rgba(6,182,212,.05)}
+.inv-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
+.inv-name{font-size:12px;font-weight:700;color:var(--text)}
+.inv-amount{font-size:12px;font-weight:700;font-family:monospace}
+.inv-amount.green{color:var(--green)}
+.inv-amount.amber{color:var(--amber)}
+.inv-amount.red{color:var(--red)}
+.inv-meta{font-size:10px;color:var(--muted)}
+.inv-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:8px;font-size:9px;font-weight:700}
+.inv-badge::before{content:'';width:5px;height:5px;border-radius:50%;display:inline-block}
+.inv-badge.matched{background:rgba(16,217,144,.1);color:var(--green);border:1px solid rgba(16,217,144,.2)}.inv-badge.matched::before{background:var(--green)}
+.inv-badge.differs{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}.inv-badge.differs::before{background:var(--amber)}
+.inv-badge.nopo{background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.2)}.inv-badge.nopo::before{background:var(--red)}
+.inv-badge.parsing{background:rgba(6,182,212,.1);color:var(--teal);border:1px solid rgba(6,182,212,.2)}.inv-badge.parsing::before{background:var(--teal);animation:pulse 1s infinite}
+.inv-badge.split{background:rgba(168,85,247,.1);color:#d8b4fe;border:1px solid rgba(168,85,247,.2)}.inv-badge.split::before{background:var(--purple)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* DETAIL PANEL */
+.detail-supplier{font-size:16px;font-weight:800;color:#fff}
+.detail-meta-row{display:flex;gap:16px;margin:6px 0 14px;flex-wrap:wrap}
+.detail-meta-item{font-size:11px;color:var(--muted)}
+.detail-meta-item strong{color:var(--text)}
+.po-match-box{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.po-match-label{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:3px}
+.po-match-value{font-family:monospace;font-size:13px;font-weight:700;color:var(--teal)}
+.po-match-status{font-size:11px;color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;white-space:nowrap}
+.btn.primary{background:var(--teal);color:#000}
+.btn.ghost{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.btn.danger{background:var(--red-bg);border:1px solid rgba(244,63,94,.25);color:var(--red)}
+
+/* LINE ITEMS */
+.lines-table{width:100%;border-collapse:collapse;font-size:11px}
+.lines-table th{padding:5px 8px;text-align:left;color:var(--muted);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border)}
+.lines-table td{padding:5px 8px;border-bottom:1px solid var(--dim);color:var(--muted);vertical-align:top}
+.lines-table tr:last-child td{border-bottom:none}
+.lines-table td:last-child{text-align:right;font-family:monospace;color:var(--text)}
+.match-chip{display:inline-block;padding:1px 6px;border-radius:4px;font-size:9px;font-weight:700;font-family:monospace}
+.match-chip.exact{background:rgba(16,217,144,.12);color:var(--green);border:1px solid rgba(16,217,144,.2)}
+.match-chip.partial{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.2)}
+.match-chip.none{background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+
+/* BULK ACTION BAR */
+.bulk-bar{
+  background:var(--surface2);border-top:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;
+}
+.bulk-summary{font-size:12px;color:var(--muted)}
+.bulk-summary strong{color:var(--text)}
+.bulk-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* QUEUE WIDGET */
+.queue-grid{display:flex;flex-direction:column;gap:6px}
+.queue-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;display:flex;align-items:center;gap:12px;
+}
+.queue-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.queue-icon.pdf{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.2)}
+.queue-icon.img{background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2)}
+.queue-meta{flex:1}
+.queue-name{font-size:12px;font-weight:700;color:var(--text)}
+.queue-sub{font-size:10px;color:var(--muted)}
+.queue-status{font-size:10px;font-weight:700;text-align:right}
+.queue-status.done{color:var(--green)}
+.queue-status.active{color:var(--teal)}
+.queue-status.queued{color:var(--muted)}
+.queue-status.error{color:var(--red)}
+.queue-status.split{color:var(--purple)}
+.progress-mini{height:3px;border-radius:2px;background:var(--border);margin-top:4px;overflow:hidden}
+.progress-mini .fill{height:100%;background:var(--teal);border-radius:2px;transition:width .3s}
+
+/* API TABLE */
+.api-table{width:100%;border-collapse:collapse}
+.api-table thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+.api-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.api-table tbody tr{border-bottom:1px solid var(--border)}
+.api-table tbody tr:last-child{border-bottom:none}
+.api-table tbody tr:hover{background:var(--surface2)}
+.api-table td{padding:10px 14px;font-size:12px;vertical-align:top;color:var(--muted)}
+.api-table td:first-child{color:var(--text)}
+.method{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;font-family:monospace}
+.method.POST{background:rgba(16,217,144,.15);color:var(--green)}
+.method.GET{background:rgba(99,102,241,.15);color:var(--blue-light)}
+.endpoint{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#a5f3fc}
+
+/* DATA MODEL */
+.model-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.model-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.model-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.model-field{display:flex;justify-content:space-between;align-items:flex-start;
+  padding:5px 0;border-bottom:1px solid var(--dim);font-size:11px;gap:8px}
+.model-field:last-child{border-bottom:none}
+.field-name{font-family:monospace;color:#a5f3fc;flex-shrink:0}
+.field-type{color:var(--amber);font-family:monospace;font-size:10px;flex-shrink:0}
+.field-note{color:var(--muted);font-size:10px;text-align:right}
+
+/* PHASE */
+.phase-grid{display:flex;flex-direction:column;gap:12px}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;gap:16px}
+.phase-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0}
+.phase-num.p1{background:rgba(16,217,144,.15);color:var(--green)}
+.phase-num.p2{background:rgba(6,182,212,.15);color:var(--teal)}
+.phase-num.p3{background:rgba(245,158,11,.15);color:var(--amber)}
+.phase-num.p4{background:rgba(168,85,247,.15);color:#d8b4fe}
+.phase-body{flex:1}
+.phase-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.phase-items{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.phase-items li{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 10px;font-size:11px;color:var(--muted)}
+
+/* CODE */
+pre.code-block{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11.5px;
+  line-height:1.6;overflow-x:auto;color:#e2e8f0;
+}
+pre.code-block .comment{color:#3d4f6a}
+pre.code-block .key{color:#93c5fd}
+pre.code-block .val{color:#6ee7b7}
+pre.code-block .str{color:#fde68a}
+pre.code-block .kw{color:#c084fc}
+
+/* EDGE CASE TABLE */
+.edge-table{width:100%;border-collapse:collapse}
+.edge-table th{padding:8px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)}
+.edge-table td{padding:9px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:top}
+.edge-table tr:last-child td{border-bottom:none}
+.edge-table tr:hover td{background:var(--surface2)}
+.edge-table td:first-child{color:var(--text);font-weight:600}
+
+/* STATUS LEGEND */
+.status-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.sl-item{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.sl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sl-item.matched{background:rgba(16,217,144,.08);border:1px solid rgba(16,217,144,.2)}.sl-item.matched .sl-dot{background:var(--green)}
+.sl-item.differs{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)}.sl-item.differs .sl-dot{background:var(--amber)}
+.sl-item.nopo{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2)}.sl-item.nopo .sl-dot{background:var(--red)}
+.sl-item.split{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2)}.sl-item.split .sl-dot{background:var(--purple)}
+.sl-item.parsing{background:var(--teal-bg);border:1px solid rgba(6,182,212,.2)}.sl-item.parsing .sl-dot{background:var(--teal)}
+.sl-label{color:var(--text)}
+.sl-desc{color:var(--muted);font-weight:400}
+
+/* FOOTER */
+footer{text-align:center;padding:32px 40px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+
+/* DIVIDER */
+.sub-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank">Live Prototype</a>
+    <span>›</span>
+    <span>Batch Bill Import Spec</span>
+  </div>
+  <div class="spec-title">FI-003 — <span>Batch Bill Import</span></div>
+  <div class="spec-subtitle">Workflow specification for importing multiple supplier invoices in one operation — whether dropped as separate files or contained within a single multi-invoice PDF.</div>
+  <div class="spec-meta">
+    <span class="meta-pill teal">📐 Spec — Ready to Build</span>
+    <span class="meta-pill amber">🕐 Not Yet Built</span>
+    <span class="meta-pill">Last updated: Mar 2026</span>
+    <span class="meta-pill">Owner: Paul Tyrrell</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="spec-nav">
+  <a href="#overview" class="active">Overview</a>
+  <a href="#entry">Entry Points</a>
+  <a href="#upload">Upload Interaction</a>
+  <a href="#detection">Multi-Invoice Detection</a>
+  <a href="#queue">Processing Queue</a>
+  <a href="#review">Batch Review Screen</a>
+  <a href="#matching">Matching Rules</a>
+  <a href="#bulk">Bulk Apply</a>
+  <a href="#api">API Changes</a>
+  <a href="#edge">Edge Cases</a>
+  <a href="#roadmap">Roadmap</a>
+</nav>
+
+<div class="spec-body">
+
+  <!-- ── SECTION 01: OVERVIEW ── -->
+  <div class="spec-section" id="overview">
+    <div class="sec-label">Section 01</div>
+    <div class="sec-title">Overview</div>
+    <div class="sec-desc">The Batch Bill Import workflow handles two scenarios that today require multiple separate uploads. Both converge on the same Batch Review Screen — a split-panel interface where every detected invoice is listed with its match status and the user can review, adjust, and apply them in bulk.</div>
+
+    <div class="callout teal">
+      <strong>Design principle:</strong> Uploading ten bills should not be ten times the work. Anything the system can match automatically is pre-approved — the user's job is to resolve exceptions only.
+    </div>
+
+    <div style="margin-top:24px">
+      <table class="api-table">
+        <thead><tr><th>Scenario</th><th>Input</th><th>Detection</th><th>Outcome</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--teal)">A — Multiple Files</strong></td>
+            <td>User drops or selects 2–20 individual PDF / image files</td>
+            <td>Each file parsed independently</td>
+            <td>N invoices on the Batch Review Screen</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--purple)">B — Single Multi-Invoice PDF</strong></td>
+            <td>One PDF containing multiple concatenated supplier invoices (e.g. from accounting export, email attachment bundle)</td>
+            <td>Claude detects multiple invoice sections; returns array</td>
+            <td>N invoices from 1 file on the Batch Review Screen</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--muted)">C — Single File (existing)</strong></td>
+            <td>One PDF with one invoice (current behaviour)</td>
+            <td>Array of length 1 returned</td>
+            <td>Batch Review Screen with 1 item — or auto-route to Bill Detail</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 02: ENTRY POINTS ── -->
+  <div class="spec-section" id="entry">
+    <div class="sec-label">Section 02</div>
+    <div class="sec-title">Entry Points</div>
+    <div class="sec-desc">Users reach the batch import flow from two places. The key change from the current design is that the Bill Detail page drops the PDF zone for single-file upload — that experience moves to the new Batch Import page which handles both single and multiple files gracefully.</div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot teal">A</div>
+        <div class="flow-body">
+          <div class="flow-title">Bills sidebar / nav item → "Import Bills" <span class="tag fe">Frontend</span></div>
+          <div class="flow-desc">New dedicated page at <code>/bills/import</code>. The primary entry point for all bill uploads — single or batch. Replaces the embedded drop zone on Bill Detail for new imports. Shows the full upload zone and batch queue.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot blue">B</div>
+        <div class="flow-body">
+          <div class="flow-title">Bill Detail page → "Import from PDF" button <span class="tag fe">Frontend</span></div>
+          <div class="flow-desc">The existing Bill Detail page keeps a compact "Import from PDF" button for users who arrive at a specific bill and want to parse it. This opens the same upload flow but pre-scoped to that bill's supplier (pre-fills the supplier filter in review).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:8px">
+      <strong>Routing rule:</strong> If the batch result contains exactly 1 invoice AND it cleanly matches a known PO, the flow auto-routes to Bill Detail with the invoice pre-populated (no review screen needed — zero friction for the common single-bill case).
+    </div>
+  </div>
+
+  <!-- ── SECTION 03: UPLOAD INTERACTION ── -->
+  <div class="spec-section" id="upload">
+    <div class="sec-label">Section 03</div>
+    <div class="sec-title">Upload Interaction</div>
+    <div class="sec-desc">The upload zone is generous — large, visible, and permissive. It accepts any combination of PDFs and images in a single drop. Files are added to the queue immediately and processing begins as soon as the first file lands.</div>
+
+    <!-- MOCKUP: Upload Zone -->
+    <div class="ui-mockup" style="margin-bottom:20px">
+      <div class="ui-bar">
+        <div class="ui-dot red"></div><div class="ui-dot amber"></div><div class="ui-dot green"></div>
+        <div class="ui-url">fi-supplier-po.herokuapp.com/bills/import</div>
+      </div>
+      <div style="padding:40px;text-align:center;border:2px dashed var(--border2);border-radius:8px;margin:20px;
+                  background:linear-gradient(135deg,rgba(6,182,212,.03) 0%,transparent 60%);cursor:pointer;
+                  transition:all .2s" onmouseenter="this.style.borderColor='#06b6d4'" onmouseleave="this.style.borderColor='#2a3050'">
+        <div style="font-size:36px;margin-bottom:12px">📄</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px">Drop supplier invoices here</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:20px">Accepts PDF or image files (JPEG, PNG, WEBP) · Multiple files or one PDF with multiple invoices</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+          <div style="display:inline-block;padding:9px 20px;background:var(--teal);color:#000;font-weight:700;font-size:13px;border-radius:8px">Choose Files</div>
+          <div style="font-size:11px;color:var(--muted)">or drag and drop</div>
+        </div>
+        <div style="margin-top:16px;font-size:10px;color:var(--dim)">Max 25 MB per file · Up to 20 files per batch</div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot teal">1</div>
+        <div class="flow-body">
+          <div class="flow-title">Files added to queue instantly</div>
+          <div class="flow-desc">As soon as files are dropped (or selected), they appear in the queue with a "Queued" status. The upload zone shrinks to a compact bar at the top so the queue becomes the focus. The user can keep adding more files — the queue is live.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot blue">2</div>
+        <div class="flow-body">
+          <div class="flow-title">Parallel processing — max 3 concurrent</div>
+          <div class="flow-desc">Up to 3 files are sent to <code>/api/parse-invoice</code> simultaneously. This keeps the total wait time low without overwhelming the Anthropic API rate limits. A 4th file starts processing as soon as a slot opens.</div>
+          <div class="flow-code">
+<span class="comment">// Client concurrency control</span>
+<span class="key">const</span> MAX_CONCURRENT = <span class="val">3</span>;
+<span class="comment">// Files processed via a semaphore queue — not Promise.all</span></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot green">3</div>
+        <div class="flow-body">
+          <div class="flow-title">Queue updates in real time</div>
+          <div class="flow-desc">Each file card transitions: <strong>Queued → Parsing → Split detected (if applicable) → Done / Error</strong>. When a file finishes, its parsed invoices appear immediately in the review panel below — no need to wait for all files.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 04: MULTI-INVOICE DETECTION ── -->
+  <div class="spec-section" id="detection">
+    <div class="sec-label">Section 04</div>
+    <div class="sec-title">Multi-Invoice Detection</div>
+    <div class="sec-desc">The most powerful part of this workflow. When a single PDF contains multiple supplier invoices — common with email-batched attachments or accounting system exports — Claude detects the boundaries between them and returns each as a separate, fully-parsed invoice object.</div>
+
+    <div class="callout amber">
+      <strong>Real-world trigger:</strong> A supplier emails a single PDF with 6 invoices for the month. Or a bookkeeper exports all unpaid bills from Xero as one document. Today, each invoice requires a separate upload. This spec eliminates that entirely.
+    </div>
+
+    <hr class="sub-divider"/>
+
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">Prompt Update — Invoice Schema Change</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">The existing <code>/api/parse-invoice</code> prompt is updated to always return an array of invoices. Single-invoice PDFs return an array of length 1. This makes the client logic uniform and eliminates a separate batch endpoint.</div>
+
+    <pre class="code-block"><span class="comment">// UPDATED response schema — always returns invoices[] array</span>
+{
+  <span class="key">"invoices"</span>: [
+    {
+      <span class="key">"supplierInvoiceNo"</span>: <span class="str">"INV-12345"</span>,
+      <span class="key">"invoiceDate"</span>:       <span class="str">"2026-03-10"</span>,
+      <span class="key">"supplierName"</span>:      <span class="str">"Daikin Australia Pty Ltd"</span>,
+      <span class="key">"customerPoRef"</span>:     <span class="str">"PO-1648"</span>,
+      <span class="key">"documentGst"</span>:       <span class="str">"ex"</span>,
+      <span class="key">"subtotalExGst"</span>:     <span class="val">3110.91</span>,
+      <span class="key">"totalGst"</span>:          <span class="val">311.09</span>,
+      <span class="key">"totalIncGst"</span>:       <span class="val">3422.00</span>,
+      <span class="key">"lines"</span>: [ <span class="comment">/* same as before */</span> ]
+    },
+    {
+      <span class="key">"supplierInvoiceNo"</span>: <span class="str">"INV-12346"</span>,  <span class="comment">// second invoice in same PDF</span>
+      <span class="key">"supplierName"</span>:      <span class="str">"Daikin Australia Pty Ltd"</span>,
+      <span class="key">"customerPoRef"</span>:     <span class="str">"PO-1701"</span>,
+      <span class="comment">// ...</span>
+    }
+  ]
+}</pre>
+
+    <div style="margin-top:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Prompt Instruction — Split Detection</div>
+      <div class="callout green">
+        <strong>Key prompt addition:</strong> "If the document contains more than one supplier invoice (identified by separate invoice numbers, dates, or supplier headers), return each as a separate object in the invoices array. Do not merge line items across separate invoices."
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Server: Backwards Compatibility</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">The server normalises both old (single invoice object) and new (invoices array) shapes so the transition is non-breaking:</div>
+      <pre class="code-block"><span class="comment">// server.js — normalise response shape</span>
+<span class="key">const</span> parsed = JSON.parse(cleaned);
+<span class="key">const</span> invoices = Array.isArray(parsed.invoices)
+  ? parsed.invoices
+  : [parsed]; <span class="comment">// legacy single-object response</span>
+
+res.json({ invoices }); <span class="comment">// always returns { invoices: [...] }</span></pre>
+    </div>
+  </div>
+
+  <!-- ── SECTION 05: PROCESSING QUEUE ── -->
+  <div class="spec-section" id="queue">
+    <div class="sec-label">Section 05</div>
+    <div class="sec-title">Processing Queue</div>
+    <div class="sec-desc">The queue is shown above the review panel during processing. Once all files are done, it collapses to a compact summary bar. Each item shows the file name, status, and what was found.</div>
+
+    <!-- QUEUE MOCKUP -->
+    <div class="queue-grid">
+      <div class="queue-item">
+        <div class="queue-icon pdf">📄</div>
+        <div class="queue-meta">
+          <div class="queue-name">daikin-invoices-march.pdf</div>
+          <div class="queue-sub">2 invoices detected · Daikin Australia</div>
+          <div class="progress-mini"><div class="fill" style="width:100%"></div></div>
+        </div>
+        <div class="queue-status split">2 invoices split ✦</div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-icon pdf">📄</div>
+        <div class="queue-meta">
+          <div class="queue-name">reece-INV-99821.pdf</div>
+          <div class="queue-sub">1 invoice · Reece Pty Ltd</div>
+          <div class="progress-mini"><div class="fill" style="width:100%"></div></div>
+        </div>
+        <div class="queue-status done">✓ Done</div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-icon img">🖼</div>
+        <div class="queue-meta">
+          <div class="queue-name">photo-invoice-site42.jpg</div>
+          <div class="queue-sub">Parsing with Claude Vision...</div>
+          <div class="progress-mini"><div class="fill" style="width:55%"></div></div>
+        </div>
+        <div class="queue-status active">Parsing…</div>
+      </div>
+      <div class="queue-item">
+        <div class="queue-icon pdf">📄</div>
+        <div class="queue-meta">
+          <div class="queue-name">supplier-batch-apr.pdf</div>
+          <div class="queue-sub">Waiting for slot…</div>
+          <div class="progress-mini"><div class="fill" style="width:0%"></div></div>
+        </div>
+        <div class="queue-status queued">Queued</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <table class="api-table">
+        <thead><tr><th>Status</th><th>Meaning</th><th>Visual</th></tr></thead>
+        <tbody>
+          <tr><td>Queued</td><td>File received, waiting for a processing slot</td><td>Grey — no progress bar fill</td></tr>
+          <tr><td>Parsing</td><td>File sent to Claude Vision, awaiting response</td><td>Teal — animated progress bar</td></tr>
+          <tr><td>Done</td><td>Parsed successfully — 1 invoice extracted</td><td>Green checkmark</td></tr>
+          <tr><td>N invoices split</td><td>Claude detected multiple invoices in one file</td><td>Purple ✦ label showing count</td></tr>
+          <tr><td>Error</td><td>Parse failed or Claude returned invalid JSON</td><td>Red — retry button shown</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 06: BATCH REVIEW SCREEN ── -->
+  <div class="spec-section" id="review">
+    <div class="sec-label">Section 06</div>
+    <div class="sec-title">Batch Review Screen</div>
+    <div class="sec-desc">The centrepiece of the workflow. A split panel — invoice list on the left, selected invoice detail on the right. The user scans the list, resolves exceptions by clicking into them, then hits "Apply All Matched" when ready.</div>
+
+    <!-- STATUS LEGEND -->
+    <div class="status-legend">
+      <div class="sl-item matched"><div class="sl-dot"></div><span class="sl-label">Matched</span><span class="sl-desc">&nbsp;— PO found, amt within tolerance</span></div>
+      <div class="sl-item differs"><div class="sl-dot"></div><span class="sl-label">Needs Review</span><span class="sl-desc">&nbsp;— PO found, amount differs</span></div>
+      <div class="sl-item nopo"><div class="sl-dot"></div><span class="sl-label">No PO Found</span><span class="sl-desc">&nbsp;— no matching PO</span></div>
+      <div class="sl-item split"><div class="sl-dot"></div><span class="sl-label">Split from PDF</span><span class="sl-desc">&nbsp;— multiple invoices in one file</span></div>
+    </div>
+
+    <!-- SCREEN MOCKUP -->
+    <div class="ui-mockup">
+      <div class="ui-bar">
+        <div class="ui-dot red"></div><div class="ui-dot amber"></div><div class="ui-dot green"></div>
+        <div class="ui-url">fi-supplier-po.herokuapp.com/bills/import/review</div>
+      </div>
+
+      <div class="ui-header">
+        <div>
+          <div class="ui-header-title">Batch Import Review</div>
+          <div class="ui-header-sub">4 files · 6 invoices · 3 matched · 2 need review · 1 no PO</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="btn ghost" style="font-size:11px;padding:6px 12px">Filter</div>
+          <div class="btn ghost" style="font-size:11px;padding:6px 12px">✦ Sort</div>
+        </div>
+      </div>
+
+      <div class="ui-body">
+        <!-- LEFT: Invoice list -->
+        <div class="ui-left">
+          <div class="ui-section-label">Invoices (6)</div>
+
+          <div class="inv-item active">
+            <div class="inv-item-top">
+              <div class="inv-name">Daikin — INV-12345</div>
+              <div class="inv-amount green">$3,422.00</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">10 Mar 2026 · PO-1648</div>
+              <div class="inv-badge matched">Matched</div>
+            </div>
+          </div>
+
+          <div class="inv-item">
+            <div style="position:absolute;top:6px;right:8px;font-size:8px;color:var(--purple);font-weight:700">✦ Split</div>
+            <div class="inv-item-top">
+              <div class="inv-name">Daikin — INV-12346</div>
+              <div class="inv-amount matched">$1,980.00</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">10 Mar 2026 · PO-1701</div>
+              <div class="inv-badge matched">Matched</div>
+            </div>
+          </div>
+
+          <div class="inv-item">
+            <div class="inv-item-top">
+              <div class="inv-name">Reece — INV-99821</div>
+              <div class="inv-amount green">$892.50</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">12 Mar 2026 · PO-1655</div>
+              <div class="inv-badge matched">Matched</div>
+            </div>
+          </div>
+
+          <div class="inv-item">
+            <div class="inv-item-top">
+              <div class="inv-name">Reece — INV-99847</div>
+              <div class="inv-amount amber">$1,340.00</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">14 Mar 2026 · PO-1655 · +$47 var</div>
+              <div class="inv-badge differs">Needs Review</div>
+            </div>
+          </div>
+
+          <div class="inv-item">
+            <div class="inv-item-top">
+              <div class="inv-name">Unknown Supplier</div>
+              <div class="inv-amount red">$1,200.00</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">11 Mar 2026 · ref: SITE-42</div>
+              <div class="inv-badge nopo">No PO Found</div>
+            </div>
+          </div>
+
+          <div class="inv-item">
+            <div class="inv-item-top">
+              <div class="inv-name">Daikin — INV-12401</div>
+              <div class="inv-amount amber">$2,200.00</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div class="inv-meta">15 Mar 2026 · PO-1712 · -$22 var</div>
+              <div class="inv-badge differs">Needs Review</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Detail panel -->
+        <div class="ui-right">
+          <div>
+            <div class="detail-supplier">Daikin Australia Pty Ltd</div>
+            <div class="detail-meta-row">
+              <div class="detail-meta-item"><strong>Invoice</strong> INV-12345</div>
+              <div class="detail-meta-item"><strong>Date</strong> 10 Mar 2026</div>
+              <div class="detail-meta-item"><strong>Total</strong> $3,422.00 inc GST</div>
+              <div class="detail-meta-item"><strong>Source</strong> daikin-invoices-march.pdf</div>
+            </div>
+          </div>
+
+          <div class="po-match-box">
+            <div>
+              <div class="po-match-label">Matched PO</div>
+              <div class="po-match-value">PO-1648</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:2px">Daikin — Split system supply · $3,422.00 · Matched by PO ID</div>
+            </div>
+            <div>
+              <div class="po-match-status">✓ Within tolerance</div>
+              <div style="font-size:10px;color:var(--dim);margin-top:2px">Var: $0.00</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="ui-section-label" style="margin-bottom:6px">Line Items (4)</div>
+            <table class="lines-table">
+              <thead>
+                <tr><th>Code</th><th>Description</th><th>Qty</th><th>Match</th><th style="text-align:right">Total</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="color:var(--teal);font-family:monospace">FDYBN140</td>
+                  <td>Daikin VRV outdoor unit 14kW</td>
+                  <td>1</td>
+                  <td><span class="match-chip exact">exact</span></td>
+                  <td>$2,100.00</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--teal);font-family:monospace">BRC1H63</td>
+                  <td>Wired remote controller</td>
+                  <td>2</td>
+                  <td><span class="match-chip exact">exact</span></td>
+                  <td>$580.91</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--teal);font-family:monospace">KAF929A48</td>
+                  <td>Refrigerant piping kit</td>
+                  <td>1</td>
+                  <td><span class="match-chip partial">partial</span></td>
+                  <td>$330.00</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--muted);font-family:monospace">FREIGHT</td>
+                  <td>Delivery charge</td>
+                  <td>1</td>
+                  <td><span class="match-chip none">none</span></td>
+                  <td>$100.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:auto">
+            <div class="btn primary">✓ Approve &amp; Sync to PO-1648</div>
+            <div class="btn ghost">Skip</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BULK BAR -->
+      <div class="bulk-bar">
+        <div class="bulk-summary">
+          <strong>3 matched</strong> ready to apply &nbsp;·&nbsp;
+          <strong>2</strong> need review &nbsp;·&nbsp;
+          <strong>1</strong> no PO found
+        </div>
+        <div class="bulk-actions">
+          <div class="btn ghost" style="font-size:11px;padding:7px 14px">Skip All</div>
+          <div class="btn ghost" style="font-size:11px;padding:7px 14px;color:var(--amber)">⚠ Review Exceptions (3)</div>
+          <div class="btn primary" style="font-size:11px;padding:7px 14px">✓ Apply All Matched (3)</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Detail Panel Behaviour</div>
+      <table class="api-table">
+        <thead><tr><th>Invoice Status</th><th>Detail Panel Shows</th><th>Primary Action</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Matched</td>
+            <td>PO match card (green), line items, variance = $0</td>
+            <td>"Approve &amp; Sync to PO-X"</td>
+          </tr>
+          <tr>
+            <td>Needs Review</td>
+            <td>PO match card (amber), line items, variance highlighted, suggested resolution</td>
+            <td>"Add Line to PO" or "Accept variance &amp; Sync"</td>
+          </tr>
+          <tr>
+            <td>No PO Found</td>
+            <td>Supplier ref shown, PO search field, "Create New PO" option</td>
+            <td>Search + select PO, then "Sync" or "Create PO"</td>
+          </tr>
+          <tr>
+            <td>Error</td>
+            <td>Raw Claude response shown for debugging, retry button</td>
+            <td>"Retry Parse"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 07: MATCHING RULES ── -->
+  <div class="spec-section" id="matching">
+    <div class="sec-label">Section 07</div>
+    <div class="sec-title">Per-Invoice Matching Rules</div>
+    <div class="sec-desc">Each invoice goes through the same matching logic as the existing single-bill flow. A 2% tolerance catches rounding and minor freight variations without flagging everything as an exception.</div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot green">1</div>
+        <div class="flow-body">
+          <div class="flow-title">PO match on <code>customerPoRef</code></div>
+          <div class="flow-desc">Compare the invoice's <code>customerPoRef</code> (our PO number as printed on the invoice) against all open FieldInsight PO IDs. Case-insensitive exact match.</div>
+          <div class="flow-code">pos.find(p => p.id.toLowerCase() === invoice.customerPoRef.toLowerCase())</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot blue">2</div>
+        <div class="flow-body">
+          <div class="flow-title">Variance check → Matched or Needs Review</div>
+          <div class="flow-desc">If a PO is found: compare <code>invoice.totalIncGst</code> to <code>po.totalValue</code>. If variance ≤ 2% of PO value → <strong>Matched</strong>. If variance &gt; 2% → <strong>Needs Review</strong>.</div>
+          <div class="flow-code"><span class="key">const</span> variance = Math.abs(invoice.totalIncGst - po.totalValue);
+<span class="key">const</span> tolerance = po.totalValue * <span class="val">0.02</span>;
+<span class="key">const</span> status = variance &lt;= tolerance ? <span class="str">'matched'</span> : <span class="str">'differs'</span>;</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot amber">3</div>
+        <div class="flow-body">
+          <div class="flow-title">No match → No PO Found</div>
+          <div class="flow-desc">No PO with a matching ID found. The invoice is flagged. User options: search and link to an existing PO, create a new PO, or skip the invoice. Unlike statements, invoice matching is PO-ID only — no tiered project/job fallback (the PO number should always be on an invoice).</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot purple">4</div>
+        <div class="flow-body">
+          <div class="flow-title">Duplicate detection</div>
+          <div class="flow-desc">Before adding to the review list, check if <code>invoice.supplierInvoiceNo</code> + <code>invoice.supplierName</code> combination already exists in the bill register. If so, flag as <strong>Possible Duplicate</strong> with a warning — user must confirm before syncing.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 08: BULK APPLY ── -->
+  <div class="spec-section" id="bulk">
+    <div class="sec-label">Section 08</div>
+    <div class="sec-title">Bulk Apply Flow</div>
+    <div class="sec-desc">The power of batch import is in bulk approval. "Apply All Matched" processes every green invoice in sequence, syncing each to its PO with a single click. The user sees a live counter and a final summary.</div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot teal">1</div>
+        <div class="flow-body">
+          <div class="flow-title">"Apply All Matched (N)" clicked <span class="tag ux">User Action</span></div>
+          <div class="flow-desc">A confirmation modal lists the N invoices that will be synced, their POs, and the total dollar value being applied. "Confirm Apply" proceeds.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot blue">2</div>
+        <div class="flow-body">
+          <div class="flow-title">Sequential apply with live counter <span class="tag fe">Frontend</span></div>
+          <div class="flow-desc">Invoices are applied one at a time (not in parallel) to avoid race conditions on shared POs. A progress indicator shows "Applying 2 of 3…". Each invoice calls the existing <code>updatePurchaseOrder</code> / <code>addPOLineDetails</code> DataContext functions.</div>
+          <div class="flow-code"><span class="comment">// Per matched invoice — existing sync logic</span>
+<span class="key">for</span> (<span class="key">const</span> inv <span class="kw">of</span> matchedInvoices) {
+  <span class="kw">await</span> syncBillToPO(inv.matchedPoId, inv);
+  setAppliedCount(n => n + <span class="val">1</span>);
+}</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot green">3</div>
+        <div class="flow-body">
+          <div class="flow-title">Summary screen <span class="tag ux">User Feedback</span></div>
+          <div class="flow-desc">Once all matched invoices are applied, a summary card appears: <strong>"3 bills synced · 2 need your attention"</strong>. The review list auto-filters to show only the unresolved items. The user can then work through exceptions individually.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot amber">4</div>
+        <div class="flow-body">
+          <div class="flow-title">Individual exception resolution <span class="tag ux">User Action</span></div>
+          <div class="flow-desc">Each "Needs Review" invoice shows the variance amount and offers: <strong>Add Line to PO</strong> (adds a MISC/freight line for the difference), <strong>Accept &amp; Sync</strong> (applies despite variance — for known discrepancies), or <strong>Skip</strong> (defer to later). Each "No PO" invoice offers: <strong>Search &amp; Link</strong>, <strong>Create PO</strong>, or <strong>Skip</strong>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 09: API CHANGES ── -->
+  <div class="spec-section" id="api">
+    <div class="sec-label">Section 09</div>
+    <div class="sec-title">API Changes</div>
+    <div class="sec-desc">The server change is minimal — a prompt update and a normalisation wrapper. All existing clients continue to work.</div>
+
+    <table class="api-table" style="margin-bottom:24px">
+      <thead><tr><th>Endpoint</th><th>Change</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="endpoint">POST /api/parse-invoice</span></td>
+          <td>Response now always returns <code>{ invoices: [...] }</code> array</td>
+          <td>Backwards-compatible via server normalisation. Single-invoice PDFs return array of length 1.</td>
+        </tr>
+        <tr>
+          <td><span class="endpoint">POST /api/parse-statement</span></td>
+          <td>No change</td>
+          <td>Statement parsing is already array-based.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px">Updated <code>ParsedBatch</code> Client Type</div>
+    <pre class="code-block"><span class="comment">// New types — src/data/types.ts</span>
+<span class="kw">export interface</span> <span class="key">ParsedInvoice</span> {
+  supplierInvoiceNo: <span class="str">string</span>;
+  invoiceDate:       <span class="str">string</span>;
+  supplierName:      <span class="str">string</span>;
+  customerPoRef:     <span class="str">string</span>;
+  documentGst:       <span class="str">'ex'</span> | <span class="str">'inc'</span>;
+  subtotalExGst:     <span class="val">number</span>;
+  totalGst:          <span class="val">number</span>;
+  totalIncGst:       <span class="val">number</span>;
+  lines:             <span class="key">InvoiceLine</span>[];
+}
+
+<span class="kw">export type</span> <span class="key">InvoiceMatchStatus</span> = <span class="str">'matched'</span> | <span class="str">'differs'</span> | <span class="str">'no-po'</span> | <span class="str">'duplicate'</span> | <span class="str">'error'</span>;
+
+<span class="kw">export interface</span> <span class="key">BatchInvoiceResult</span> {
+  id:           <span class="str">string</span>;          <span class="comment">// uuid — stable across re-renders</span>
+  invoice:      <span class="key">ParsedInvoice</span>;
+  sourceFile:   <span class="str">string</span>;          <span class="comment">// original filename</span>
+  splitIndex?:  <span class="val">number</span>;         <span class="comment">// 1-based index if split from multi-invoice PDF</span>
+  status:       <span class="key">InvoiceMatchStatus</span>;
+  matchedPo?:   <span class="key">PurchaseOrder</span>;
+  variance?:    <span class="val">number</span>;          <span class="comment">// invoice.totalIncGst - po.totalValue</span>
+  approved:     <span class="val">boolean</span>;
+}</pre>
+
+    <div style="margin-top:20px">
+      <div class="model-grid">
+        <div class="model-card">
+          <div class="model-name"><span>📥</span> BatchInvoiceResult</div>
+          <div class="model-field"><span class="field-name">id</span><span class="field-type">string</span><span class="field-note">uuid</span></div>
+          <div class="model-field"><span class="field-name">invoice</span><span class="field-type">ParsedInvoice</span><span class="field-note">Claude output</span></div>
+          <div class="model-field"><span class="field-name">sourceFile</span><span class="field-type">string</span><span class="field-note">filename</span></div>
+          <div class="model-field"><span class="field-name">splitIndex</span><span class="field-type">number?</span><span class="field-note">position in multi-inv PDF</span></div>
+          <div class="model-field"><span class="field-name">status</span><span class="field-type">MatchStatus</span><span class="field-note">matched | differs | …</span></div>
+          <div class="model-field"><span class="field-name">matchedPo</span><span class="field-type">PO?</span><span class="field-note">linked PO if found</span></div>
+          <div class="model-field"><span class="field-name">variance</span><span class="field-type">number?</span><span class="field-note">$ difference</span></div>
+          <div class="model-field"><span class="field-name">approved</span><span class="field-type">boolean</span><span class="field-note">ready to apply</span></div>
+        </div>
+        <div class="model-card">
+          <div class="model-name"><span>⚙️</span> Client State</div>
+          <div class="model-field"><span class="field-name">uploadQueue</span><span class="field-type">QueueItem[]</span><span class="field-note">files with status</span></div>
+          <div class="model-field"><span class="field-name">batchResults</span><span class="field-type">BatchInvoiceResult[]</span><span class="field-note">all parsed invoices</span></div>
+          <div class="model-field"><span class="field-name">selectedId</span><span class="field-type">string?</span><span class="field-note">detail panel focus</span></div>
+          <div class="model-field"><span class="field-name">isApplying</span><span class="field-type">boolean</span><span class="field-note">bulk apply in progress</span></div>
+          <div class="model-field"><span class="field-name">appliedCount</span><span class="field-type">number</span><span class="field-note">live counter during apply</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 10: EDGE CASES ── -->
+  <div class="spec-section" id="edge">
+    <div class="sec-label">Section 10</div>
+    <div class="sec-title">Edge Cases</div>
+    <div class="sec-desc">Common scenarios that need explicit handling so the user is never stuck.</div>
+
+    <table class="edge-table">
+      <thead><tr><th>Scenario</th><th>Expected Behaviour</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Same PO matched by 2+ invoices</td>
+          <td>Both shown in review. User applies first one — second now shows the updated PO value, variance recalculated. If second also matches within tolerance, it remains green. User is warned: "PO-1648 has already had a bill synced in this batch."</td>
+        </tr>
+        <tr>
+          <td>Invoice already in system (duplicate)</td>
+          <td>Flagged as "Possible Duplicate" with amber warning. Shows the existing bill record. User must explicitly choose "Apply anyway" or "Skip". Never silently overwrites.</td>
+        </tr>
+        <tr>
+          <td>PDF parse returns 0 invoices</td>
+          <td>File shows as Error in queue. Error panel: "Claude couldn't find any invoice data in this file." Retry button + manual skip.</td>
+        </tr>
+        <tr>
+          <td>One file in a 10-file batch fails</td>
+          <td>The other 9 continue and appear in review normally. Failed file shown in queue as red with "Retry" button. User can proceed with the 9 and retry or skip the failed one separately.</td>
+        </tr>
+        <tr>
+          <td>Multi-invoice PDF but same supplier + same PO across all invoices</td>
+          <td>Each invoice is still a separate row in the review list. They may all match the same PO. User can bulk-apply them — total will exceed PO value, so second and third will show variance. Designed behaviour: the PO was only for one delivery; user must create PO for subsequent ones.</td>
+        </tr>
+        <tr>
+          <td>File dropped onto existing Bill Detail page</td>
+          <td>Bill Detail retains a compact "Import from PDF" button. Clicking it opens the Batch Import flow at <code>/bills/import</code> and pre-fills the supplier selector with the current bill's supplier.</td>
+        </tr>
+        <tr>
+          <td>20+ files dropped at once</td>
+          <td>Cap at 20 files per batch with a clear message: "Batch limit is 20 files. The extra N files were not added." Prevents excessively long queues and API overload.</td>
+        </tr>
+        <tr>
+          <td>ANTHROPIC_API_KEY not set</td>
+          <td>All files in queue immediately move to "Demo mode" status. Review screen pre-populates with seeded demo invoices per-supplier. Blue info callout: "API key not configured — showing demo data."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SECTION 11: ROADMAP ── -->
+  <div class="spec-section" id="roadmap">
+    <div class="sec-label">Section 11</div>
+    <div class="sec-title">Build Phases</div>
+    <div class="sec-desc">Suggested build order. P1 delivers the full user-facing value. P2–P4 are quality-of-life and scale improvements.</div>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <div class="phase-num p1">P1</div>
+        <div class="phase-body">
+          <div class="phase-title">Core Batch Import — ~3–4 days dev</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+            New <code>/bills/import</code> page. Multi-file drop zone. Processing queue (max 3 concurrent). Batch review split-panel with invoice list + detail. "Apply All Matched" bulk action. Prompt update for multi-invoice array response. Backwards-compatible server normalisation.
+          </div>
+          <ul class="phase-items">
+            <li>BatchImportPage.tsx</li>
+            <li>Concurrency queue (semaphore)</li>
+            <li>Server prompt update</li>
+            <li>BatchInvoiceResult types</li>
+            <li>Bulk apply flow</li>
+            <li>Route /bills/import</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p2">P2</div>
+        <div class="phase-body">
+          <div class="phase-title">Duplicate Detection + Multi-invoice Split UX — ~1–2 days dev</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+            Cross-reference parsed invoices against existing bill register. Visual ✦ Split indicator with source file tooltip. Group related invoices by source file in the list view (collapsible).
+          </div>
+          <ul class="phase-items">
+            <li>Duplicate check on invoice no. + supplier</li>
+            <li>Split grouping in list panel</li>
+            <li>Duplicate confirm modal</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p3">P3</div>
+        <div class="phase-body">
+          <div class="phase-title">Auto-route Single Clean Match — ~0.5 days dev</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+            If exactly 1 invoice parsed + cleanly matched → bypass review screen and route directly to Bill Detail with data pre-populated. Zero friction for the most common use case.
+          </div>
+          <ul class="phase-items">
+            <li>Post-parse routing logic</li>
+            <li>Bill Detail pre-populate from batch result</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p4">P4</div>
+        <div class="phase-body">
+          <div class="phase-title">Email Ingest — ~3 days dev</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+            Monitor a dedicated inbox (e.g. <code>bills@fieldinsight.com.au</code>). Automatically extract PDF/image attachments and push them into the import queue. User sees new items appear in Bills → Import Review without any manual upload.
+          </div>
+          <ul class="phase-items">
+            <li>SendGrid inbound email parsing</li>
+            <li>Attachment extraction + queue push</li>
+            <li>Email-source indicator in review list</li>
+            <li>Notification: "3 new bills from email"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  FieldInsight Batch Bill Import Spec — FI-003 &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
+  <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank">Live Prototype →</a> &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/fi-02-pdf-parsing-spec.html">PDF Parsing Spec</a> &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/voice-spec.html">Voice IVR Spec</a>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('.spec-section[id]');
+const navLinks = document.querySelectorAll('nav.spec-nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`nav.spec-nav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
