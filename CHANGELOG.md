@@ -5,6 +5,20 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.7 — 2026-04-12
+
+### Added
+- `meridian-auth.js`: Shared authentication guard for all pages — session check, redirect to login, Meridian nav bar injection
+- `meridian-login.html`: The Meridian branded login page — dark theme, Google OAuth, animated grid background, platform chip list
+- All 10 pages now protected: index, ai-conquest, sdr-dashboard, business-dashboard, cashflow-growth, fi-advantage, voice-spec, fi-02-pdf-parsing-spec, fi-03-multi-bill-import-spec, customer-ideas
+- Sign-in once → access all pages; session shared via `localStorage`; auto-redirect back after login
+- Meridian nav bar injected into every page (Roadmap · AI Conquest · SDR Board · Business · Cashflow)
+
+### Changed
+- `ai-conquest.html`: Removed per-page Google GSI login gate; now uses shared Meridian session; topbar sign-out wired to `meridianSignOut()`; topbar and sidebar offsets updated for Meridian nav bar
+
+---
+
 ## v0.8.6 — 2026-04-12
 
 ### Added

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-meridian-no-bar>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Meridian — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg:      #04050a;
+      --surface: #0b0d16;
+      --border:  #151826;
+      --border2: rgba(167,139,250,0.15);
+      --text:    #e8eaf6;
+      --muted:   #5a607a;
+      --purple:  #a78bfa;
+      --purple2: #c4b5fd;
+      --green:   #34d399;
+      --red:     #f87171;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(167,139,250,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 85% 80%, rgba(52,211,153,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 30% 30% at 10% 90%, rgba(167,139,250,0.03) 0%, transparent 50%);
+    }
+
+    /* Fine grid overlay */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      position: relative; z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    /* ── WORDMARK ── */
+    .wordmark {
+      display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 3.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .wm-gem {
+      font-size: 1.6rem; color: var(--purple);
+      filter: drop-shadow(0 0 12px rgba(167,139,250,0.5));
+      line-height: 1;
+    }
+    .wm-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--purple2);
+    }
+
+    /* ── LOGIN CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 3rem 3.5rem;
+      width: 100%; max-width: 420px;
+      text-align: center;
+      box-shadow:
+        0 0 0 1px rgba(167,139,250,0.05),
+        0 32px 64px rgba(0,0,0,0.5),
+        0 0 80px rgba(167,139,250,0.04);
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .card-eyebrow {
+      font-size: 0.58rem; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--purple);
+      background: rgba(167,139,250,0.08);
+      border: 1px solid rgba(167,139,250,0.2);
+      display: inline-block;
+      padding: 3px 12px; border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.55rem; font-weight: 800;
+      letter-spacing: -0.75px; line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-sub {
+      font-size: 0.8rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 2.25rem;
+    }
+    .card-sub strong { color: var(--green); font-weight: 600; }
+
+    /* ── GOOGLE BUTTON WRAPPER ── */
+    .google-wrap {
+      display: flex; justify-content: center;
+      margin-bottom: 1.25rem;
+      min-height: 44px;
+      align-items: center;
+    }
+
+    /* ── ERROR ── */
+    .error-msg {
+      font-size: 0.77rem;
+      color: var(--red);
+      background: rgba(248,113,113,0.08);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      display: none;
+      margin-top: 0.75rem;
+      line-height: 1.5;
+    }
+
+    /* ── FOOTER NOTE ── */
+    .card-note {
+      font-size: 0.67rem; color: var(--muted);
+      margin-top: 1.75rem;
+      line-height: 1.6;
+    }
+    .card-note strong { color: rgba(167,139,250,0.6); font-weight: 600; }
+
+    /* ── DIVIDER ── */
+    .card-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+      margin: 2rem 0 1.5rem;
+    }
+
+    /* ── PLATFORM LIST ── */
+    .platform-chips {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem;
+      margin-bottom: 0;
+    }
+    .chip {
+      font-size: 0.62rem; font-weight: 600;
+      color: rgba(232,234,246,0.35);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px; padding: 3px 9px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── BOTTOM TAGLINE ── */
+    .tagline {
+      margin-top: 2.5rem;
+      font-size: 0.67rem; color: var(--muted);
+      letter-spacing: 0.04em;
+      animation: fadeUp 0.6s 0.25s ease both;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── LOADING STATE ── */
+    .loading-state {
+      display: none;
+      flex-direction: column; align-items: center; gap: 0.75rem;
+      padding: 1rem 0;
+    }
+    .loading-dot {
+      width: 32px; height: 32px;
+      border: 2px solid rgba(167,139,250,0.2);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .loading-text { font-size: 0.78rem; color: var(--muted); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="bg-canvas"></div>
+<div class="bg-grid"></div>
+
+<div class="page">
+
+  <!-- WORDMARK -->
+  <div class="wordmark">
+    <span class="wm-gem">◈</span>
+    <span class="wm-name">The Meridian</span>
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+    <div class="card-eyebrow">🔒 Private Intelligence Platform</div>
+    <h1 class="card-title">Sign in to access<br>your workspace</h1>
+    <p class="card-sub">
+      Restricted to <strong>@fieldinsight.com</strong> accounts.<br>
+      Roadmap · AI Conquest · Dashboards · Competitive Intel
+    </p>
+
+    <!-- Google Sign-In -->
+    <div id="g_id_onload"
+         data-client_id="REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false"
+         data-hosted_domain="fieldinsight.com">
+    </div>
+
+    <div class="google-wrap">
+      <div class="g_id_signin"
+           data-type="standard"
+           data-size="large"
+           data-theme="filled_black"
+           data-text="signin_with"
+           data-shape="rectangular"
+           data-logo_alignment="left"
+           data-width="260">
+      </div>
+    </div>
+
+    <div class="loading-state" id="loading">
+      <div class="loading-dot"></div>
+      <div class="loading-text">Verifying your account…</div>
+    </div>
+
+    <div id="error-msg" class="error-msg"></div>
+
+    <div class="card-divider"></div>
+
+    <!-- What's inside -->
+    <div class="platform-chips">
+      <span class="chip">Product Roadmap</span>
+      <span class="chip">AI Conquest</span>
+      <span class="chip">SDR Board</span>
+      <span class="chip">Business Dashboard</span>
+      <span class="chip">Cashflow Forecast</span>
+      <span class="chip">Competitive Thesis</span>
+    </div>
+
+    <p class="card-note">
+      <strong>@fieldinsight.com</strong> Google Workspace accounts only.<br>
+      Contact your admin if you need access.
+    </p>
+  </div>
+
+  <p class="tagline">FieldInsight · Built with Alfred</p>
+
+</div>
+
+<script>
+  /* ─────────────────────────────────────────────────────────────
+     CONFIG — paste your Google OAuth 2.0 Client ID below
+     console.cloud.google.com → APIs & Services → Credentials
+     Authorised JavaScript origins: https://ptyrrell.github.io
+  ───────────────────────────────────────────────────────────── */
+  var GOOGLE_CLIENT_ID = 'REPLACE_WITH_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  var ALLOWED_DOMAIN   = 'fieldinsight.com';
+  var SESSION_KEY      = 'meridian_session';
+  var RETURN_KEY       = 'meridian_return';
+
+  function showError(msg) {
+    var el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    document.getElementById('loading').style.display = 'none';
+  }
+
+  function handleCredentialResponse(response) {
+    document.getElementById('loading').style.display = 'flex';
+    try {
+      /* Decode JWT payload (not verifying sig client-side — fine for UI gating) */
+      var parts   = response.credential.split('.');
+      var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+
+      var email  = payload.email || '';
+      var domain = email.split('@')[1] || '';
+
+      if (domain !== ALLOWED_DOMAIN) {
+        showError('Access restricted to @' + ALLOWED_DOMAIN + ' accounts. Got: ' + email);
+        return;
+      }
+
+      /* Save session */
+      var session = {
+        email:   email,
+        name:    payload.name    || email,
+        picture: payload.picture || '',
+        exp:     payload.exp     || 0,
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+
+      /* Redirect to saved return URL or default to roadmap */
+      var base    = window.location.pathname.replace(/\/[^/]*$/, '/');
+      var fallback = window.location.origin + base + 'index.html';
+      var returnTo = localStorage.getItem(RETURN_KEY) || fallback;
+
+      /* Never redirect back to the login page itself */
+      if (returnTo.indexOf('meridian-login') !== -1) returnTo = fallback;
+
+      localStorage.removeItem(RETURN_KEY);
+      window.location.href = returnTo;
+
+    } catch (e) {
+      showError('Sign-in failed: ' + e.message);
+    }
+  }
+
+  /* Check if already authenticated — skip login */
+  (function () {
+    try {
+      var stored = localStorage.getItem(SESSION_KEY);
+      if (!stored) return;
+      var s = JSON.parse(stored);
+      if (!s || !s.email) return;
+      if (s.email.split('@')[1] !== ALLOWED_DOMAIN) return;
+      var now = Math.floor(Date.now() / 1000);
+      if (s.exp && s.exp < now) { localStorage.removeItem(SESSION_KEY); return; }
+      /* Already logged in — go home */
+      var base = window.location.pathname.replace(/\/[^/]*$/, '/');
+      window.location.replace(window.location.origin + base + 'index.html');
+    } catch (e) { /* ignore */ }
+  })();
+</script>
+
+</body>
+</html>
