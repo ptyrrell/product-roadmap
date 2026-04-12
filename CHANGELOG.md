@@ -5,6 +5,25 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.8.4 — 2026-04-12
+
+### Added
+- FI-020: Replaced with full 10-page Competitive Threat & Opportunity Thesis (Perplexity Computer, April 2026)
+  - TTAN deep dive: financial metrics, Atlas AI moat, structural vulnerabilities, stock analysis (-57.9% from ATH)
+  - simPRO deep dive: ANZ incumbent, commercial-project bias, reactive maintenance weakness, AI gap
+  - Fieldproxy deep dive: YC W2022, $649/mo flat, $1M USD funded, ANZ compliance gaps, threat level assessment
+  - AI disruption wave: organises labour vs replaces labour, per-tech pricing liability, implementation tax
+  - Capital markets signal: HUBS -64%, CRM -33%, PLTR +36% — workflow SaaS vs data+AI re-rating
+  - Palantir analogy: system of record + proprietary data = compounding AI moat
+  - Full threat matrix (7 threats with probability/impact/timeframe)
+  - Full opportunity matrix (8 opportunities with urgency/potential)
+- FI-021: simPRO Refugee Campaign — reactive/maintenance operator beachhead, migration tooling, comparison SEO
+- FI-022: ANZ Compliance Layer — AS/NZS 3000, CCEW, WHS, licensing verification — no competitor owns this
+- FI-023: Pricing Innovation — flat-fee tiers ($499/20 techs, $899/40 techs), outcome-linked pilots
+- FI-024: Data Moat Infrastructure — ANZ electrical benchmarking, anonymised industry reports, AI training data
+
+---
+
 ## v0.8.3 — 2026-04-12
 
 ### Updated
