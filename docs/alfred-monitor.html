@@ -165,6 +165,22 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     a.back { color: var(--muted); font-size: 12px; text-decoration: none; }
     a.back:hover { color: var(--text); }
+    .wide-card { grid-column: 1 / -1; }
+    .msg-list { display: flex; flex-direction: column; gap: 6px; max-height: 340px; overflow-y: auto; }
+    .msg-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 10px; border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      font-size: 12px; line-height: 1.4;
+    }
+    .msg-row.in  { border-left: 3px solid var(--accent); }
+    .msg-row.out { border-left: 3px solid var(--green); }
+    .msg-ts   { color: var(--muted); white-space: nowrap; min-width: 70px; }
+    .msg-dir  { font-weight: 700; min-width: 28px; }
+    .msg-dir.in  { color: var(--accent); }
+    .msg-dir.out { color: var(--green); }
+    .msg-chan  { background: rgba(255,255,255,0.06); border-radius: 4px; padding: 1px 5px; font-size: 10px; color: var(--muted); min-width: 48px; text-align: center; }
+    .msg-body { color: var(--text); flex: 1; word-break: break-word; }
     @media (max-width: 480px) {
       .dash-links { grid-template-columns: 1fr; }
     }
@@ -237,6 +253,15 @@
     </div>
   </div>
 
+  <!-- Message History -->
+  <div class="card wide-card" id="msg-card">
+    <div class="card-header">
+      <span class="card-title">Twilio Message History</span>
+      <span id="msg-loading" style="font-size:11px;color:var(--muted)">Loading…</span>
+    </div>
+    <div id="msg-list" class="msg-list"></div>
+  </div>
+
 </div>
 
 <div class="last-check" id="last-check">Checking status…</div>
@@ -275,7 +300,7 @@
     if (status.status === 'running') {
       document.getElementById('main-card').className = 'card online';
       document.getElementById('main-dot').className = 'status-dot green pulse';
-      document.getElementById('main-status').textContent = '● Online';
+      document.getElementById('main-status').textContent = 'Online';
       document.getElementById('main-status').className = 'big-status green';
       document.getElementById('main-sub').textContent = 'Alfred is running on Mac Studio';
     } else {
@@ -286,6 +311,7 @@
     const tunnelEl = document.getElementById('d-tunnel');
     if (status.tunnel_url) {
       tunnelEl.innerHTML = `<a href="${status.tunnel_url}" target="_blank" style="color:var(--accent)">${status.tunnel_url.replace('https://','').replace('.trycloudflare.com','')}</a>`;
+      loadMessages(status.tunnel_url);
     } else {
       tunnelEl.textContent = '—';
     }
@@ -308,13 +334,43 @@
   function setOffline(reason) {
     document.getElementById('main-card').className = 'card offline';
     document.getElementById('main-dot').className = 'status-dot red';
-    document.getElementById('main-status').textContent = '● Offline';
+    document.getElementById('main-status').textContent = 'Offline';
     document.getElementById('main-status').className = 'big-status red';
     document.getElementById('main-sub').textContent = reason;
   }
 
   checkStatus();
-  setInterval(checkStatus, 60000); // auto-refresh every 60s
+  setInterval(checkStatus, 60000);
+
+  // ── Message History ───────────────────────────────────────────────────────
+  async function loadMessages(tunnelUrl) {
+    if (!tunnelUrl) return;
+    const listEl    = document.getElementById('msg-list');
+    const loadingEl = document.getElementById('msg-loading');
+    try {
+      const r = await fetch(tunnelUrl + '/messages?t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) { loadingEl.textContent = 'Unavailable'; return; }
+      const data = await r.json();
+      loadingEl.textContent = data.messages.length + ' messages';
+      listEl.innerHTML = '';
+      data.messages.forEach(m => {
+        const row = document.createElement('div');
+        row.className = 'msg-row ' + (m.direction === 'in' ? 'in' : 'out');
+        row.innerHTML =
+          `<span class="msg-ts">${m.ts}</span>` +
+          `<span class="msg-dir ${m.direction}">${m.direction === 'in' ? '←' : '→'}</span>` +
+          `<span class="msg-chan">${m.channel}</span>` +
+          `<span class="msg-body">${escHtml(m.body)}</span>`;
+        listEl.appendChild(row);
+      });
+    } catch (e) {
+      loadingEl.textContent = 'Could not reach Alfred';
+    }
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 </script>
 </body>
 </html>
