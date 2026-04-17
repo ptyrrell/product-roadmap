@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alfred Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0b0f;
+      --card: #12141a;
+      --border: #1e2030;
+      --text: #e8eaf6;
+      --muted: #5a5f7a;
+      --green: #00e5b0;
+      --red: #ff4d6d;
+      --yellow: #ffd166;
+      --accent: #7b61ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+    .header {
+      max-width: 640px;
+      margin: 0 auto 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header h1 { font-size: 1.6rem; font-weight: 800; }
+    .header h1 span { color: var(--accent); }
+    .refresh-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .grid {
+      max-width: 640px;
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .card.online  { border-color: rgba(0,229,176,0.3); }
+    .card.offline { border-color: rgba(255,77,109,0.3); }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+    .status-dot.green  { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .status-dot.red    { background: var(--red); }
+    .status-dot.yellow { background: var(--yellow); }
+    .status-dot.pulse  { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+    .big-status {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .big-status.green  { color: var(--green); }
+    .big-status.red    { color: var(--red); }
+    .big-status.yellow { color: var(--yellow); }
+    .sub { font-size: 13px; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .rows { display: grid; gap: 10px; }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .row:last-child { border-bottom: none; }
+    .row-label { color: var(--muted); font-size: 12px; }
+    .row-val { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text); }
+    .row-val.green  { color: var(--green); }
+    .row-val.red    { color: var(--red); }
+    .row-val.yellow { color: var(--yellow); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(123,97,255,0.12);
+      border: 1px solid rgba(123,97,255,0.25);
+      color: var(--accent);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+    }
+    .dash-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 2px;
+    }
+    .dash-link {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.15s;
+    }
+    .dash-link:hover { border-color: var(--accent); color: var(--accent); }
+    .last-check {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      margin-top: 20px;
+    }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    a.back { color: var(--muted); font-size: 12px; text-decoration: none; }
+    a.back:hover { color: var(--text); }
+    @media (max-width: 480px) {
+      .dash-links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎩 <span>Alfred</span> Monitor</h1>
+  <button class="refresh-btn" onclick="checkStatus()">↻ Refresh</button>
+</div>
+
+<div class="grid">
+
+  <!-- Main status card -->
+  <div class="card" id="main-card">
+    <div class="card-header">
+      <span class="card-title">Server Status</span>
+      <span class="status-dot pulse" id="main-dot"></span>
+    </div>
+    <div class="big-status" id="main-status"><span class="spinner"></span></div>
+    <div class="sub" id="main-sub">Checking…</div>
+  </div>
+
+  <!-- Details -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">System Details</span>
+    </div>
+    <div class="rows" id="details-rows">
+      <div class="row"><span class="row-label">Tunnel</span><span class="row-val" id="d-tunnel">—</span></div>
+      <div class="row"><span class="row-label">Messenger</span><span class="row-val" id="d-messenger">—</span></div>
+      <div class="row"><span class="row-label">Local LLM</span><span class="row-val" id="d-llm">—</span></div>
+      <div class="row"><span class="row-label">Models</span><span class="row-val" id="d-models">—</span></div>
+      <div class="row"><span class="row-label">Last seen</span><span class="row-val" id="d-updated">—</span></div>
+    </div>
+  </div>
+
+  <!-- Channels -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Message Channels</span>
+    </div>
+    <div class="rows">
+      <div class="row">
+        <span class="row-label">iMessage</span>
+        <span class="row-val" id="ch-imessage">—</span>
+      </div>
+      <div class="row">
+        <span class="row-label">WhatsApp</span>
+        <span class="row-val" id="ch-whatsapp">—</span>
+      </div>
+      <div class="row">
+        <span class="row-label">SMS</span>
+        <span class="row-val" id="ch-sms">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboards -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Dashboards</span>
+    </div>
+    <div class="dash-links">
+      <a class="dash-link" href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com/" target="_blank">📊 Ops Dashboard</a>
+      <a class="dash-link" href="https://fi-financial-forecast-5c442469c4be.herokuapp.com/" target="_blank">💰 Financial Forecast</a>
+      <a class="dash-link" href="https://fi-gmail-inbox-08bff4b3a7ed.herokuapp.com/" target="_blank">📧 Gmail Inbox</a>
+      <a class="dash-link" href="https://ptyrrell.github.io/product-roadmap/" target="_blank">🗺 Roadmap</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="last-check" id="last-check">Checking status…</div>
+
+<script>
+  // Alfred status.json is written by Alfred on every startup
+  const STATUS_URL = 'https://ptyrrell.github.io/product-roadmap/alfred-status.json';
+
+  async function checkStatus() {
+    document.getElementById('main-status').innerHTML = '<span class="spinner"></span>';
+    document.getElementById('main-sub').textContent = 'Checking…';
+    document.getElementById('main-dot').className = 'status-dot pulse';
+
+    let status = null;
+    try {
+      const r = await fetch(STATUS_URL + '?t=' + Date.now(), { cache: 'no-store' });
+      if (r.ok) status = await r.json();
+    } catch (e) {}
+
+    const now = new Date();
+    document.getElementById('last-check').textContent =
+      'Last checked: ' + now.toLocaleTimeString();
+
+    if (!status) {
+      setOffline('No status file found');
+      return;
+    }
+
+    // Check if last_updated is recent (within 24h)
+    const lastSeen = new Date(status.last_updated);
+    const ageH = (now - lastSeen) / 1000 / 3600;
+    const ageStr = ageH < 1
+      ? Math.round(ageH * 60) + 'm ago'
+      : Math.round(ageH) + 'h ago';
+
+    if (status.status === 'running') {
+      document.getElementById('main-card').className = 'card online';
+      document.getElementById('main-dot').className = 'status-dot green pulse';
+      document.getElementById('main-status').textContent = '● Online';
+      document.getElementById('main-status').className = 'big-status green';
+      document.getElementById('main-sub').textContent = 'Alfred is running on Mac Studio';
+    } else {
+      setOffline(status.status || 'Unknown');
+    }
+
+    // Details
+    const tunnelEl = document.getElementById('d-tunnel');
+    if (status.tunnel_url) {
+      tunnelEl.innerHTML = `<a href="${status.tunnel_url}" target="_blank" style="color:var(--accent)">${status.tunnel_url.replace('https://','').replace('.trycloudflare.com','')}</a>`;
+    } else {
+      tunnelEl.textContent = '—';
+    }
+    document.getElementById('d-messenger').textContent = status.messenger || '—';
+    document.getElementById('d-llm').textContent = status.local_llm_enabled ? '✅ Hermes 3 active' : '⬜ Claude only';
+    document.getElementById('d-models').textContent = status.local_llm_model || 'claude-opus-4-5';
+    document.getElementById('d-updated').textContent = ageStr + ' (' + lastSeen.toLocaleString() + ')';
+
+    // Channels
+    const setChannel = (id, val, ok) => {
+      const el = document.getElementById(id);
+      el.textContent = val;
+      el.className = 'row-val ' + (ok ? 'green' : 'red');
+    };
+    setChannel('ch-imessage', status.imessage_polling ? '✅ Polling' : '⚠️ Not polling', status.imessage_polling);
+    setChannel('ch-whatsapp', '+61 468 156 287 ✅', true);
+    setChannel('ch-sms',      '+1 838 368 1923 ✅', true);
+  }
+
+  function setOffline(reason) {
+    document.getElementById('main-card').className = 'card offline';
+    document.getElementById('main-dot').className = 'status-dot red';
+    document.getElementById('main-status').textContent = '● Offline';
+    document.getElementById('main-status').className = 'big-status red';
+    document.getElementById('main-sub').textContent = reason;
+  }
+
+  checkStatus();
+  setInterval(checkStatus, 60000); // auto-refresh every 60s
+</script>
+</body>
+</html>

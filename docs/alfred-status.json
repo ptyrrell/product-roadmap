@@ -1,0 +1,10 @@
+{
+  "status": "running",
+  "tunnel_url": "https://prisoners-nato-chef-probability.trycloudflare.com",
+  "last_updated": "2026-04-17T12:55:00.155541",
+  "messenger": "iMessage + Twilio",
+  "imessage_polling": true,
+  "local_llm_enabled": true,
+  "local_llm_model": "hermes3:8b",
+  "version": "alfred-v2"
+}
