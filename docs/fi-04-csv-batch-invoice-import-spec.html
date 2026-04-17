@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CSV Batch Invoice Import Spec — FI-004 Bill Importer</title>
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--surface3:#191d2a;
+  --border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --accent:#10d990;--accent-bg:rgba(16,217,144,.08);--accent-glow:rgba(16,217,144,.18);
+  --blue:#6366f1;--blue-light:#a5b4fc;
+  --teal:#06b6d4;--teal-bg:rgba(6,182,212,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+  --font:'Inter var',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+.spec-header{
+  background:linear-gradient(160deg,#07141a 0%,#0b1e20 60%,#0f2424 100%);
+  border-bottom:1px solid var(--border);padding:48px 40px 40px;
+  position:relative;overflow:hidden;
+}
+.spec-header::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(16,217,144,.14) 0%,transparent 70%);pointer-events:none;
+}
+.spec-header::after{
+  content:'';position:absolute;bottom:-80px;left:10%;width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(6,182,212,.05) 0%,transparent 70%);pointer-events:none;
+}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.spec-breadcrumb a{color:var(--accent);text-decoration:none;opacity:.85}.spec-breadcrumb a:hover{opacity:1;text-decoration:underline}
+.spec-title{font-size:32px;font-weight:800;letter-spacing:-.8px;color:#fff;line-height:1.2;position:relative;z-index:1}
+.spec-title span{color:var(--accent)}
+.spec-subtitle{font-size:15px;color:var(--muted);margin-top:8px;position:relative;z-index:1;max-width:640px}
+.spec-meta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);
+  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.accent{background:var(--accent-bg);border-color:rgba(16,217,144,.3);color:var(--accent)}
+.meta-pill.teal{background:var(--teal-bg);border-color:rgba(6,182,212,.3);color:var(--teal)}
+.meta-pill.amber{background:var(--amber-bg);border-color:rgba(245,158,11,.25);color:var(--amber)}
+
+nav.spec-nav{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 40px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100;
+}
+nav.spec-nav a{
+  display:block;padding:14px 16px;font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;
+}
+nav.spec-nav a:hover{color:var(--text);border-bottom-color:var(--border2)}
+nav.spec-nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.spec-body{max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:56px}
+
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.4px;color:#fff;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);max-width:720px;line-height:1.7;margin-bottom:24px}
+
+.callout{border-radius:var(--r);padding:16px 18px;border-left:3px solid;margin:16px 0;font-size:13px}
+.callout.accent{background:var(--accent-bg);border-color:var(--accent);color:#6ee7b7}
+.callout.teal{background:var(--teal-bg);border-color:var(--teal);color:#a5f3fc}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout strong{color:inherit;font-weight:700}
+
+.flow{display:flex;flex-direction:column;gap:0}
+.flow-step{display:flex;gap:16px;align-items:flex-start;padding:18px 0;
+  border-left:2px solid var(--border);padding-left:20px;margin-left:16px;position:relative;}
+.flow-step:last-child{border-left-color:transparent}
+.flow-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;position:absolute;left:-16px;top:18px;}
+.flow-dot.accent{background:var(--accent);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.teal{background:var(--teal);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.amber{background:var(--amber);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.flow-dot.purple{background:var(--purple);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.flow-body{padding-left:4px;flex:1}
+.flow-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px}
+.flow-desc{font-size:12px;color:var(--muted);line-height:1.65}
+
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700;margin-left:6px;vertical-align:middle}
+.tag.fe{background:rgba(6,182,212,.15);color:#a5f3fc;border:1px solid rgba(6,182,212,.25)}
+.tag.be{background:rgba(251,146,60,.15);color:#fed7aa;border:1px solid rgba(251,146,60,.25)}
+.tag.data{background:rgba(16,217,144,.15);color:#6ee7b7;border:1px solid rgba(16,217,144,.25)}
+
+/* Format cards side-by-side */
+.format-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.format-grid{grid-template-columns:1fr}}
+.format-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.format-card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.format-badge{padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;font-family:monospace}
+.format-badge.a{background:rgba(16,217,144,.12);color:var(--accent);border:1px solid rgba(16,217,144,.3)}
+.format-badge.b{background:rgba(6,182,212,.12);color:var(--teal);border:1px solid rgba(6,182,212,.3)}
+.format-name{font-size:14px;font-weight:800;color:#fff}
+.format-sub{font-size:11px;color:var(--muted);margin-bottom:10px}
+.format-filename{font-family:monospace;font-size:11px;color:var(--muted);background:var(--surface2);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:14px}
+
+/* Column-mapping table */
+.col-table{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px}
+.col-table th{padding:7px 10px;text-align:left;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)}
+.col-table td{padding:7px 10px;border-bottom:1px solid var(--dim);vertical-align:top}
+.col-table td:first-child{color:var(--muted);font-family:monospace;font-size:11px;white-space:nowrap}
+.col-table td:nth-child(2){color:var(--text);font-weight:600}
+.col-table td:nth-child(3){color:var(--accent);font-family:monospace;font-size:11px}
+
+/* API table */
+.api-table{width:100%;border-collapse:collapse}
+.api-table thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+.api-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.api-table tbody tr{border-bottom:1px solid var(--border)}
+.api-table tbody tr:last-child{border-bottom:none}
+.api-table tbody tr:hover{background:var(--surface2)}
+.api-table td{padding:10px 14px;font-size:12px;vertical-align:top;color:var(--muted)}
+.api-table td:first-child{color:var(--text)}
+.method{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:800;font-family:monospace}
+.method.POST{background:rgba(16,217,144,.15);color:var(--accent)}
+.method.GET{background:rgba(99,102,241,.15);color:var(--blue-light)}
+.endpoint{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#a5f3fc}
+
+/* Lifecycle states */
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.state-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.state-dot{width:10px;height:10px;border-radius:50%}
+.state-head{display:flex;align-items:center;gap:8px}
+.state-name{font-size:12px;font-weight:800;color:var(--text)}
+.state-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.state-card.pending  .state-dot{background:var(--muted)}
+.state-card.matched  .state-dot{background:var(--accent)}
+.state-card.review   .state-dot{background:var(--amber)}
+.state-card.nopo     .state-dot{background:var(--purple)}
+.state-card.wip      .state-dot{background:var(--orange)}
+.state-card.done     .state-dot{background:#6ee7b7}
+.state-card.skipped  .state-dot{background:var(--dim)}
+.state-card.error    .state-dot{background:var(--red)}
+
+/* Edge cases */
+.edge-table{width:100%;border-collapse:collapse}
+.edge-table th{padding:8px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)}
+.edge-table td{padding:9px 14px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:top}
+.edge-table tr:last-child td{border-bottom:none}
+.edge-table tr:hover td{background:var(--surface2)}
+.edge-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+
+/* Phase cards */
+.phase-grid{display:flex;flex-direction:column;gap:12px}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;gap:16px}
+.phase-num{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;flex-shrink:0}
+.phase-num.p1{background:rgba(16,217,144,.15);color:var(--accent)}
+.phase-num.p2{background:rgba(6,182,212,.15);color:var(--teal)}
+.phase-num.p3{background:rgba(245,158,11,.15);color:var(--amber)}
+.phase-num.p4{background:rgba(168,85,247,.15);color:#d8b4fe}
+.phase-body{flex:1}
+.phase-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.phase-desc{font-size:12px;color:var(--muted);line-height:1.65}
+.phase-items{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.phase-items li{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 10px;font-size:11px;color:var(--muted)}
+
+/* Code */
+pre.code-block{
+  background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px 20px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11.5px;
+  line-height:1.6;overflow-x:auto;color:#e2e8f0;
+}
+pre.code-block .c{color:#3d4f6a}
+pre.code-block .k{color:#93c5fd}
+pre.code-block .v{color:#6ee7b7}
+pre.code-block .s{color:#fde68a}
+pre.code-block .n{color:#c084fc}
+
+/* Testing block */
+.test-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;margin-top:10px;font-family:monospace;font-size:11.5px;line-height:1.6;color:var(--muted)}
+.test-result .ok{color:var(--accent);font-weight:700}
+.test-result .hdr{color:#fff;font-weight:700;padding:4px 0;border-bottom:1px solid var(--border);margin-bottom:6px}
+
+footer{text-align:center;padding:32px 40px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+
+hr.sub-divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com/bills/import" target="_blank">Live Prototype</a>
+    <span>›</span>
+    <span>FI-004 · CSV Batch Invoice Import</span>
+  </div>
+  <div class="spec-title">FI-004 — <span>CSV Batch Invoice Import</span></div>
+  <div class="spec-subtitle">
+    Parse multi-invoice supplier-portal CSV exports directly into the bill queue.
+    One file → many bills, instant, no Claude. Formats covered: <strong>Selected-Invoices</strong> and <strong>SMARTBIZ</strong>.
+  </div>
+  <div class="spec-meta">
+    <span class="meta-pill accent">🟢 Shipped v1.4.0</span>
+    <span class="meta-pill">Frontend-only</span>
+    <span class="meta-pill">papaparse</span>
+    <span class="meta-pill teal">Zero API cost</span>
+    <span class="meta-pill amber">Duplicate detection</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="spec-nav">
+  <a href="#overview" class="active">Overview</a>
+  <a href="#formats">Formats</a>
+  <a href="#detection">Detection</a>
+  <a href="#flow">UX Flow</a>
+  <a href="#lifecycle">Queue Lifecycle</a>
+  <a href="#api">API &amp; Data</a>
+  <a href="#edge">Edge Cases</a>
+  <a href="#test">Test Results</a>
+  <a href="#roadmap">Build Phases</a>
+</nav>
+
+<div class="spec-body">
+
+  <!-- OVERVIEW -->
+  <div class="spec-section" id="overview">
+    <div class="sec-label">Section 01</div>
+    <div class="sec-title">Why CSV matters</div>
+    <div class="sec-desc">
+      Most large suppliers (Reece, Plumbers Co-op, Bunnings Trade, Tradelink) offer a CSV export of recent invoices from their customer portal —
+      typically a single file with 10-100 invoices covering a week or a month. Running each invoice through Claude Vision would cost $2-20 per file
+      and take several minutes; CSV is already structured, so we parse it locally in milliseconds, group line items into individual bills, and drop
+      them straight into the same processing queue that PDF imports populate.
+    </div>
+
+    <div class="callout accent">
+      <strong>Zero API cost · Zero round-trip latency.</strong> 16 invoices with 32 line items parse in under 30 ms on a mid-range laptop.
+      No Claude call, no server hit, no Heroku egress.
+    </div>
+  </div>
+
+  <!-- FORMATS -->
+  <div class="spec-section" id="formats">
+    <div class="sec-label">Section 02</div>
+    <div class="sec-title">Supported formats</div>
+    <div class="sec-desc">
+      Two distinct supplier-portal exports both marketed as "CSV invoice download". Both live side-by-side in production and are auto-detected by
+      sniffing the first row.
+    </div>
+
+    <div class="format-grid">
+      <!-- Format A -->
+      <div class="format-card">
+        <div class="format-card-head">
+          <span class="format-badge a">Format A</span>
+          <span class="format-name">Selected-Invoices</span>
+        </div>
+        <div class="format-sub">Header-based export — 22 columns, one row per line item.</div>
+        <div class="format-filename">Selected-Invoices220469_2026-04-15-08.14.22.UTC.csv</div>
+        <table class="col-table">
+          <thead><tr><th>Header</th><th>Meaning</th><th>Maps to</th></tr></thead>
+          <tbody>
+            <tr><td>Document Type</td><td>INV / Credit</td><td>docType</td></tr>
+            <tr><td>Document Number</td><td>Supplier invoice #</td><td>supplierInvoiceNo</td></tr>
+            <tr><td>Document Date/Credit Date</td><td>Issue date</td><td>invoiceDate</td></tr>
+            <tr><td>Customer Order Number</td><td>Customer's PO ref</td><td>customerPoRef</td></tr>
+            <tr><td>Product Code</td><td>Supplier SKU</td><td>line.supplierCode</td></tr>
+            <tr><td>Product Description</td><td>Line description</td><td>line.description</td></tr>
+            <tr><td>Quantity Shipped</td><td>Qty on this line</td><td>line.qty</td></tr>
+            <tr><td>Unit Price</td><td>Per-unit price</td><td>line.unitPrice</td></tr>
+            <tr><td>Line Value Excl. GST</td><td>Line total ex</td><td>line.lineTotal</td></tr>
+            <tr><td>Total Document Amount Incl GST</td><td>Invoice total</td><td>totalIncGst</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Format B -->
+      <div class="format-card">
+        <div class="format-card-head">
+          <span class="format-badge b">Format B</span>
+          <span class="format-name">SMARTBIZ</span>
+        </div>
+        <div class="format-sub">Positional export — no header row, 19+ columns indexed by position.</div>
+        <div class="format-filename">SMARTBIZ Invoice Format (63).csv</div>
+        <table class="col-table">
+          <thead><tr><th>Col #</th><th>Meaning</th><th>Maps to</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>INV / CRD</td><td>docType</td></tr>
+            <tr><td>1</td><td>Supplier ABN</td><td>supplierAbn</td></tr>
+            <tr><td>3</td><td>Invoice #</td><td>supplierInvoiceNo</td></tr>
+            <tr><td>4</td><td>Invoice date</td><td>invoiceDate</td></tr>
+            <tr><td>5</td><td>Customer PO ref</td><td>customerPoRef</td></tr>
+            <tr><td>11</td><td>Product code</td><td>line.supplierCode</td></tr>
+            <tr><td>12</td><td>Description</td><td>line.description</td></tr>
+            <tr><td>15</td><td>Qty shipped</td><td>line.qty</td></tr>
+            <tr><td>17</td><td>Unit price</td><td>line.unitPrice</td></tr>
+            <tr><td>18</td><td>Total ex-GST</td><td>subtotalExGst</td></tr>
+            <tr><td>20</td><td>Total inc-GST</td><td>totalIncGst</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout teal" style="margin-top:20px">
+      <strong>SMARTBIZ bonus:</strong> the supplier ABN travels with every row. We use it to auto-select the supplier record (and remember that
+      ABN ↔ supplier mapping for next time via localStorage, keyed by <code>bill-importer-abn-supplier-map-v1</code>).
+    </div>
+  </div>
+
+  <!-- DETECTION -->
+  <div class="spec-section" id="detection">
+    <div class="sec-label">Section 03</div>
+    <div class="sec-title">Format detection (3-layer sniff)</div>
+    <div class="sec-desc">
+      The uploader sniffs the file to decide which parser to invoke. Detection happens client-side, instantly, before any UI is shown.
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot accent">1</div>
+        <div class="flow-body">
+          <div class="flow-title">File extension + MIME check <span class="tag fe">Frontend</span></div>
+          <div class="flow-desc">
+            File ends with <code>.csv</code> or MIME is <code>text/csv</code> → treat as CSV (not PDF).
+            Dropped alongside PDFs — the uploader separates streams.
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot accent">2</div>
+        <div class="flow-body">
+          <div class="flow-title">First-row signature match <span class="tag fe">Frontend</span></div>
+          <div class="flow-desc">
+            Read the first line of the file text. If it matches <code>^"?Document Type"?,\s*"?Customer Number"?</code> → Format A (header-based).
+            If the first cell is literally <code>INV</code> or <code>CRD</code> followed by ≥19 fields → Format B (SMARTBIZ positional).
+            Anything else → <code>unknown</code>, reject with friendly error.
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot accent">3</div>
+        <div class="flow-body">
+          <div class="flow-title">Parse + group <span class="tag data">Data</span></div>
+          <div class="flow-desc">
+            Route to the matching parser. Both parsers read all rows and group line items by <code>invoiceNo</code> into a <code>Map</code>.
+            Credit notes (<code>docType === 'CRD'</code>) have their subtotal/GST/total sign-flipped to negative so the queue totals add up correctly.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UX FLOW -->
+  <div class="spec-section" id="flow">
+    <div class="sec-label">Section 04</div>
+    <div class="sec-title">UX flow — drop → preview → commit</div>
+    <div class="sec-desc">
+      A focused 3-step flow, no wizard, no multi-screen state machine. The user sees a preview and confirms a supplier; everything else is automatic.
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-dot accent">A</div>
+        <div class="flow-body">
+          <div class="flow-title">Drop CSV onto uploader</div>
+          <div class="flow-desc">
+            Same drop zone as PDFs — it detects the extension and routes appropriately. No separate "CSV upload" entry point.
+            Multiple CSVs → one modal per file (serial, not concurrent, to avoid modal stacking).
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot teal">B</div>
+        <div class="flow-body">
+          <div class="flow-title">Detection banner + supplier autocomplete</div>
+          <div class="flow-desc">
+            Modal opens showing format detected, invoice count, total $ value, date range, and (for SMARTBIZ) the supplier ABN.
+            Supplier autocomplete pre-fills when ABN matches an existing supplier or a remembered mapping; otherwise the user picks one.
+            A preview table shows the first 5 invoices.
+          </div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-dot amber">C</div>
+        <div class="flow-body">
+          <div class="flow-title">Import — one click, N bills</div>
+          <div class="flow-desc">
+            Clicks <em>"Import 16 invoices as bills"</em> → all 16 land in the queue, each pre-matched to a PO using the same tiered matcher
+            PDFs use (<code>customerPoRef === PO.id</code> → reference → jobRef → supplier-scoped fallback). Duplicates
+            (same supplierInvoiceNo already in queue) auto-skip with a note. ABN → supplier mapping is remembered for next time.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIFECYCLE -->
+  <div class="spec-section" id="lifecycle">
+    <div class="sec-label">Section 05</div>
+    <div class="sec-title">Queue lifecycle — 9 states</div>
+    <div class="sec-desc">
+      CSV-imported bills use the exact same queue lifecycle as PDF-imported bills. The queue is persisted to localStorage
+      (<code>bill-importer-queue-v1</code>), so it survives page refresh and browser restart until explicitly cleared.
+    </div>
+
+    <div class="state-grid">
+      <div class="state-card pending"><div class="state-head"><div class="state-dot"></div><div class="state-name">Pending</div></div><div class="state-desc">Just added — not used by CSV import (CSVs are parsed synchronously). PDF-only.</div></div>
+      <div class="state-card pending"><div class="state-head"><div class="state-dot"></div><div class="state-name">Processing</div></div><div class="state-desc">Claude call in flight. PDF-only.</div></div>
+      <div class="state-card matched"><div class="state-head"><div class="state-dot"></div><div class="state-name">Auto-Matched</div></div><div class="state-desc">Linked to a PO, variance ≤ 2%. Ready to one-click apply.</div></div>
+      <div class="state-card review"><div class="state-head"><div class="state-dot"></div><div class="state-name">Needs Review</div></div><div class="state-desc">Linked to a PO but variance &gt; 2%. Awaits human sanity check.</div></div>
+      <div class="state-card nopo"><div class="state-head"><div class="state-dot"></div><div class="state-name">No PO Found</div></div><div class="state-desc">No match. Inline Autocomplete in the row lets the user link a PO manually.</div></div>
+      <div class="state-card wip"><div class="state-head"><div class="state-dot"></div><div class="state-name">WIP</div></div><div class="state-desc">User opened for reconciliation — editing in progress.</div></div>
+      <div class="state-card done"><div class="state-head"><div class="state-dot"></div><div class="state-name">Completed</div></div><div class="state-desc">Bill created, linked to PO, synced. Terminal state (but reopenable).</div></div>
+      <div class="state-card skipped"><div class="state-head"><div class="state-dot"></div><div class="state-name">Skipped</div></div><div class="state-desc">Parked — duplicate, credit-note deferral, or user choice.</div></div>
+      <div class="state-card error"><div class="state-head"><div class="state-dot"></div><div class="state-name">Error</div></div><div class="state-desc">Parse failure. PDF-only (CSVs either parse or reject at upload).</div></div>
+    </div>
+
+    <div class="callout amber" style="margin-top:20px">
+      <strong>Filter tabs at the top:</strong> <em>All · To Do · WIP · Completed · Skipped</em> — badge counts update live.
+      To-Do collapses all active statuses (pending, processing, auto-matched, needs-review, no-po, error) into a single queue of work.
+    </div>
+  </div>
+
+  <!-- API & DATA -->
+  <div class="spec-section" id="api">
+    <div class="sec-label">Section 06</div>
+    <div class="sec-title">No new API endpoints — client-side only</div>
+    <div class="sec-desc">
+      CSV parsing happens entirely in the browser. The only shared interface is the <code>QueueItem</code> shape that the queue renders from —
+      both PDF and CSV routes populate it identically.
+    </div>
+
+    <pre class="code-block"><span class="c">// src/utils/csvInvoiceParser.ts</span>
+<span class="n">export</span> <span class="n">function</span> <span class="k">parseCsvInvoiceFile</span>(text: <span class="v">string</span>): <span class="v">CsvDetectionResult</span>;
+
+<span class="c">// Returned shape</span>
+<span class="n">interface</span> <span class="v">CsvDetectionResult</span> {
+  <span class="k">format</span>:          <span class="s">'selected-invoices' | 'smartbiz' | 'unknown'</span>,
+  <span class="k">invoices</span>:        <span class="v">ParsedCsvInvoice</span>[],       <span class="c">// grouped by supplierInvoiceNo</span>
+  <span class="k">supplierAbn</span>?:    <span class="v">string</span>,                   <span class="c">// only for SMARTBIZ</span>
+  <span class="k">totalInvoices</span>:   <span class="v">number</span>,
+  <span class="k">totalLines</span>:      <span class="v">number</span>,
+  <span class="k">totalValue</span>:      <span class="v">number</span>,                   <span class="c">// CRDs are negative</span>
+  <span class="k">dateRange</span>:       { from: <span class="v">string</span>, to: <span class="v">string</span> },
+  <span class="k">errors</span>:          <span class="v">string</span>[],
+}
+
+<span class="c">// ABN → supplier memory</span>
+localStorage.<span class="k">setItem</span>(<span class="s">'bill-importer-abn-supplier-map-v1'</span>, <span class="k">JSON</span>.<span class="k">stringify</span>({
+  <span class="s">'69080350812'</span>: <span class="s">'sup-reece'</span>,        <span class="c">// SMARTBIZ</span>
+  <span class="s">'12345678901'</span>: <span class="s">'sup-plumbers-coop'</span>,
+}));</pre>
+  </div>
+
+  <!-- EDGE CASES -->
+  <div class="spec-section" id="edge">
+    <div class="sec-label">Section 07</div>
+    <div class="sec-title">Edge cases &amp; how we handle them</div>
+
+    <table class="edge-table">
+      <thead>
+        <tr><th>Edge case</th><th>Behaviour</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Credit note (CRD)</td>
+          <td>Subtotal / GST / total are sign-flipped to negative. Row amount rendered red. Queue still totals correctly.</td></tr>
+        <tr><td>Duplicate invoice #</td>
+          <td>If <code>supplierInvoiceNo</code> already exists in the queue, new row lands as <strong>Skipped</strong> with note "Duplicate invoice # already in queue". User can Reopen if intentional.</td></tr>
+        <tr><td>Empty <code>customerPoRef</code></td>
+          <td>Row lands as <strong>No PO Found</strong> — inline Autocomplete in the row lets user link a PO by id / reference / job # without leaving the queue.</td></tr>
+        <tr><td>Unknown supplier ABN</td>
+          <td>SMARTBIZ: ABN present but no supplier record matches. User manually selects supplier in the preview modal; the mapping is then remembered for next time.</td></tr>
+        <tr><td>Mixed dates (DD/MM/YYYY vs YYYY-MM-DD)</td>
+          <td>Normaliser tries three formats: DD/MM/YYYY, YYYY/MM/DD, YYYY-MM-DD. Anything else is passed through as-is rather than rejected.</td></tr>
+        <tr><td>Leading-zero invoice #s</td>
+          <td>Read as strings (not numbers) throughout — no padding/stripping.</td></tr>
+        <tr><td>Trailing blank lines</td>
+          <td>papaparse <code>skipEmptyLines:true</code> handles. Rows missing an invoice # are silently ignored.</td></tr>
+        <tr><td>Multiple CSVs dropped at once</td>
+          <td>Currently modal-serialised (one at a time). Queued CSVs wait for the previous modal to close — prevents modal stacking and supplier confusion.</td></tr>
+        <tr><td>Unknown CSV format</td>
+          <td>Friendly <code>alert()</code>: <em>"Could not detect a known CSV format. Expected Selected-Invoices or SMARTBIZ format."</em> No queue pollution.</td></tr>
+        <tr><td>Supplier-ABN drift (format changes)</td>
+          <td>If the remembered ABN points to a supplier that's since been deleted, the lookup falls back to DB ABN match, then to manual selection.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TEST RESULTS -->
+  <div class="spec-section" id="test">
+    <div class="sec-label">Section 08</div>
+    <div class="sec-title">Live parser smoke-test (real supplier files)</div>
+    <div class="sec-desc">
+      Ran both parsers against the Benash plumbing-supply files on 15 April 2026 — these are the reference files the feature was built against.
+    </div>
+
+    <div class="test-result">
+      <div class="hdr">═══ FILE: Selected-Invoices220469_2026-04-15-08.14.22.UTC.csv ═══</div>
+      Format detected : <span class="ok">selected-invoices</span><br>
+      Total invoices  : <span class="ok">16</span><br>
+      Total line items: <span class="ok">36</span><br>
+      Total value     : <span class="ok">$4,038.74</span><br>
+      Date range      : 2026-04-14 → 2026-04-14<br>
+      <br>
+      Sample invoices:<br>
+      &nbsp;&nbsp;187571-527  INV  2026-04-14  PO:RD81327  lines:1 &nbsp;&nbsp;&nbsp;&nbsp;$32.07<br>
+      &nbsp;&nbsp;187579-527  INV  2026-04-14  PO:RD81331  lines:2 &nbsp;$1,924.08<br>
+      &nbsp;&nbsp;… +13 more<br>
+      Invoices w/o customer PO: <span class="ok">0</span>
+    </div>
+
+    <div class="test-result">
+      <div class="hdr">═══ FILE: SMARTBIZ Invoice Format (63).csv ═══</div>
+      Format detected : <span class="ok">smartbiz</span><br>
+      Total invoices  : <span class="ok">16</span><br>
+      Total line items: <span class="ok">32</span><br>
+      Total value     : <span class="ok">$1,340.38</span><br>
+      Date range      : 2026-04-09 → 2026-04-14<br>
+      Supplier ABN    : <span class="ok">69 080 350 812</span><br>
+      <br>
+      Credit notes detected: <span class="ok">2</span> (sign-flipped to negative)<br>
+      Invoices w/o customer PO: <span class="ok">0</span>
+    </div>
+
+    <div class="callout accent" style="margin-top:14px">
+      <strong>Result:</strong> 32 bills extracted from 2 files in under 50 ms total, zero Claude calls, zero cost, zero errors.
+      Compare PDF: ~30 s and ~$0.03–0.04 per invoice.
+    </div>
+  </div>
+
+  <!-- BUILD PHASES -->
+  <div class="spec-section" id="roadmap">
+    <div class="sec-label">Section 09</div>
+    <div class="sec-title">Build phases</div>
+    <div class="sec-desc">Phase 1 is shipped in v1.4.0. Phases 2–4 are planned enhancements.</div>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <div class="phase-num p1">1</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 1 — Core CSV parser + modal (shipped v1.4.0)</div>
+          <div class="phase-desc">Two-format parser, sniffer, preview modal, supplier autocomplete, ABN memory, duplicate detection.</div>
+          <ul class="phase-items">
+            <li>papaparse</li><li>CsvDetectionResult</li><li>detection banner</li><li>preview table</li>
+            <li>ABN→supplier map (localStorage)</li><li>credit-note sign flip</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p2">2</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 2 — Inline PO linking + manual override</div>
+          <div class="phase-desc">Autocomplete in the "Matched PO" cell for No-PO and WIP rows, recomputes variance live.</div>
+          <ul class="phase-items">
+            <li>inline Autocomplete in queue table</li><li>live re-match on select</li><li>manual override tracking</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p3">3</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 3 — Additional formats</div>
+          <div class="phase-desc">Extend the sniffer + parser for the next two supplier exports (Plumbers Co-op, Tradelink, Bunnings Trade) as they land.</div>
+          <ul class="phase-items">
+            <li>format-D sniffer</li><li>format-E parser</li><li>regression tests against real files</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-num p4">4</div>
+        <div class="phase-body">
+          <div class="phase-title">Phase 4 — Trusted sources + auto-apply</div>
+          <div class="phase-desc">Mark a supplier as "trusted" — when their CSV lands with 100% PO matches and variance ≤ 0.5%, bills auto-apply without a review step.</div>
+          <ul class="phase-items">
+            <li>trusted-source flag on supplier</li><li>auto-apply threshold config</li><li>daily digest email</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>FI-004 · CSV Batch Invoice Import · Shipped v1.4.0 · <a href="https://ptyrrell.github.io/product-roadmap/">← back to roadmap</a></div>
+  <div style="margin-top:6px">Live: <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com/bills/import" target="_blank">fi-supplier-po.herokuapp.com/bills/import</a></div>
+</footer>
+
+<script>
+const links = document.querySelectorAll('nav.spec-nav a');
+const sections = document.querySelectorAll('.spec-section[id]');
+function onScroll(){
+  let current = '';
+  const y = window.scrollY + 120;
+  sections.forEach(s => { if (y >= s.offsetTop) current = s.id; });
+  links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+
+</body>
+</html>

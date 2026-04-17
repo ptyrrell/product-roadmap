@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="version" content="v1.0.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roadmap</title>
   <style>
     :root {
@@ -47,8 +45,6 @@
     .spacer { flex: 1; }
     .tab-bar { display: flex; gap: 4px; }
     .tab { padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
-    .nav-meridian-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; background: rgba(0,229,176,0.12); border: 1px solid rgba(0,229,176,0.35); color: #00e5b0; font-size: 0.82rem; font-weight: 700; text-decoration: none; margin-right: 12px; transition: all 0.15s; white-space: nowrap; }
-    .nav-meridian-btn:hover { background: rgba(0,229,176,0.22); border-color: rgba(0,229,176,0.6); color: #fff; }
     .tab:hover { color: var(--text); background: var(--surface2); }
     .tab.active { background: var(--accent); color: #fff; }
 
@@ -194,21 +190,127 @@
     footer { text-align: center; padding: 2rem; font-size: 0.73rem; color: var(--muted); border-top: 1px solid var(--border); }
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
+
+    /* ── Strategy page ── */
+    .strat-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+    .strat-hero { margin-bottom: 2.5rem; }
+    .strat-hero h1 { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+    .strat-hero p  { color: var(--muted); margin-top: 0.4rem; font-size: 0.9rem; }
+
+    /* Goal banners */
+    .goal-banner {
+      border-radius: 14px; padding: 1.6rem 2rem; margin-bottom: 2rem;
+      position: relative; overflow: hidden;
+    }
+    .goal-banner.au {
+      background: linear-gradient(135deg, rgba(0,229,176,0.07), rgba(0,229,176,0.02));
+      border: 1px solid rgba(0,229,176,0.35);
+    }
+    .goal-banner.us {
+      background: linear-gradient(135deg, rgba(61,126,255,0.08), rgba(124,107,240,0.05));
+      border: 1px solid rgba(61,126,255,0.35);
+    }
+    .goal-flag  { font-size: 2rem; margin-right: 0.6rem; }
+    .goal-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .goal-label.au { color: var(--now); }
+    .goal-label.us { color: #60a5fa; }
+    .goal-title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .goal-deadline {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 800; letter-spacing: 0.5px;
+      padding: 3px 10px; border-radius: 20px; margin-left: 0.5rem;
+    }
+    .goal-deadline.au { background: rgba(0,229,176,0.15); color: var(--now); border: 1px solid rgba(0,229,176,0.4); }
+    .goal-deadline.us { background: rgba(61,126,255,0.15); color: #60a5fa; border: 1px solid rgba(61,126,255,0.4); }
+    .goal-sub  { color: var(--muted); font-size: 0.82rem; margin-top: 0.5rem; line-height: 1.6; }
+
+    /* Section heading */
+    .strat-section { margin-bottom: 2.5rem; }
+    .strat-section-title {
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 0; position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--border); border-radius: 2px; }
+    .tl-item { position: relative; padding: 0 0 1.8rem 1.4rem; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -1.4rem; top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center;
+    }
+    .tl-dot.done   { background: var(--done); }
+    .tl-dot.active { background: var(--active); box-shadow: 0 0 8px var(--active); }
+    .tl-dot.next   { background: var(--next); }
+    .tl-dot.future { background: var(--border); }
+    .tl-date  { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 0.2rem; }
+    .tl-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .tl-desc  { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+    .tl-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .tl-chip  {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3px;
+      padding: 2px 8px; border-radius: 20px;
+      background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+    }
+    .tl-chip.gate  { background: rgba(255,107,107,0.12); color: var(--high); border-color: rgba(255,107,107,0.35); }
+    .tl-chip.green { background: rgba(0,229,176,0.1);    color: var(--now);  border-color: rgba(0,229,176,0.3); }
+    .tl-chip.blue  { background: rgba(61,126,255,0.12);  color: #60a5fa;     border-color: rgba(61,126,255,0.3); }
+    .tl-chip.amber { background: rgba(255,169,77,0.12);  color: var(--med);  border-color: rgba(255,169,77,0.3); }
+
+    /* Budget table */
+    .budget-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    @media (max-width: 700px) { .budget-grid { grid-template-columns: 1fr; } }
+    .budget-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+    }
+    .budget-card-title { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.85rem; }
+    .budget-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.8rem; }
+    .budget-row:last-child { border-bottom: none; }
+    .budget-role { color: var(--text); }
+    .budget-type { font-size: 0.67rem; color: var(--muted); margin-left: 0.4rem; }
+    .budget-cost { font-weight: 700; color: var(--now); white-space: nowrap; }
+    .budget-total { display: flex; justify-content: space-between; align-items: baseline; padding: 0.6rem 0 0; margin-top: 0.4rem; border-top: 1px solid var(--border); font-size: 0.85rem; font-weight: 700; }
+    .budget-total-label { color: var(--muted); }
+    .budget-total-val   { color: var(--text); }
+
+    /* Risk / open questions */
+    .question-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .question-item {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.85rem 1rem; font-size: 0.8rem;
+    }
+    .q-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .q-text { color: var(--text); line-height: 1.5; }
+    .q-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* Progress bar */
+    .progress-wrap { margin: 0.5rem 0 1.2rem; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .progress-track { height: 8px; background: var(--surface2); border-radius: 8px; overflow: hidden; }
+    .progress-fill  { height: 100%; border-radius: 8px; transition: width 1s ease; }
+    .progress-fill.au { background: linear-gradient(90deg, var(--now), #00b890); }
+    .progress-fill.us { background: linear-gradient(90deg, #60a5fa, var(--accent)); }
   </style>
-  <script src="meridian-auth.js"></script>
 </head>
 <body>
 
 <!-- ── Nav ── -->
 <nav>
-  <span class="logo">Roadmap</span><span style="font-size:10px;color:#888;margin-left:8px;">v1.0.0</span>
+  <span class="logo">Roadmap</span>
+    <span class="version">v1.0.3</span>
   <div class="spacer"></div>
-  <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" class="nav-meridian-btn">📊 Meridian Dashboard</a>
-  <a href="fi-advantage.html" target="_blank" class="nav-meridian-btn" style="background:rgba(61,126,255,0.12);border-color:rgba(61,126,255,0.35);color:#6c8fff">⚡ Why FieldInsight</a>
-  <a href="ai-conquest.html" target="_blank" class="nav-meridian-btn" style="background:rgba(255,77,46,0.1);border-color:rgba(255,77,46,0.35);color:#ff6b6b">⚔️ AI Conquest</a>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
+    <button class="tab" onclick="switchView('strategy', event)">🎯 Strategic Targets</button>
   </div>
 </nav>
 
@@ -231,13 +333,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 15 April 2026 &nbsp;·&nbsp; v1.0.0</div>
-    <div style="display:flex;gap:2rem;flex-wrap:wrap;margin-top:1.25rem;padding:1rem 1.5rem;background:rgba(0,229,176,0.05);border:1px solid rgba(0,229,176,0.15);border-radius:10px;font-size:0.78rem;">
-      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">$6.21B</span><span style="color:var(--muted)">FSM market 2026 · 12.5% CAGR to $9.17B by 2030</span></div>
-      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">93%</span><span style="color:var(--muted)">of service orgs have implemented AI — it is the new operating standard</span></div>
-      <div><span style="font-size:1.1rem;font-weight:800;color:#00e5b0;display:block">34%</span><span style="color:var(--muted)">more jobs per technician with AI-first FSM · 10–15% margin expansion</span></div>
-      <div><span style="font-size:1.1rem;font-weight:800;color:#ff6b6b;display:block">-57.9%</span><span style="color:var(--muted)">TTAN from ATH · market pricing in AI-native displacement risk</span></div>
-    </div>
+    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -261,6 +357,9 @@
         <a href="https://github.com/ptyrrell/proto-two-way-comms" target="_blank">GitHub →</a>
       </div>
     </div>
+  </div>
+
+  <div class="board">
 
     <!-- ACTIVE -->
     <div class="col-active">
@@ -292,30 +391,45 @@
       </div>
 
       <div class="card" data-cat="design product">
-        <div class="ticket-id">FI-002 + FI-003</div>
-        <div class="card-title">PO Multi-Supplier Price Books &amp; Bill Importer</div>
-        <div class="card-desc">Full supplier invoice workflow — drag &amp; drop a PDF bill, Claude Vision parses it, line items are matched to internal codes, then synced to the linked PO and Job with markup applied. Prototype live at v0.7.7.</div>
+        <div class="ticket-id">FI-002</div>
+        <div class="card-title">PO Multi-Supplier Price Books</div>
+        <div class="card-desc">Manage purchase orders across multiple supplier price books. Automatic cost calculations and margin visibility per supplier.</div>
         <div class="card-meta">
           <span class="badge badge-active">🔥 Active</span>
           <span class="badge badge-high">High</span>
           <span class="badge badge-design">🎨 Design</span>
           <span class="badge badge-product">🏗 Product</span>
           <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Prototype Live</span>
-          <span class="badge" style="background:rgba(139,92,246,0.15);color:#a78bfa">⚡ AI Powered</span>
         </div>
         <div class="outcomes"><ul>
-          <li><strong>Core workflow:</strong> PO raised → supplier invoice received → drag &amp; drop PDF → Claude Vision parses → codes matched → sync to PO → sync to Job</li>
-          <li><strong>Bill Detail — split-pane UI:</strong> draggable left/right pane resize. Left: PO line items table ↔ Bill PDF preview (sub-tabs: PDF | Summary). Right: editable bill with full line items</li>
-          <li><strong>Claude Vision parser:</strong> auto-processes on drag &amp; drop — extracts invoice #, date, supplier, all line items, GST treatment, totals</li>
-          <li><strong>Code matching:</strong> supplier codes fuzzy-matched against internal inventory codes — Exact / Partial / No match badges per line</li>
-          <li><strong>PO tab:</strong> shows full PO line items table (Code, Description, Qty, Rcvd ✓, Unit $, Total). After "Copy to PO" — table refreshes with received items in real time</li>
-          <li><strong>Bill line items table:</strong> PO Qty, Rcvd, Outstg, Bill Qty columns side-by-side for instant variance visibility. Over-billed lines flagged in red</li>
-          <li><strong>Per-supplier default markup %:</strong> editable in Supplier Price Books. Pre-fills "Bill Markup" card on each bill — overridable per bill</li>
-          <li><strong>GST treatment:</strong> global Ex/Inc toggle + per-line override. Handles mixed invoices</li>
-          <li><strong>Internal Code field:</strong> on all products — used for supplier code matching and displayed in bill line items</li>
-          <li><strong>Sync actions (above tabs):</strong> Copy to PO (purple) · Copy to Job (orange) — with dollar totals shown after each sync</li>
-          <li><strong>Bill status flow:</strong> Draft → Approved → Paid. Disputed for price variances</li>
-          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype v0.7.7</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po/blob/main/PROTOTYPES.md" target="_blank" style="color:#00e5b0">Full Spec + AI Prompts</a></li>
+          <li>Supplier selector at PO level</li>
+          <li>Price book management screen</li>
+          <li>Margin visibility per line item</li>
+          <li>Switching supplier mid-PO flow</li>
+          <li>API to attach multiple price books per trade type</li>
+          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com" target="_blank" style="color:#00e5b0">Live Prototype</a> &nbsp;·&nbsp; <a href="https://ptyrrell.github.io/product-roadmap/fi-02-pdf-parsing-spec.html" target="_blank" style="color:#00e5b0">📐 PDF Parsing Spec</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/proto-multi-supplier-po" target="_blank" style="color:#00e5b0">GitHub</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="product">
+        <div class="ticket-id">FI-002 · FI-003 · FI-004</div>
+        <div class="card-title">Bill Importer</div>
+        <div class="card-desc">Import supplier bills and invoices directly into FieldInsight from email, PDF, or CSV. Auto-match to jobs and purchase orders. Reduce manual data entry for the office team.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-version">v1.4.0</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>Import via email attachment (PDF/CSV)</li>
+          <li>OCR + AI field extraction (supplier, amount, date, line items)</li>
+          <li>Auto-match to open POs and jobs</li>
+          <li>Exception queue for unmatched bills (9-state lifecycle, persistent)</li>
+          <li>CSV multi-invoice parser (Selected-Invoices + SMARTBIZ)</li>
+          <li>Xero / MYOB sync on approval</li>
+          <li>Audit trail — original bill stored against job</li>
+          <li>🔗 <a href="https://fi-supplier-po-9e72ddd27f18.herokuapp.com/bills/import" target="_blank" style="color:#00e5b0">Live Prototype</a>  ·  <a href="https://ptyrrell.github.io/product-roadmap/fi-02-pdf-parsing-spec.html" target="_blank" style="color:#00e5b0">📐 FI-002 PDF Parsing</a>  ·  <a href="https://ptyrrell.github.io/product-roadmap/fi-03-multi-bill-import-spec.html" target="_blank" style="color:#00e5b0">📐 FI-003 Batch Bill</a>  ·  <a href="https://ptyrrell.github.io/product-roadmap/fi-04-csv-batch-invoice-import-spec.html" target="_blank" style="color:#00e5b0">📐 FI-004 CSV Import</a></li>
         </ul></div>
       </div>
 
@@ -414,14 +528,12 @@
           <span class="badge badge-med">Medium</span>
           <span class="badge badge-salesops">📊 Sales Ops</span>
           <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge" style="background:rgba(0,229,176,0.12);color:#00e5b0;border:1px solid rgba(0,229,176,0.35)">🟢 Live — Meridian</span>
         </div>
         <div class="outcomes"><ul>
           <li>SDR: calls, connects, trials, bookings</li>
           <li>AE: deal age, next action, demos</li>
           <li>Stale deal alerts (&gt;7 days no touch)</li>
           <li>No-next-action alerts (should be 0)</li>
-          <li>🔗 <a href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com" target="_blank" style="color:#00e5b0">Meridian Ops Dashboard →</a></li>
         </ul></div>
       </div>
 
@@ -430,6 +542,89 @@
     <!-- NEXT -->
     <div class="col-next">
       <div class="col-header"><span class="dot"></span><span class="col-label">Next</span></div>
+
+      <div class="card" data-cat="product ai mobile">
+        <div class="ticket-id">FI-021</div>
+        <div class="card-title">AI Technician CoPilot — On-Device Gemma 4 (Edge Intelligence)</div>
+        <div class="card-desc">Embed a lightweight Gemma 4 2B/4B model directly into the FieldInsight mobile app (Android-first, iOS follow) via a Capacitor native plugin wrapping llama.cpp or Google's MediaPipe LLM Inference API. Technicians get a real-time AI assistant that works fully offline — in plant rooms, rooftops, and basements where connectivity is dead. The same open-weights model powers backend predictive analytics on the server fleet using the 26B/31B variants, and lays the groundwork for future autonomous robotic maintenance coordination.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
+          <span class="badge" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.35)">📱 Mobile</span>
+          <span class="badge" style="background:rgba(168,85,247,0.15);color:#c084fc;border:1px solid rgba(168,85,247,0.35)">🤖 On-Device</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Why on-device, not cloud:</strong></li>
+          <li>📵 <strong>Offline-first</strong> — plant rooms, rooftops, basements are dead zones; cloud AI is unavailable when it matters most</li>
+          <li>⚡ <strong>Near-zero latency</strong> — no 1–3s round-trips per step in a 10-point diagnostic checklist; on-device is instant</li>
+          <li>💰 <strong>Free at scale</strong> — 20 techs × 8 jobs/day × every photo/voice/report = significant API cost; local inference is free after deploy</li>
+          <li>🔒 <strong>Data sovereignty</strong> — customer asset data, fault photos, maintenance history never leaves the device; critical for enterprise and government clients</li>
+
+          <li><strong>Phase 1 — On-Device Mobile CoPilot (Android-first, Samsung ideal):</strong></li>
+          <li>📱 Capacitor native plugin wrapping <strong>llama.cpp</strong> or <strong>Google MediaPipe LLM Inference API</strong> (targets Android NPU for hardware-accelerated inference)</li>
+          <li>📷 Technician scans QR code or photographs unit/serial plate → Gemma 4 vision + OCR reads error codes, visible defects (leaks, corrosion, fan issues)</li>
+          <li>🗂️ Offline SQLite/PouchDB asset history injected as context (existing FI data layer, no rebuild)</li>
+          <li>🔧 Real-time step-by-step troubleshooting guidance with safety/compliance checklists auto-populated</li>
+          <li>🛒 Part recommendations with on-device inventory cache check</li>
+          <li>📝 One-tap generation of professional service reports, defect notices, and quotes</li>
+          <li>🎙️ Voice (hands-free) interaction — tech speaks, AI responds, works while hands are on the unit</li>
+          <li>📲 Plugin interface: <code>FIAIPlugin.diagnose({ photo, assetHistory })</code> → structured JSON response back to web layer — no UI rebuild required</li>
+          <li><em>Start text-only (asset context + fault codes), prove workflow, then layer in multimodal vision</em></li>
+
+          <li><strong>Phase 2 — Backend Predictive Asset Intelligence (26B/31B models on server):</strong></li>
+          <li>📊 Analyse entire asset fleet overnight — predict failures before they happen using maintenance logs, usage patterns, environmental data</li>
+          <li>📅 Auto-generate optimised preventive maintenance schedules and dispatch jobs</li>
+          <li>🛣️ Route optimisation factoring in predicted urgent repairs</li>
+          <li>📄 Auto-populate customer reports with AI insights ("Unit X — 87% probability of compressor failure in next 6 months")</li>
+
+          <li><strong>Phase 3 — Optimus / Autonomous Robot Ready (Future):</strong></li>
+          <li>🤖 Fine-tune "HVAC Specialist" Gemma 4 on aggregated anonymised FieldInsight asset + procedure data</li>
+          <li>Same model powers robot reasoning: "Given this error code + photo, execute standard refrigerant recharge protocol while logging compliance"</li>
+          <li>Bots handle repetitive tasks (filter changes, visual inspections, basic diagnostics) coordinated through existing FI job/asset workflow</li>
+          <li>Apache 2.0 licence → commercial fine-tuning, local hosting, no recurring API costs</li>
+
+          <li><strong>Model selection:</strong></li>
+          <li>🟢 <strong>2B / 4B edge variants</strong> → technician phones/tablets (low latency, offline)</li>
+          <li>🔵 <strong>26B MoE / 31B dense</strong> → server-side analytics and scheduling</li>
+          <li>Source: <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/" target="_blank">Gemma 4 announcement (Google)</a></li>
+
+          <li><strong>Business outcomes:</strong></li>
+          <li>✅ Reduce "phone-a-friend" calls to office — junior techs operate at senior level</li>
+          <li>✅ Cut average job time + repeat callouts (most costly outcome in HVAC)</li>
+          <li>✅ Improve first-time fix rate and technician confidence</li>
+          <li>✅ Higher-quality data back into asset database → continuous model improvement flywheel</li>
+          <li>✅ Turns FI from job management tool into AI-augmented platform that scales human techs today, robotic ones tomorrow</li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="infra product ceo">
+        <div class="ticket-id">FI-020</div>
+        <div class="card-title">SOC 2 Type II Compliance — US Market Launch</div>
+        <div class="card-desc">Security &amp; compliance audit required to sell into US enterprise and mid-market field service businesses. SOC 2 Type II certifies that FieldInsight's infrastructure, data handling, and access controls meet the Trust Services Criteria (Security, Availability, Confidentiality) over a sustained observation period — typically 6–12 months. Critical gate for US logo acquisition and procurement approvals.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-ceo">👔 CEO</span>
+          <span class="badge" style="background:rgba(255,200,61,0.15);color:#fbbf24;border:1px solid rgba(255,200,61,0.35)">🇺🇸 US Launch</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>What SOC 2 Type II covers:</strong></li>
+          <li>✅ <strong>Security</strong> — access controls, encryption at rest &amp; in transit, vulnerability management, intrusion detection</li>
+          <li>✅ <strong>Availability</strong> — uptime SLAs, incident response, disaster recovery, monitoring</li>
+          <li>✅ <strong>Confidentiality</strong> — data classification, retention policies, NDA enforcement, data deletion procedures</li>
+          <li><strong>Key workstreams:</strong></li>
+          <li>📋 Readiness gap assessment — map current controls to TSC criteria</li>
+          <li>🔐 Identity &amp; access management — MFA enforcement, least-privilege review, offboarding audit</li>
+          <li>🛡️ Penetration testing — engage third-party pen tester on fieldinsight.com codebase</li>
+          <li>📝 Policy library — write / formalise: Information Security, Incident Response, Change Management, Vendor Risk, Business Continuity policies</li>
+          <li>📊 Continuous monitoring — tooling for log aggregation, alerting, anomaly detection (e.g. Datadog, Vanta, Drata)</li>
+          <li>🏢 Auditor engagement — select AICPA-accredited auditor for observation period + Type II report</li>
+          <li>⏱️ Timeline: ~6 months observation period + 2–4 months audit → target report by Q1 2027</li>
+          <li>💡 Suggested tooling: <strong>Vanta</strong> or <strong>Drata</strong> for compliance automation (maps to AWS/Heroku/GitHub controls automatically)</li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="product infra">
         <div class="ticket-id">FI-008</div>
@@ -529,33 +724,12 @@
 
       <div class="card" data-cat="product">
         <div class="ticket-id">FI-013</div>
-        <div class="card-title">⚡ AI Dispatch — Auto-Assign + Optimised Routing Engine</div>
-        <div class="card-desc">The AI dispatcher that eliminates the need for a human dispatcher entirely. Auto-assigns jobs to technicians in real-time across 20+ variables — skills, location, live traffic, job urgency, tech capacity, and parts availability. Fieldproxy claims 34% more jobs/tech from AI dispatching. This is FieldInsight's direct counter — with ANZ-specific routing intelligence no global platform has.</div>
+        <div class="card-title">AI-Optimised Routing</div>
+        <div class="card-desc">Advanced scheduling using AI to optimise technician routes and reduce drive time.</div>
         <div class="card-meta">
-          <span class="badge badge-high">High</span>
+          <span class="badge badge-low">Low</span>
           <span class="badge badge-product">🏗 Product</span>
-          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
         </div>
-        <div class="outcomes"><ul>
-          <li><strong>What it replaces:</strong> 0.5–1.0 full-time dispatcher · AU $60K–$80K/year salary · 5–15 min manual decision per job assignment → 0.3 sec AI decision</li>
-          <li><strong>Core dispatch variables (20+):</strong></li>
-          <li>Tech skills match (certification, licence, trade competency per job type)</li>
-          <li>Real-time location + live traffic (Apple Maps / Google Maps routing)</li>
-          <li>Current job queue depth per tech</li>
-          <li>Estimated job duration + buffer time</li>
-          <li>Parts availability — only assigns tech who has required parts or is near a supplier</li>
-          <li>Job urgency classification (P1 Emergency / P2 Same-day / P3 Scheduled)</li>
-          <li>Customer preference (preferred tech, tech history at this site)</li>
-          <li>Tech shift hours remaining + fatigue compliance (WHS)</li>
-          <li>SLA deadline for contract customers (body corporate, government)</li>
-          <li><strong>Route optimisation:</strong></li>
-          <li>Daily route sequencing: orders jobs to minimise total drive time across full day</li>
-          <li>Dynamic resequencing: when a P1 job arrives, recalculates remaining route for all affected techs</li>
-          <li>Traffic-aware: morning peak routing vs afternoon — avoids Sydney/Melbourne CBD at school hours</li>
-          <li>ANZ-specific: postcode-to-suburb time matrix trained on AU driving patterns, not US defaults</li>
-          <li><strong>FI-Token cost:</strong> ~150 tokens per auto-assignment (~AU $0.00075) · 50 dispatches/day/10 techs = ~7,500 tokens/day</li>
-          <li><strong>Market benchmark:</strong> Fieldproxy claims 34% more jobs/tech · ServiceTitan Dispatch Pro at $100+/tech/month · FieldInsight delivers this in the base Growth plan</li>
-        </ul></div>
       </div>
 
       <div class="card" data-cat="design product">
@@ -658,456 +832,6 @@
           <li>Twilio Conversations API — thread-per-booking</li>
         </ul></div>
       </div>
-
-      <div class="card" data-cat="product ceo">
-        <div class="ticket-id">FI-020</div>
-        <div class="card-title">📊 Competitive Threat &amp; Opportunity Thesis — FSM · ANZ · April 2026</div>
-        <div class="card-desc">Full 10-page competitive analysis of the FSM software landscape. ServiceTitan faces structural AI disruption. simPRO has no credible AI roadmap. Fieldproxy is cheap but underfunded. FieldInsight is at the intersection of right geography, right segment, and right timing — but the window is 12–18 months. <em>Prepared by Perplexity Computer, April 2026.</em></div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge" style="background:rgba(255,107,107,0.12);color:#ff6b6b;border:1px solid rgba(255,107,107,0.35)">🔬 Competitive Intel</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>Core Thesis:</strong> The platform that wins FSM long-term is not the most feature-rich — it is the platform whose proprietary data makes its AI irreplaceable. <em>This is the Palantir playbook applied to vertical SaaS.</em></li>
-          <li>FSM market bifurcating: workflow SaaS (HUBS -64%, CRM -33%) vs proprietary data + decision AI (PLTR +36%)</li>
-          <li>FieldInsight window: right geography (ANZ underserved mid-market), right segment (10–40 techs), right timing — must move decisively before window closes</li>
-
-          <li><strong>— ServiceTitan (TTAN) — Global Leader, Structural Pressure —</strong></li>
-          <li>FY2026 Revenue: $961M (+24% YoY) · Gross Margin: 70.1% · FCF: $85.1M · GAAP OpLoss: -$169.2M · Enterprise Retention: &gt;95%</li>
-          <li>Stock: IPO $71 (Dec 2024) → ATH $131.33 (May 2025) → $55.29 (Apr 10, 2026) · <strong>-57.9% from ATH</strong> · -22.1% below IPO price</li>
-          <li>Analyst consensus: Strong Buy · avg target $108 (10 analysts) · P/S 7.7x</li>
-          <li>GTM: Direct sales + content-led inbound (200+ pieces/month, 60%+ organic MQLs, CAC ~25% below SaaS avg) + Ferguson Enterprises (36,000+ contractors) + Home Depot Pro Xtra + QBO + Synchrony</li>
-          <li>Land &amp; Expand: Core → Pro Products (Contact Center Pro / Dispatch Pro / Field Pro) → FinTech (Payments, Financing)</li>
-          <li>Atlas AI moat: AI Voice Agents (inbound booking), AI dispatch routing (Dispatch Pro), smart field documentation (Field Pro) — built on 10+ years of proprietary trades data</li>
-          <li>TTAN vulnerabilities: 3–12 month onboarding · users access ~30% of features · $245–$500/tech/month · $5k–$50k implementation fees · 12–36 month contracts · ANZ structurally inaccessible (USD pricing, US-centric product)</li>
-          <li>Multiple compression story: the market wants AI-native labour substitution — Pro Products are AI augmentation, not replacement</li>
-
-          <li><strong>— simPRO — The ANZ Incumbent (20+ years) —</strong></li>
-          <li>Founded Brisbane 2002 — dominant in commercial/project electrical, plumbing, HVAC, security across ANZ</li>
-          <li>Core strength: complex quoting, procurement, progress billing on multi-site commercial projects — best-in-class</li>
-          <li>Core weakness: reactive maintenance operators find it overly complex and project-centric — poor fit for service ticket workflows</li>
-          <li>AI capability: <strong>minimal</strong> — relies on 3rd-party marketplace integrations, no native AI roadmap equivalent to Atlas</li>
-          <li>GTM: sales-heavy + channel partners, 3–6 month sales cycles, uses HubSpot + Salesforce internally</li>
-          <li>Existential risk: as AI tools demonstrate measurable per-technician gains, "comprehensive and established" weakens vs "30% more productive"</li>
-          <li>FieldInsight beachhead: reactive/maintenance operators (body corporate, industrial, government) frustrated by simPRO's project-centric workflow</li>
-
-          <li><strong>— Fieldproxy — AI-Native Price Disruptor (YC W2022) —</strong></li>
-          <li>Founded 2016, Bangalore · Total funding: ~$1M USD · YC W2022 · $649/month flat, unlimited users · <strong>Tagline: "Ditch the Dinosaurs"</strong></li>
-          <li>Claims: 34% more jobs/tech · 60% fewer missed calls · 40–60% lower total cost vs TTAN</li>
-          <li>Economics: 20-tech business on TTAN = ~$10,000/month vs Fieldproxy = $649/month</li>
-          <li>Deployment: 1–2 weeks vs 3–12 months for TTAN · AI-first architecture from ground up</li>
-          <li><strong>Confirmed solution set (website):</strong> Technician Mobile App · Custom Estimates · Dispatching &amp; Scheduling · Job Checklists · Contracts &amp; Invoices · Customer Portals · Work Order Management · Recurring Jobs · Spare Parts Management · Asset Management · Dashboarding &amp; Reporting</li>
-          <li><strong>Confirmed AI agents (website):</strong> Voice Agent · Vision Agent · Dispatch Agent · Document Intelligence · Knowledge Agent · Voice Orchestrator · Command Center · Calling Agent</li>
-          <li><strong>Industries targeted:</strong> HVAC · Plumbing · Fire &amp; Safety · <strong>Electrical</strong> · Mechanical · Security · Roofing · Pest Control · Facilities · Landscaping · Energy · Field Services — <em>direct overlap with FieldInsight's core market</em></li>
-          <li>Pain points they attack: Per-User Fees · Slow Customization (six-month projects for simple changes) · Rigid Workflows · Growth Penalties (exponentially increasing costs)</li>
-          <li>Weaknesses: ~$1M USD critically underfunded for ANZ campaign · no proprietary trades data · near-absent on G2/Capterra (claims unverified) · no ANZ compliance (CCEW, WHS) · India/EM market perception in ANZ enterprise · no embedded payments or financing · time zone support gap</li>
-          <li>Threat level: <strong>Moderate but growing.</strong> Lacks capital for ANZ today — but its confirmed solution set is comprehensive and its pricing model is a genuine market signal. A Series A targeting ANZ would create severe pricing pressure. FieldInsight must establish value-per-dollar AND ANZ-compliance leadership before that moment arrives.</li>
-          <li>🔗 <a href="https://www.fieldproxy.com" target="_blank" style="color:#ff6b6b">fieldproxy.com →</a></li>
-
-          <li><strong>— Capital Markets Signal —</strong></li>
-          <li>HUBS -64% · CRM -33% · PLTR +36% (Apr 2025 → Apr 2026)</li>
-          <li>Re-rating logic: workflow automation platforms = commodity risk · proprietary data + decision-layer AI = premium · the premium will flow to platforms that reduce non-technical headcount, not just organise it</li>
-          <li>Palantir analogy: the bull case is a read-write decision loop on proprietary data — not a semantic layer. For FieldInsight: become the system of record for ANZ electrical contracting, accumulate proprietary job data, build AI that no generalist platform can replicate</li>
-          <li>Michael Burry 'Anthropic Displacement' thesis (bear case for PLTR): generalist LLMs could make consultant-heavy ontology models obsolete. The counter: regulated industry data moats + read-write decision loops are defensible. Same logic applies to FieldInsight's ANZ compliance data</li>
-
-          <li><strong>— Threat Matrix —</strong></li>
-          <li>🔴 AI-native entrants (Fieldproxy / Zuper / FieldCamp) rebuilding dispatcher/coordinator in AI — HIGH probability · HIGH impact · 12–18 months</li>
-          <li>🔴 Flat-fee pricing becomes category norm — HIGH probability · MEDIUM impact · 6–18 months</li>
-          <li>🔴 Per-tech SaaS pricing backlash intensifies — HIGH probability · MEDIUM impact · 6–12 months</li>
-          <li>🔴 AI voice booking commoditised via OpenAI/Anthropic API — HIGH probability · MEDIUM impact · 12–24 months</li>
-          <li>🟡 simPRO acquires or builds AI layer — MEDIUM probability · HIGH impact · 12–24 months</li>
-          <li>🟡 Well-funded AI-native entrant targets ANZ — MEDIUM probability · HIGH impact · 12–18 months</li>
-          <li>🟢 ServiceTitan launches ANZ-specific pricing — LOW–MEDIUM probability · HIGH impact · 18–36 months</li>
-
-          <li><strong>— Opportunity Matrix —</strong></li>
-          <li>⚡ Become the ANZ data moat for electrical contracting — <strong>Very Large</strong> · HIGH urgency (see FI-024)</li>
-          <li>⚡ AI coordinator replacement — $50k–$100k AUD/year direct saving per business, measurable ROI — <strong>Large</strong> · HIGH urgency (see FI-001)</li>
-          <li>⚡ Capture simPRO refugees — reactive/maintenance operators — <strong>Large</strong> · HIGH urgency (see FI-021)</li>
-          <li>⚡ Embedded FinTech layer (payments, financing) — ANZ equivalent of TTAN's FinTech upsell — <strong>Very Large</strong> · Medium urgency</li>
-          <li>⚡ ANZ compliance-first positioning (AS/NZS 3000, CCEW, WHS) — <strong>Large</strong> · Medium urgency (see FI-022)</li>
-          <li>⚡ Flat-fee or outcome-based pricing innovation — attack per-seat anxiety before it becomes a category expectation — <strong>Medium</strong> · HIGH urgency (see FI-023)</li>
-          <li>⚡ Channel: electrical wholesalers &amp; industry bodies (Master Electricians AU, NECA) — equivalent of TTAN's Ferguson/Home Depot — <strong>Large</strong> · Medium urgency</li>
-
-          <li><strong>FieldInsight position — already in flight:</strong></li>
-          <li>✅ VOIP IVR + AI booking (FI-001 / FI-017) — directly addresses the "no CSR" angle</li>
-          <li>✅ AI Notes Enhancer + Voice Job Logging (FI-009 / FI-016) — reduces admin per job</li>
-          <li>✅ SMS + Email AI scheduling (FI-001 / FI-018) — multi-channel AI interaction model</li>
-          <li><strong>Gap analysis — still needed:</strong></li>
-          <li>AI dispatching / auto-assign engine — not yet in roadmap → link to FI-021 priority 1 action</li>
-          <li>Zero-touch invoicing from job completion — not yet scoped</li>
-          <li>AI-driven pricing suggestions (markup + labour) — not yet scoped</li>
-          <li>simPRO migration tooling — not yet scoped → FI-021</li>
-          <li>ANZ compliance layer (CCEW, WHS, AS/NZS 3000) — not yet scoped → FI-022</li>
-          <li>Flat-fee pricing tier option — not yet scoped → FI-023</li>
-          <li>Data moat + benchmarking infrastructure — not yet scoped → FI-024</li>
-          <li>🔗 <a href="https://www.fieldproxy.com" target="_blank" style="color:#ff6b6b">Fieldproxy →</a> &nbsp;·&nbsp; <a href="https://investors.servicetitan.com" target="_blank" style="color:#ff6b6b">TTAN IR →</a> &nbsp;·&nbsp; <a href="https://simprogroup.com" target="_blank" style="color:#ff6b6b">simPRO →</a></li>
-          <li>📄 <a href="fieldinsight_thesis.pdf" target="_blank" style="color:#00e5b0">Full Competitive Thesis PDF →</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/product-roadmap/blob/main/docs/fieldinsight_thesis.md" target="_blank" style="color:#00e5b0">Thesis MD (editable) →</a> &nbsp;·&nbsp; <a href="fi-advantage.html" target="_blank" style="color:#00e5b0">FieldInsight AI Page →</a></li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product salesops ceo">
-        <div class="ticket-id">FI-021</div>
-        <div class="card-title">simPRO Refugee Campaign — Attack ANZ Incumbent's Reactive Weakness</div>
-        <div class="card-desc">simPRO dominates ANZ but is deeply project-centric. Reactive maintenance operators (body corporate, industrial, government facilities) are frustrated and under-served. This is FieldInsight's most actionable near-term GTM beachhead — dedicated migration tooling, comparison SEO, and pricing designed to win the 10–40 tech reactive segment.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>Why simPRO is vulnerable here:</strong></li>
-          <li>simPRO's workflow is optimised for complex commercial projects — multi-site, multi-trade, progress billing</li>
-          <li>Reactive service ticket operators (body corporate, industrial maintenance, government) find it slow, over-engineered, and frustrating</li>
-          <li>No credible AI roadmap — "comprehensive and established" weakens as AI-native tools demonstrate per-tech productivity gains</li>
-          <li>3–6 month sales cycle + consultant-dependent onboarding → high switching cost, but also high existing frustration</li>
-          <li><strong>Product actions:</strong></li>
-          <li>Build dedicated simPRO → FieldInsight migration tooling (data export/import, job history, assets, contacts)</li>
-          <li>Service ticket UX specifically benchmarked against simPRO's reactive workflow gaps</li>
-          <li>AI dispatcher / auto-assign as the direct counter to simPRO's manual dispatch</li>
-          <li><strong>GTM actions:</strong></li>
-          <li>Comparison content targeting "simPRO alternatives," "simPRO vs FieldInsight" — high-intent search</li>
-          <li>Pricing designed to undercut simPRO for 10–40 tech businesses (linked to FI-023)</li>
-          <li>Testimonial-led social proof from switched customers — body corporate and industrial operators specifically</li>
-          <li>Channel: Master Electricians Australia, NECA — trade association distribution equivalent to TTAN's Ferguson/Home Depot</li>
-          <li><strong>Message:</strong> "Built for reactive. Not for projects." — explicitly contrast with simPRO's commercial bias</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product infra">
-        <div class="ticket-id">FI-022</div>
-        <div class="card-title">ANZ Compliance Layer — AS/NZS 3000 · CCEW · WHS Documentation</div>
-        <div class="card-desc">No FSM platform has deeply integrated Australian electrical compliance requirements. Building a native compliance layer creates switching costs no generalist AI platform can replicate, opens distribution through industry associations, and positions FieldInsight as the mandatory-grade platform if digital compliance documentation becomes regulated.</div>
-        <div class="card-meta">
-          <span class="badge badge-med">Medium</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-infra">⚙️ Infra</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>No competitor owns this:</strong></li>
-          <li>TTAN: US-centric, no ANZ compliance feature set</li>
-          <li>simPRO: has compliance fields but no structured digital compliance workflow</li>
-          <li>Fieldproxy: no documented ANZ regulatory features at all</li>
-          <li><strong>Compliance requirements to build:</strong></li>
-          <li>AS/NZS 3000 — Australian/NZ Wiring Rules documentation and job sign-off</li>
-          <li>CCEW — Certificate of Compliance for Electrical Work (state-based: VIC, NSW, QLD, WA, SA, ACT)</li>
-          <li>WHS documentation — Safe Work Method Statements, hazard identification, incident recording</li>
-          <li>State-based licensing verification — electrician licence numbers per technician, expiry tracking</li>
-          <li>WorkSafe documentation — site inspection records, RCD testing logs</li>
-          <li><strong>Strategic value:</strong></li>
-          <li>Switching cost: compliance data embedded in FieldInsight is a regulatory liability to migrate away from</li>
-          <li>Distribution channel: Master Electricians Australia and NECA may recommend or co-market a compliance-certified platform</li>
-          <li>Regulatory moat: if CCEW digital lodgement becomes mandated, FieldInsight becomes the default platform</li>
-          <li>Data moat: compliance documentation creates a uniquely valuable Australian-specific dataset no global platform has</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product ceo salesops">
-        <div class="ticket-id">FI-023</div>
-        <div class="card-title">💰 Pricing Innovation — AU $500 Flat + FI-Token AI Consumption Model</div>
-        <div class="card-desc">Per-seat SaaS is structurally broken and the market knows it — TTAN is down 57.9% from ATH. FieldInsight's answer: one flat AU price for unlimited users, with FI-Tokens powering every AI action. Removes growth friction entirely. Creates a transparent, usage-based AI revenue lever that compounds with customer success.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>— 2026 FSM Pricing Landscape —</strong></li>
-          <li>🔴 <strong>ServiceTitan:</strong> ~$350/tech/month (hidden, quote-only) · 20 techs = $84K/year software + $5K–$50K implementation · 12–36 month contracts · no public pricing · annual increases locked in</li>
-          <li>🔴 <strong>simPRO:</strong> per-user, enterprise pricing · implementation consultant required · 3–6 month sales cycle · no flat option</li>
-          <li>🟡 <strong>Fieldproxy:</strong> $19–$39/user/month USD (per-user, still scales with headcount) · Basic = $19/user, Growth = $39/user · 20 users = $380–$780/month USD = AU $600–$1,260/month · Also markets AU $649/month flat (unverified current pricing)</li>
-          <li>🟡 <strong>Jobber:</strong> $29–$149/month flat tiers · no AI agents · best for &lt;5 tech solo operators</li>
-          <li>🟡 <strong>FieldCommerce (2026 entrant):</strong> $82–$249/month + per-user add-ons · 50–500 AI assists/month capped by tier · interesting token-adjacent model but capped, not unlimited</li>
-          <li>🟡 <strong>Service Fusion:</strong> $225/month flat unlimited users · no meaningful AI · feature-lite</li>
-          <li>🟢 <strong>FieldInsight:</strong> AU $299–500 flat unlimited · 25K–100K FI-Tokens included · all 8 AI agents · ANZ compliance built-in · local data moat</li>
-
-          <li><strong>— The FieldInsight Pricing Model —</strong></li>
-          <li>🏷️ <strong>Starter — AU $299/month:</strong> up to 10 technicians · unlimited admin seats · 25,000 FI-Tokens/month · Core AI agents (Inbox, Voice Notes, Document Parser)</li>
-          <li>🏷️ <strong>Growth — AU $500/month:</strong> unlimited technicians · unlimited admin · 100,000 FI-Tokens/month · All 8 AI agents · IoT fault monitoring · ANZ compliance layer · Priority support</li>
-          <li>🏷️ <strong>Enterprise — Custom:</strong> multi-branch · dedicated AI model fine-tuned on your data · unlimited tokens · SLA · white-label option · direct API access</li>
-          <li>🪙 <strong>FI-Token top-ups:</strong> AU $0.005/token when monthly allocation exceeded — pay only for what you use</li>
-
-          <li><strong>— FI-Token: What Each AI Action Costs —</strong></li>
-          <li>🗣️ Voice note transcription + AI enhance: <strong>~200 tokens</strong> (AU $0.001)</li>
-          <li>📞 Booking Agent full inbound call (book/reschedule): <strong>~800 tokens</strong> (AU $0.004)</li>
-          <li>📄 Document Agent invoice parse (PDF): <strong>~500 tokens</strong> (AU $0.0025)</li>
-          <li>🚐 Dispatch Agent auto-job-assignment: <strong>~150 tokens</strong> (AU $0.00075)</li>
-          <li>📬 Inbox Agent email classify + reply draft: <strong>~300 tokens</strong> (AU $0.0015)</li>
-          <li>📊 Insights Agent weekly report generation: <strong>~2,000 tokens</strong> (AU $0.01)</li>
-          <li>Growth plan 100K tokens/month → handles ~125 calls + 200 invoices + 333 dispatches + 333 emails + 4 weekly reports — <strong>typical 20-tech business uses 60–80K tokens/month</strong></li>
-
-          <li><strong>— Head-to-Head: 20 Techs, 12 Months, Total Cost of Ownership —</strong></li>
-          <li>ServiceTitan: $84,000/yr software + $15K implementation + AI add-ons = <strong>$100K+ Year 1</strong> — and still needs CSR + dispatcher staff</li>
-          <li>Fieldproxy (Growth, 20 users): $39 × 20 × 12 = AU ~$14,976/yr — no ANZ compliance, no local data, no offline AI, no CCEW</li>
-          <li>FieldCommerce Professional: $249 × 12 = AU $2,988/yr + add-ons — but 500 AI assists/month is often insufficient; overages unpredictable</li>
-          <li>FieldInsight Growth: AU $500 × 12 = <strong>$6,000/yr</strong> · AI eliminates $145K–$200K in staff cost · FI-Token overage typically under $200/month for heavy users</li>
-          <li>🔥 <strong>FieldInsight Total Cost of Ownership advantage: ~14x cheaper than TTAN on software alone. With AI labour replacement factored in: 30x+ TCO advantage.</strong></li>
-
-          <li><strong>— Why This Pricing Model Wins (2026 SaaS Research) —</strong></li>
-          <li>2026 AI SaaS consensus: hybrid flat subscription + consumption = the dominant winning model (per Monetizely, OpenView, Saaslogic 2026 research)</li>
-          <li>Pure per-seat: punishes growth, creates churn trigger every time headcount adds up</li>
-          <li>Pure consumption: unpredictable bills, enterprise buyers hate it</li>
-          <li>Hybrid flat + tokens: predictable baseline cost, fair AI scaling, aligns revenue with value delivered</li>
-          <li>FI-Token audit trail: every AI action is logged → makes "the AI saved you X hours" provable → creates upsell motion naturally</li>
-          <li>Token model converts abstract AI claims into documented, auditable ROI — the "AI ROI Guarantee" pilot becomes possible (see FI-032)</li>
-
-          <li><strong>— Positioning Message —</strong></li>
-          <li>"Pay per business, not per head. Your growth shouldn't cost you more."</li>
-          <li>"The AI that replaces your $75,000/year CSR costs $0.004 per call. That's not a feature — that's a structural business model change."</li>
-          <li>🔗 <a href="fi-advantage.html" target="_blank" style="color:#00e5b0">FieldInsight AI Page (pricing section) →</a></li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product infra ceo">
-        <div class="ticket-id">FI-024</div>
-        <div class="card-title">Data Moat Infrastructure — ANZ Electrical Benchmarking + Industry Reports</div>
-        <div class="card-desc">Every month of operational data from FieldInsight customers is a compounding competitive asset. The FSM platform that wins long-term is the system of record — the Palantir playbook applied to vertical SaaS. Build the data aggregation, anonymisation, and benchmarking layer that creates AI recommendations no generalist platform can replicate.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-infra">⚙️ Infra</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>Why this is the highest-value long-term play:</strong></li>
-          <li>10+ years of ANZ electrical contracting data = AI recommendations no global platform can access</li>
-          <li>"A 3-phase fault at a Melbourne body corporate typically requires X hours and Y parts" — not possible without local proprietary data</li>
-          <li>Palantir analogy: the moat is the read-write decision loop on proprietary data, not the feature set</li>
-          <li>Generalist LLMs (GPT, Claude) cannot replicate ANZ-specific job completion patterns, pricing norms, and compliance workflows</li>
-          <li><strong>Infrastructure to build:</strong></li>
-          <li>Data aggregation pipeline — jobs, technicians, parts, pricing, compliance docs — anonymised and structured</li>
-          <li>Benchmarking engine: "Your techs complete 4.2 jobs/day vs ANZ average 3.8 — here's what the top quartile does differently"</li>
-          <li>Industry vertical breakdowns: body corporate · industrial maintenance · government facilities · residential</li>
-          <li>Anomaly detection: job profitability outliers, technician performance flags, compliance gaps</li>
-          <li><strong>External content/PR channel:</strong></li>
-          <li>Annual ANZ Electrical Contracting Industry Report — equivalent of TTAN's trades reports</li>
-          <li>Quarterly benchmarking PDF to customers — each customer sees their performance vs anonymised peers</li>
-          <li>Media and industry association distribution — Master Electricians AU, NECA, trade press</li>
-          <li>This content channel drives organic MQLs (equivalent to TTAN's 60%+ organic MQL rate from content)</li>
-          <li><strong>AI moat payoff:</strong></li>
-          <li>AI dispatch recommendations trained on ANZ job completion data → demonstrably better than generic AI</li>
-          <li>Pricing suggestions: "Jobs of this type in this postcode typically bill at $X — you're 15% below market"</li>
-          <li>Predictive parts ordering: "Based on 10,000 similar jobs, stock Y qty of Z part before this site visit"</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product ceo salesops">
-        <div class="ticket-id">FI-025</div>
-        <div class="card-title">FieldInsight AI Positioning Page — "Why FieldInsight"</div>
-        <div class="card-desc">FieldInsight's equivalent of Fieldproxy's "Why Fieldproxy" / "Ditch the Dinosaurs" marketing page. Purpose-built competitive landing page for ANZ electrical contractors — AI agents, flat AU $500 pricing + FI-Tokens, the ANZ data moat advantage, solutions, and a head-to-head comparison table.</div>
-        <div class="card-meta">
-          <span class="badge badge-active">🔥 Active</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Live</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>Hero: "Your trades business, powered by AI that knows how Australia works"</li>
-          <li>Pain points section: Per-User Fees · Six-Month Implementations · Rigid Workflows · Growth Penalties</li>
-          <li>8 AI Agents with status: Scheduler · Booking · Voice · Dispatch · Document · Inbox · Knowledge · Insights</li>
-          <li>16 platform solutions covering full FSM lifecycle</li>
-          <li>FieldInsight competitive advantage: ANZ data moat, stitched intelligence, compounding accuracy</li>
-          <li>Head-to-head table: FieldInsight vs TTAN vs simPRO vs Fieldproxy (7 dimensions)</li>
-          <li>14 industries including Electrical (primary), HVAC, Plumbing, Fire &amp; Safety</li>
-          <li>Pricing: AU $299 Starter · AU $500 Growth (unlimited users) · Enterprise custom</li>
-          <li>FI-Tokens model explained with per-action token costs</li>
-          <li>CTA: "Ditch the dinosaur. Run a smarter business."</li>
-          <li>🔗 <a href="fi-advantage.html" target="_blank" style="color:#00e5b0">Live Page →</a> &nbsp;·&nbsp; <a href="fieldinsight_thesis.pdf" target="_blank" style="color:#00e5b0">Competitive Thesis PDF →</a></li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product ceo salesops">
-        <div class="ticket-id">FI-026</div>
-        <div class="card-title">⚔️ AI Conquest — Migration + Feature Internal Hub</div>
-        <div class="card-desc">Internal strategy page covering the full AI conquest playbook: migration from simPRO/ServiceM8/Tradify/AroFlo/Fergus, AI agent expansion vs Fieldproxy, Gemini Local offline client, NEC phone reception, PPM scheduling, and the auto-allocation engine. Protected by Google OAuth — @fieldinsight.com only.</div>
-        <div class="card-meta">
-          <span class="badge badge-active">🔥 Active</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Live</span>
-          <span class="badge" style="background:rgba(255,77,46,0.1);color:#ff6b6b;border:1px solid rgba(255,77,46,0.3)">🔒 Auth Required</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>7-priority migration conquest table (simPRO API → ServiceM8 → Tradify CSV → AroFlo → Fergus → AI enrichment → LLM outreach)</li>
-          <li>AI Expansion vs Fieldproxy 10-row comparison table</li>
-          <li>Auto Job Request Processing (Email / SMS / VOIP / Web Form)</li>
-          <li>Gemini Local: offline AI client for field techs (on-device fault diagnosis, voice capture)</li>
-          <li>CRM Phone Reception + NEC PBX integration for overflow AI handling</li>
-          <li>PPM Scheduling with visual monthly calendar mock</li>
-          <li>Allocation Engine: Auto Allocate AI + visual drag-and-drop PPM planner</li>
-          <li>Google OAuth login gate — restricted to @fieldinsight.com accounts</li>
-          <li>🔗 <a href="ai-conquest.html" target="_blank" style="color:#ff6b6b">AI Conquest Hub →</a></li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product infra">
-        <div class="ticket-id">FI-027</div>
-        <div class="card-title">Gemini Local — Offline AI Client for Field Technicians</div>
-        <div class="card-desc">Gemini-powered local AI running on the technician's phone. Diagnoses faults, captures voice notes, references AS/NZS 3000 and compliance standards — with zero internet required on site. Syncs all captured data when reconnected.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-infra">⚙️ Infra</span>
-          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>Offline mode (Gemini Nano on-device):</strong></li>
-          <li>Fault diagnosis from downloaded fault library (Daikin / Mitsubishi / Panasonic + electrical)</li>
-          <li>AS/NZS 3000 compliance reference — locally cached</li>
-          <li>Voice capture for job notes — transcribed on-device, structured when reconnected</li>
-          <li>Cached customer + asset data for today's scheduled jobs</li>
-          <li>Job checklist completion saved locally, uploaded on reconnect</li>
-          <li><strong>Online mode (full Gemini Cloud):</strong></li>
-          <li>Full job history context from FieldInsight CRM</li>
-          <li>Real-time parts pricing from supplier price books</li>
-          <li>AI-drafted quote from voice description</li>
-          <li>Live dispatch updates + job reassignment notifications</li>
-          <li>No competitor has this — Fieldproxy, TTAN, and simPRO all require internet</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product infra salesops">
-        <div class="ticket-id">FI-028</div>
-        <div class="card-title">CRM Phone Reception — AI Overflow + NEC PBX Integration</div>
-        <div class="card-desc">AI answers the phone when staff are busy. Handles bookings, job status queries, and urgent fault reports. NEC UNIVERGE SV9100/SV9300 integration routes overflow and after-hours calls to FieldInsight's AI reception agent via SIP trunk.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>SIP trunk integration — NEC routes queue overflow to FieldInsight VOIP</li>
-          <li>After-hours mode: AI takes all calls outside business hours</li>
-          <li>Queue overflow threshold: AI steps in when wait time &gt;X seconds</li>
-          <li>AI handles: new booking · job status query · urgent fault escalation · message taking</li>
-          <li>Urgent faults: escalates to on-call tech via SMS immediately</li>
-          <li>All AI-handled calls logged to CRM with transcript + recording</li>
-          <li>Morning summary report: overnight calls handled, jobs created, follow-ups needed</li>
-          <li>NEC is already widely deployed across ANZ trades and body corporate — no hardware change needed</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product design">
-        <div class="ticket-id">FI-029</div>
-        <div class="card-title">PPM Scheduling — Asset-Linked Maintenance Plans + Visual Calendar</div>
-        <div class="card-desc">Planned Preventive Maintenance module for body corporate, industrial, and government facility operators. Asset-linked maintenance schedules auto-generate recurring jobs. Visual monthly calendar shows all PPM jobs per technician with compliance deadline flags.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-design">🎨 Design</span>
-          <span class="badge badge-product">🏗 Product</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li>Asset maintenance plans: frequency (monthly/quarterly/bi-annual/annual), compliance-triggered</li>
-          <li>Auto-generate PPM jobs when maintenance is due — no manual intervention</li>
-          <li>Recurring job templates: checklist, parts, compliance fields, photo evidence points</li>
-          <li>CCEW annual inspection countdowns: flags assets approaching compliance deadline</li>
-          <li>Visual monthly PPM calendar: tech rows × working days grid</li>
-          <li>Export monthly schedule as PDF for customer scheduling letters</li>
-          <li>Critical for body corporate and government facility contracts — high-value repeat revenue</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product design">
-        <div class="ticket-id">FI-030</div>
-        <div class="card-title">Allocation Engine — Auto Allocate AI + Visual PPM Planner</div>
-        <div class="card-desc">Two-mode allocation system: AI Auto Allocate for reactive jobs (assigns best-fit tech in &lt;3 seconds across 8 variables), and a visual drag-and-drop PPM planner for monthly schedule building. Together they eliminate the dispatcher role.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-design">🎨 Design</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>Auto Allocate (reactive jobs):</strong></li>
-          <li>Variables: skill match · proximity · current load · travel time · customer history · asset familiarity · licence requirements</li>
-          <li>ANZ-tuned: CCEW licence verification before assignment</li>
-          <li>Confidence score displayed — dispatcher can override with one click</li>
-          <li>Learning loop: job outcome data feeds back into next assignment</li>
-          <li>Estimated saving: replaces $70k+/year dispatcher at &gt;20 tech scale</li>
-          <li><strong>Visual PPM Planner:</strong></li>
-          <li>Drag PPM jobs from unallocated pool onto tech/day grid</li>
-          <li>AI "Fill Gaps" button: fills remaining unallocated jobs optimally</li>
-          <li>Geographic clustering: AI groups nearby sites on same day to reduce drive time</li>
-          <li>Real-time allocation dashboard: tech status, live ETA, drag-and-drop reassignment</li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product salesops">
-        <div class="ticket-id">FI-031</div>
-        <div class="card-title">Migration Conquest — simPRO + ServiceM8 + Tradify Extraction</div>
-        <div class="card-desc">Frictionless data migration from the top 5 ANZ FSM platforms. One-click extraction wizard imports customers, jobs, assets, quotes, invoices, and recurring maintenance schedules. Pre-demo migration preview converts prospects before they've committed to switching.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>P1:</strong> CSV import for Tradify + generic — immediate, covers the gap</li>
-          <li><strong>P2:</strong> simPRO API extraction microservice — highest value ANZ target (REST API + OAuth2)</li>
-          <li><strong>P3:</strong> ServiceM8 extraction — second largest ANZ install (ServiceM8 API v4)</li>
-          <li><strong>P4:</strong> Outbound AI enrichment — enriches imported data with AI-inferred fields from day one</li>
-          <li><strong>P5:</strong> Pre-demo migration preview — prospect sees their own data in FieldInsight before committing</li>
-          <li><strong>P6:</strong> AroFlo + Fergus extraction — completes ANZ market coverage</li>
-          <li><strong>P7:</strong> AI outreach generation — Claude drafts personalised SDR emails from migration data</li>
-          <li>🔗 <a href="ai-conquest.html#onboarding" target="_blank" style="color:#ff6b6b">Full detail in AI Conquest Hub →</a></li>
-        </ul></div>
-      </div>
-
-      <div class="card" data-cat="product ceo salesops">
-        <div class="ticket-id">FI-032</div>
-        <div class="card-title">🤖 AI Labour Replacement Index — The ROI Case</div>
-        <div class="card-desc">The single most powerful sales conversation in 2026: AI doesn't just save time — it directly replaces high-cost operational roles. FieldInsight's 8 AI agents collectively eliminate $145K–$210K AUD in annual headcount cost per business. This is the ROI calculator, the case study template, and the "AI ROI Guarantee" pilot framework that closes deals.</div>
-        <div class="card-meta">
-          <span class="badge badge-high">High</span>
-          <span class="badge badge-product">🏗 Product</span>
-          <span class="badge badge-ceo">👔 CEO</span>
-          <span class="badge badge-salesops">📊 Sales Ops</span>
-          <span class="badge" style="background:rgba(61,126,255,0.15);color:#60a5fa;border:1px solid rgba(61,126,255,0.35)">⚡ AI Powered</span>
-        </div>
-        <div class="outcomes"><ul>
-          <li><strong>— The Market Context (April 2026) —</strong></li>
-          <li>FSM market: $6.21B in 2026 → $9.17B by 2030 · growth driven entirely by AI labour substitution</li>
-          <li>93% of service orgs now have AI implemented — those without it are already behind</li>
-          <li>AI-first FSM delivers: 34% more jobs/tech · 60% fewer missed calls · 10–15% margin expansion · 5–10% COGS reduction</li>
-          <li>The market re-rating: HUBS -64% · TTAN -57.9% from ATH · PLTR +36% — investors pricing AI labour replacement as the winner, not workflow SaaS</li>
-
-          <li><strong>— What Each AI Agent Replaces —</strong></li>
-          <li>🎙️ <strong>Booking Agent (VOIP IVR):</strong> replaces 0.5–1.0 CSR · AU $55K–$75K/year salary saved · handles 24/7 inbound bookings, rescheduling, status queries</li>
-          <li>📬 <strong>Inbox Agent (Email/Gmail):</strong> replaces 0.5 admin · AU $30K–$45K/year · classifies, prioritises, and drafts replies for 100% of job-request emails</li>
-          <li>🚐 <strong>Dispatch Agent (Auto-Assign):</strong> replaces 0.5–1.0 dispatcher · AU $60K–$80K/year · assigns jobs across 20+ variables in real-time vs human dispatcher taking 5–15 min per decision</li>
-          <li>📄 <strong>Document Agent (Bill Parser):</strong> replaces 0.25–0.5 accounts admin · AU $25K–$40K/year · processes 100% of supplier invoices with zero manual data entry</li>
-          <li>🗣️ <strong>Voice Agent (Job Notes):</strong> saves 12–18 min per job in note-writing · at 8 jobs/day/tech = 96–144 min/day/tech · 10 techs = $40K–$60K/year in admin time recaptured</li>
-          <li>📊 <strong>Insights Agent:</strong> replaces monthly business reporting + KPI analysis · AU $10K–$20K/year in consultant/analyst time</li>
-          <li>🔧 <strong>IoT Fault Agent (FI-008):</strong> proactive outreach before customer calls = $15K–$25K/year in reactive callout revenue uplift</li>
-          <li>🌐 <strong>Gemini Local (FI-027):</strong> eliminates 30–40% of "call the office" interruptions per job · tech resolves on-site independently</li>
-
-          <li><strong>— The Numbers: 20-Tech Business, 12 Months —</strong></li>
-          <li>TTAN software: $84,000/year (20 × $350/month) + $15K implementation + $5K training = <strong>$104K Year 1</strong></li>
-          <li>TTAN + staffing (CSR + dispatcher + admin): $104K + $170K salaries = <strong>$274K/year operational cost</strong></li>
-          <li>FieldInsight Growth plan: $500/month = $6,000/year — <strong>AI replaces $145K–$200K in roles</strong></li>
-          <li>FieldInsight total cost (software + retained lean team): ~$6K + $60K = <strong>$66K/year</strong></li>
-          <li>🔥 <strong>Net saving vs TTAN full-stack: $208K/year — 208x the FieldInsight subscription cost</strong></li>
-          <li>vs Fieldproxy ($19–39/user/month, per-user): 20 users = $4,560–$9,360/year — but no ANZ compliance, no local data moat, no offline AI, no CCEW documentation</li>
-
-          <li><strong>— AI ROI Guarantee Pilot Framework —</strong></li>
-          <li>Offer 3–5 customers a 90-day "AI ROI Guarantee": if our AI agents don't save X hours/month → credits applied</li>
-          <li>Measurement: FI-Token log = auditable record of every AI action performed, time saved calculated per action type</li>
-          <li>Target metrics per pilot: ≥30% reduction in manual booking/scheduling time · ≥20% reduction in admin hours/job · ≥15% increase in jobs per tech per month</li>
-          <li>Case study output: each pilot produces a signed ROI report → primary sales collateral for that industry vertical</li>
-          <li>FI-Token audit trail: transparent log of every AI call — makes "the AI did X" provable, not a marketing claim</li>
-
-          <li><strong>— Product Actions Required —</strong></li>
-          <li>Build FI-Token usage dashboard — per-customer breakdown of AI actions vs time saved</li>
-          <li>Auto-generate monthly "AI Savings Report" per account — shows ROI in hours and AUD equivalent</li>
-          <li>In-app ROI widget: running total of "Hours saved this month by AI" visible on home screen</li>
-          <li>SDR tool: pre-built ROI calculator using prospect's tech count + salary data → generates a personalised "FieldInsight vs current stack" savings projection</li>
-        </ul></div>
-      </div>
-
     </div>
 
     <!-- DONE -->
@@ -1129,7 +853,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 15 April 2026 &nbsp;·&nbsp; v1.0.0</div>
+    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1150,6 +874,9 @@
         <a href="https://ptyrrell.github.io/product-roadmap/cashflow-growth.html" target="_blank">📈 Cashflow Growth Plan →</a>
       </div>
     </div>
+  </div>
+
+  <div class="board">
 
     <!-- NOW -->
     <div class="col-now">
@@ -1497,6 +1224,225 @@
   &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/customer-ideas.html" target="_blank">💡 Share an Idea</a>
 </footer>
+
+<!-- ════════════════════════════════════════════════════════════
+     STRATEGIC TARGETS
+     ════════════════════════════════════════════════════════════ -->
+<div id="view-strategy" class="view">
+<div class="strat-wrap">
+
+  <div class="strat-hero">
+    <h1>Strategic Targets</h1>
+    <p>Growth goals, market entry plans, and budget for AU scale &amp; US launch.</p>
+  </div>
+
+  <!-- ── Goal Banners ── -->
+  <div class="goal-banner au">
+    <div class="goal-label au">🇦🇺 Australia — Primary Market</div>
+    <div class="goal-title">
+      <span class="goal-flag">🎯</span>
+      10 Sales per Month
+      <span class="goal-deadline au">Target: June 2026</span>
+    </div>
+    <div class="goal-sub">Scale the AU business to 10 closed/won deals per month. Tim + Jay SDR team, improved demo conversion, and onboarding efficiency are the key levers. Currently tracking ~5–6/month.</div>
+    <div class="progress-wrap" style="margin-top:1rem">
+      <div class="progress-label"><span>Current pace ~5–6/mo</span><span>Target 10/mo · June 2026</span></div>
+      <div class="progress-track"><div class="progress-fill au" style="width:55%"></div></div>
+    </div>
+  </div>
+
+  <div class="goal-banner us">
+    <div class="goal-label us">🇺🇸 United States — New Market</div>
+    <div class="goal-title">
+      <span class="goal-flag">🚀</span>
+      10 Sales per Month (US)
+      <span class="goal-deadline us">Target: Dec 2027</span>
+    </div>
+    <div class="goal-sub">Enter the US field service market — HVAC, refrigeration, electrical. Sane, staged entry: SOC 2 certification, outsourced SDR test, US-based onboarding &amp; support, then scale. 12-month ramp to 10/month.</div>
+    <div class="progress-wrap" style="margin-top:1rem">
+      <div class="progress-label"><span>Planning phase</span><span>Target 10/mo · Dec 2027</span></div>
+      <div class="progress-track"><div class="progress-fill us" style="width:8%"></div></div>
+    </div>
+  </div>
+
+  <!-- ── AU Milestone Timeline ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">🇦🇺 AU Scale — Milestones to 10/Month</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot done"></div>
+        <div class="tl-date">Q1 2026 — Jan–Mar</div>
+        <div class="tl-title">SDR Machine Running</div>
+        <div class="tl-desc">Tim &amp; Jay hitting cadence. Kyle Tracking live. Feb: 5 wins, Mar: 2 wins. Pipeline attribution and CAC tracking active in Sales Summary.</div>
+        <div class="tl-chips"><span class="tl-chip green">✅ Done</span><span class="tl-chip">Tim + Jay SDR</span><span class="tl-chip">CAC Tracking</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot active"></div>
+        <div class="tl-date">Q2 2026 — Apr–Jun</div>
+        <div class="tl-title">Hit 10 Sales / Month</div>
+        <div class="tl-desc">Increase disco → trial conversion. Tighten offer timing. Reach consistent 10 closed/won per month. CAC below $1,000. Payback under 3 months.</div>
+        <div class="tl-chips"><span class="tl-chip amber">🔥 Active Goal</span><span class="tl-chip">10/mo target</span><span class="tl-chip gate">Jun 2026 deadline</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot next"></div>
+        <div class="tl-date">Q3–Q4 2026 — Jul–Dec</div>
+        <div class="tl-title">Optimise &amp; Prepare US Foundation</div>
+        <div class="tl-desc">AU running at 10+/month. Begin SOC 2 observation period (6-month clock). Research US market fit — accounting integrations (Sage?), US-specific workflows, pricing in USD.</div>
+        <div class="tl-chips"><span class="tl-chip blue">SOC 2 starts</span><span class="tl-chip">US research</span><span class="tl-chip">AU 10/mo hold</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── US Entry Timeline ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">🇺🇸 US Entry Plan — Phased Approach</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot next"></div>
+        <div class="tl-date">Phase 1 — Jul–Dec 2026 · Pre-Launch</div>
+        <div class="tl-title">Foundations &amp; Compliance</div>
+        <div class="tl-desc">Everything needed before taking a US dollar. SOC 2 Type II observation period running. US demo environment. Legal entity or use existing AU entity with US tax advice. Research Sage integration requirement — check what accounting software US field service businesses use (QuickBooks? Sage Intacct?).</div>
+        <div class="tl-chips">
+          <span class="tl-chip gate">🔒 SOC 2 Type II — FI-020</span>
+          <span class="tl-chip gate">Legal structure</span>
+          <span class="tl-chip amber">Sage/QB research</span>
+          <span class="tl-chip blue">US demo env</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-date">Phase 2 — Jan–Jun 2027 · Soft Launch</div>
+        <div class="tl-title">Test &amp; Prove — 2–3 Sales/Month US</div>
+        <div class="tl-desc">SOC 2 report received. Begin controlled US sales motion: outsourced SDR team (2 reps, US-based, HVAC/field service experience). One US onboarding person (contractor initially). Shared AU support with US hours overlap. Target Sun Belt states — Florida, Texas, California where HVAC is year-round.</div>
+        <div class="tl-chips">
+          <span class="tl-chip gate">SOC 2 report required</span>
+          <span class="tl-chip">Outsourced SDR × 2</span>
+          <span class="tl-chip">US onboarding hire</span>
+          <span class="tl-chip amber">2–3 wins/mo target</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot future"></div>
+        <div class="tl-date">Phase 3 — Jul–Dec 2027 · Scale</div>
+        <div class="tl-title">Scale to 10 Sales/Month US</div>
+        <div class="tl-desc">Validated playbook from Phase 2. Expand SDR team. Dedicated US support. Consider US AE if deal size warrants. Localised content, US case studies, G2/Capterra presence. Full US go-to-market running.</div>
+        <div class="tl-chips">
+          <span class="tl-chip blue">10/mo target</span>
+          <span class="tl-chip">US AE (TBD)</span>
+          <span class="tl-chip">US support hire</span>
+          <span class="tl-chip green">G2 / Capterra</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── US Budget ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">💰 US Entry Budget Estimate</div>
+    <div class="budget-grid">
+
+      <div class="budget-card">
+        <div class="budget-card-title">Phase 2 — Soft Launch (Jan–Jun 2027)</div>
+        <div class="budget-row"><span class="budget-role">Outsourced SDR Team <span class="budget-type">(2 reps, US)</span></span><span class="budget-cost">$6–10k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Onboarding Person <span class="budget-type">(contractor)</span></span><span class="budget-cost">$5–8k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Support <span class="budget-type">(AU overlap hrs)</span></span><span class="budget-cost">$2–3k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">SOC 2 Tool <span class="budget-type">(Vanta/Drata)</span></span><span class="budget-cost">~$1k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Demo + Infra <span class="budget-type"></span></span><span class="budget-cost">~$0.5k/mo</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. monthly burn</span><span class="budget-total-val">$14–22k / mo</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">One-Time Setup Costs</div>
+        <div class="budget-row"><span class="budget-role">SOC 2 Audit <span class="budget-type">(AICPA auditor)</span></span><span class="budget-cost">$20–40k</span></div>
+        <div class="budget-row"><span class="budget-role">Legal / US Entity <span class="budget-type">(Delaware LLC)</span></span><span class="budget-cost">$5–15k</span></div>
+        <div class="budget-row"><span class="budget-role">US-specific Design <span class="budget-type">(demo, collateral)</span></span><span class="budget-cost">$5–10k</span></div>
+        <div class="budget-row"><span class="budget-role">Sage / QB Integration <span class="budget-type">(if required)</span></span><span class="budget-cost">TBD</span></div>
+        <div class="budget-row"><span class="budget-role">Pen Testing <span class="budget-type">(SOC 2 req)</span></span><span class="budget-cost">$5–10k</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. one-time</span><span class="budget-total-val">$35–75k</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">Phase 3 — Scale (Jul–Dec 2027)</div>
+        <div class="budget-row"><span class="budget-role">SDR Team <span class="budget-type">(expand to 4)</span></span><span class="budget-cost">$12–20k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US AE <span class="budget-type">(if deal size warrants)</span></span><span class="budget-cost">$8–12k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Onboarding <span class="budget-type">(full-time)</span></span><span class="budget-cost">$6–8k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">US Dedicated Support</span><span class="budget-cost">$4–6k/mo</span></div>
+        <div class="budget-row"><span class="budget-role">Marketing / Content <span class="budget-type">(US)</span></span><span class="budget-cost">$2–4k/mo</span></div>
+        <div class="budget-total"><span class="budget-total-label">Est. monthly burn at scale</span><span class="budget-total-val">$32–50k / mo</span></div>
+      </div>
+
+      <div class="budget-card">
+        <div class="budget-card-title">CAC Target — US Market</div>
+        <div class="budget-row"><span class="budget-role">Phase 2 target CAC <span class="budget-type">(2–3 wins/mo)</span></span><span class="budget-cost">&lt; $6,000</span></div>
+        <div class="budget-row"><span class="budget-role">Phase 3 target CAC <span class="budget-type">(10 wins/mo)</span></span><span class="budget-cost">&lt; $3,500</span></div>
+        <div class="budget-row"><span class="budget-role">Target avg US MRR <span class="budget-type">(USD)</span></span><span class="budget-cost">$500–800</span></div>
+        <div class="budget-row"><span class="budget-role">Target payback <span class="budget-type">(Phase 3)</span></span><span class="budget-cost">&lt; 8 months</span></div>
+        <div class="budget-row"><span class="budget-role">Break-even MRR <span class="budget-type">(Phase 2)</span></span><span class="budget-cost">~$20k MRR</span></div>
+        <div class="budget-total"><span class="budget-total-label">US break-even</span><span class="budget-total-val">~25–30 customers</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Open Questions ── -->
+  <div class="strat-section">
+    <div class="strat-section-title">❓ Open Questions &amp; Decisions Required</div>
+    <div class="question-list">
+
+      <div class="question-item">
+        <span class="q-icon">🔗</span>
+        <div>
+          <div class="q-text"><strong>Sage Integration — is it a gate for US entry?</strong></div>
+          <div class="q-sub">US mid-market field service businesses commonly use QuickBooks, Sage 50, or Sage Intacct. FieldInsight likely has Xero/MYOB (AU-focused). Need to validate: what % of US HVAC/field service prospects use Sage vs QuickBooks? QuickBooks may be more critical. Decision: integrate before launch or sell without accounting integration initially?</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">👥</span>
+        <div>
+          <div class="q-text"><strong>Outsourced SDR team — which vendor and vertical expertise?</strong></div>
+          <div class="q-sub">Need US-based SDR team with field service / HVAC industry knowledge. Options: specialist sales outsourcers (e.g. memoryBlue, Operatix, Belkins) vs generalist BDR agencies. Must be able to speak to tradespeople and service managers. Test with 2 reps for 90 days before expanding.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🏛️</span>
+        <div>
+          <div class="q-text"><strong>US entity structure — Delaware LLC or use AU entity?</strong></div>
+          <div class="q-sub">Selling into US under AU entity is possible initially (especially for software SaaS) but creates friction with larger prospects and payroll for any US hires. Delaware LLC is cheap (~$500/yr) and standard. Decision needed before Phase 2 hiring.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🎯</span>
+        <div>
+          <div class="q-text"><strong>Target segment — which US state/vertical first?</strong></div>
+          <div class="q-sub">Recommended: Sun Belt HVAC (Florida, Texas, California) — year-round work, high volume, strong field service culture. Avoid cold-climate states initially. Size: 5–50 technicians, owner-operated or family business. Same ICP as AU.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">💵</span>
+        <div>
+          <div class="q-text"><strong>US pricing — same as AU or adjusted?</strong></div>
+          <div class="q-sub">AU pricing ~$420/mo avg MRR. US market typically supports 20–40% premium for B2B SaaS. Consider USD pricing at $499–699/mo base. Run pricing discovery in Phase 2 soft launch before locking in.</div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <span class="q-icon">🔐</span>
+        <div>
+          <div class="q-text"><strong>SOC 2 Type II — hard gate for US enterprise, soft gate for SMB</strong></div>
+          <div class="q-sub">US SMB (&lt;50 staff) won't always ask for SOC 2. US mid-market and enterprise will require it. Decision: can we start selling to US SMB before SOC 2 report is complete (Jan 2027 soft launch without report)? Risk: lose enterprise deals. Mitigation: focus Phase 2 on SMB, pursue enterprise after report.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="updated" style="text-align:right">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
+</div>
+</div>
 
 <script>
   let currentView = 'fi';
