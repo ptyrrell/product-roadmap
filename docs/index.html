@@ -305,12 +305,13 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v1.0.3</span>
+    <span class="version">v0.9.4</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
     <button class="tab" onclick="switchView('strategy', event)">🎯 Strategic Targets</button>
+    <button class="tab" onclick="switchView('inspiration', event)">💡 Inspiration</button>
   </div>
 </nav>
 
@@ -333,7 +334,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
+    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -853,7 +854,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
+    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1440,8 +1441,83 @@
     </div>
   </div>
 
-  <div class="updated" style="text-align:right">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.3</div>
+  <div class="updated" style="text-align:right">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
 </div>
+</div>
+
+<!-- ── INSPIRATION VIEW ─────────────────────────────────────────────────── -->
+<div id="view-inspiration" class="view">
+  <div class="hero">
+    <h1>💡 Inspiration</h1>
+    <p>Market ideas, signals, and thinking worth holding onto.</p>
+    <div class="updated">Last updated: 18 April 2026 &nbsp;·&nbsp; v0.9.4</div>
+  </div>
+
+  <div class="board">
+    <div class="col">
+      <div class="col-head">Market Ideas</div>
+
+      <div class="card" data-cat="product">
+        <div class="card-header">
+          <span class="card-title">⚙️ Machine Maintenance as a Service</span>
+        </div>
+        <div class="card-tags">
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge" style="background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.25)">💡 Market Signal</span>
+          <span class="badge" style="background:rgba(99,102,241,.12);color:#818cf8;border:1px solid rgba(99,102,241,.25)">🇺🇸 US Opportunity</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin:10px 0 4px">
+          Via <a href="https://x.com/zanehengsperger" target="_blank" style="color:var(--accent)">@zanehengsperger</a>
+        </p>
+        <p style="font-size:13px;line-height:1.6;margin-bottom:12px">
+          <strong>$222B/year</strong> in the US is spent on machine maintenance or repair. If one company could own this category with a software-first approach:
+        </p>
+        <ul style="font-size:13px;line-height:1.9;color:var(--text);padding-left:18px;margin-bottom:12px">
+          <li>Quarterly PMs on machines</li>
+          <li>Full service history — including history of other identical machines</li>
+          <li>Predictive maintenance via sensors or cameras</li>
+          <li>Instant spare parts ordering from integrated online store</li>
+          <li>Operator training module</li>
+          <li>AI chatbot that knows your specific machine inside out</li>
+        </ul>
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.6;color:var(--muted)">
+          <strong style="color:var(--text)">Why it's a strong bet:</strong> Robotics are scaling and maintenance is inevitable. Every repair and process gets documented with data points correlated to a specific machine — compounding tribal knowledge into a system. Hire the oldest guys with the most tribal knowledge first.
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:var(--muted)">Saved 18 Apr 2026</div>
+      </div>
+
+    </div>
+    <div class="col">
+      <div class="col-head">Relevance to FieldInsight</div>
+
+      <div class="card" data-cat="product">
+        <div class="card-header">
+          <span class="card-title">🔗 FieldInsight Overlap</span>
+        </div>
+        <div class="card-tags">
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <p style="font-size:13px;line-height:1.7;margin-bottom:10px">
+          FieldInsight already operates in the field service layer. The Machine Maintenance as a Service thesis maps directly to several potential product directions:
+        </p>
+        <ul style="font-size:13px;line-height:1.9;color:var(--text);padding-left:18px">
+          <li><strong>Asset service history</strong> — FieldInsight already tracks jobs per asset; full machine-level history is a natural extension</li>
+          <li><strong>Predictive PM scheduling</strong> — rule-based → sensor-based triggers for recurring jobs</li>
+          <li><strong>Parts ordering integration</strong> — inline parts procurement against a job</li>
+          <li><strong>Machine-specific knowledge base</strong> — AI trained on service history per asset type (HVAC, refrigeration, lifts)</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="col">
+      <div class="col-head">Add Notes</div>
+      <div class="card" data-cat="product" style="background:rgba(255,255,255,.02);border-style:dashed">
+        <p style="font-size:13px;color:var(--muted);text-align:center;padding:20px 0">
+          More ideas will appear here as they are saved.
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
