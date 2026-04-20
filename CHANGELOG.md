@@ -5,6 +5,31 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.9.7 — 2026-04-20
+
+### Added
+- **FI-022 spec — Table of Contents** at the top of `fi-22-fieldinsight-api-mcp-spec.html`. Each Area of Work now gets a sub-ticket number (FI-022.1 … FI-022.8) with a one-line description and phase tag, so the spec doubles as a work-breakdown structure:
+  - `FI-022.1` OAuth Foundation — P1 CORE
+  - `FI-022.2` Typed API Client — P2 CORE
+  - `FI-022.3` MCP Read Surface (14 tools) — P3 CORE
+  - `FI-022.4` MCP Write Tools — P4
+  - `FI-022.5` Alfred WhatsApp Integration — P4
+  - `FI-022.6` Hardening & Observability — P4
+  - `FI-022.7` OpenAPI Spec Reverse-Engineer — P4 · OPTIONAL
+  - `FI-022.8` Webhook Ingestion — P4 · OPTIONAL
+- **MCP Phase 3 read surface expanded from 6 → 14 tools** covering the full FieldInsight operational surface, grouped into four categories:
+  - **Jobs & Customers:** `list_jobs`, `get_job`, `list_customers`, `get_customer`
+  - **Operations:** `list_technicians`, `list_timesheets`, `list_assets`, `list_defects`
+  - **Financial:** `list_quotes`, `list_invoices`, `list_supplier_invoices`, `list_purchase_orders`
+  - **Catalogue:** `list_products`, `list_service_items`
+
+### Changed
+- Spec effort estimate: Phase 3 bumped from ~1–1.5 days (6 tools) to ~2–3 days (14 tools); total CORE MVP now ~3.5–5 days (was ~2.5–3 days).
+- Spec version bumped v0.1 → v0.2; roadmap site bumped v0.9.6 → v0.9.7 (nav + footer).
+- FI-022 card on index.html: Phase 3 bullet now lists the full 14-tool surface; Definition-of-Done examples widened to quotes/invoices/defects/POs to reflect the broader coverage.
+
+---
+
 ## v0.9.6 — 2026-04-20
 
 ### Added

@@ -166,17 +166,18 @@ footer a:hover{color:var(--text)}
   <div class="spec-title">FI-022 — <span>FieldInsight Public API + OAuth + MCP Server</span></div>
   <div class="spec-subtitle">Expose FieldInsight&rsquo;s REST API to Alfred, Claude Desktop, Cursor, and any other MCP-aware agent. Standard OAuth 2.0 Authorization Code Grant → secure token store → typed API client → MCP tool layer. Shipped in four phases: Phases 1–3 are CORE, Phase 4 is Nice to Have.</div>
   <div class="spec-meta">
-    <span class="meta-pill blue">📘 Spec — v0.1</span>
+    <span class="meta-pill blue">📘 Spec — v0.2</span>
     <span class="meta-pill amber">⏳ Not Started</span>
     <span class="meta-pill green">🟢 OAuth 2.0 Standard</span>
-    <span class="meta-pill">Effort: ~2.5 days MVP · ~5 days full</span>
+    <span class="meta-pill">Effort: ~3.5&ndash;5d CORE MVP &middot; ~7d full</span>
     <span class="meta-pill purple">🤖 MCP Ready</span>
     <span class="meta-pill">Owner: Paul Tyrrell</span>
   </div>
 </div>
 
 <nav class="spec-nav">
-  <a href="#overview" class="active">Overview</a>
+  <a href="#toc" class="active">Contents</a>
+  <a href="#overview">Overview</a>
   <a href="#api-facts">API Facts</a>
   <a href="#architecture">Architecture</a>
   <a href="#phases">Phases</a>
@@ -190,6 +191,72 @@ footer a:hover{color:var(--text)}
 
 <div class="spec-body">
 
+  <div id="toc">
+    <div class="sec-label">Contents</div>
+    <div class="sec-title">Areas of Work</div>
+    <div class="sec-desc">FI-022 is the umbrella ticket. Each Area of Work below is a separately assignable sub-ticket that can be built, tested, and shipped independently. Phases 1&ndash;3 are <strong style="color:var(--green)">CORE</strong>; Phase 4 items are <strong style="color:#d8b4fe">Nice to Have</strong>.</div>
+
+    <table class="api-table">
+      <thead>
+        <tr><th style="width:110px">Ticket</th><th style="width:210px">Area of Work</th><th>Brief</th><th style="width:110px">Phase</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--green)">FI-022.1</strong></td>
+          <td><a href="#phase-1" style="color:var(--text);font-weight:700;text-decoration:none">OAuth Foundation</a></td>
+          <td>Register confidential OAuth app; implement Auth Code Grant against <code>/oauth/authorize</code> + <code>/oauth/token/</code>; encrypted multi-tenant token store; auto-refresh within 5min of expiry.</td>
+          <td><span class="phase-tag core">P1 Core</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--teal)">FI-022.2</strong></td>
+          <td><a href="#phase-2" style="color:var(--text);font-weight:700;text-decoration:none">Typed API Client</a></td>
+          <td>Thin HTTP wrapper around <code>public-api/</code>; bearer token injection; 401 auto-refresh + retry; exponential backoff on 429; typed models; pagination helper.</td>
+          <td><span class="phase-tag core">P2 Core</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--blue-light)">FI-022.3</strong></td>
+          <td><a href="#phase-3" style="color:var(--text);font-weight:700;text-decoration:none">MCP Read Surface</a></td>
+          <td>Ship <code>fi-mcp</code> package exposing <strong>14 read tools</strong> covering jobs, customers, technicians, timesheets, assets, defects, quotes, invoices, supplier invoices, purchase orders, products, service items. Stdio transport for Claude Desktop / Cursor.</td>
+          <td><span class="phase-tag core">P3 Core</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#d8b4fe">FI-022.4</strong></td>
+          <td><a href="#phase-4" style="color:var(--text);font-weight:700;text-decoration:none">MCP Write Tools</a></td>
+          <td>Mutating tools: <code>create_job</code>, <code>update_job</code>, <code>complete_job</code>, <code>create_customer</code>. Every call gated by a <code>confirm=true</code> flag so agents can&rsquo;t mutate FI without explicit user acknowledgement.</td>
+          <td><span class="phase-tag nice">P4</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#d8b4fe">FI-022.5</strong></td>
+          <td><a href="#phase-4" style="color:var(--text);font-weight:700;text-decoration:none">Alfred WhatsApp Integration</a></td>
+          <td>Alfred routes natural-language FI questions (&ldquo;what jobs are on today?&rdquo;) through the MCP read tools and responds in-channel.</td>
+          <td><span class="phase-tag nice">P4</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#d8b4fe">FI-022.6</strong></td>
+          <td><a href="#phase-4" style="color:var(--text);font-weight:700;text-decoration:none">Hardening &amp; Observability</a></td>
+          <td>Structured error envelope, Sentry integration, rate-limit dashboards, redacted logs, latency histograms per endpoint.</td>
+          <td><span class="phase-tag nice">P4</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--amber)">FI-022.7</strong></td>
+          <td><a href="#phase-4" style="color:var(--text);font-weight:700;text-decoration:none">OpenAPI Spec Reverse-Engineer</a> <span class="opt-tag" style="margin-left:6px">Optional</span></td>
+          <td>Generate a canonical OpenAPI 3.1 spec from the Postman collection + observed responses, so the typed client auto-regenerates.</td>
+          <td><span class="phase-tag nice">P4</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--amber)">FI-022.8</strong></td>
+          <td><a href="#phase-4" style="color:var(--text);font-weight:700;text-decoration:none">Webhook Ingestion</a> <span class="opt-tag" style="margin-left:6px">Optional</span></td>
+          <td>Subscribe to FI webhooks (if available) and emit MCP notifications so agents react to job / invoice events in real time.</td>
+          <td><span class="phase-tag nice">P4</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout blue" style="margin-top:20px">
+      <strong>Umbrella ticket:</strong> <a href="https://ptyrrell.github.io/product-roadmap/#fi-022" style="color:var(--blue-light)">FI-022</a> on the product roadmap. Sub-tickets (FI-022.1 &hellip; FI-022.8) are defined here to keep this spec the single source of truth; they&rsquo;re picked up as standalone units of work when scheduled.
+    </div>
+  </div>
+
   <div id="overview">
     <div class="sec-label">Section 01</div>
     <div class="sec-title">Overview</div>
@@ -200,12 +267,12 @@ footer a:hover{color:var(--text)}
     <div class="summary-grid">
       <div class="sum-card"><div class="sum-label">Phase 1 · CORE</div><div class="sum-num p1">OAuth</div><div class="sum-sub">~1 day</div></div>
       <div class="sum-card"><div class="sum-label">Phase 2 · CORE</div><div class="sum-num p2">API Client</div><div class="sum-sub">~0.5–1 day</div></div>
-      <div class="sum-card"><div class="sum-label">Phase 3 · CORE</div><div class="sum-num p3">MCP Read</div><div class="sum-sub">~1–1.5 days</div></div>
+      <div class="sum-card"><div class="sum-label">Phase 3 · CORE</div><div class="sum-num p3">14 Tools</div><div class="sum-sub">~2–3 days</div></div>
       <div class="sum-card"><div class="sum-label">Phase 4 · Nice</div><div class="sum-num p4">Extras</div><div class="sum-sub">~2–3 days</div></div>
     </div>
 
     <div class="callout blue">
-      <strong>Definition of Done for CORE (Phases 1–3):</strong> From Cursor or Claude Desktop, I can ask &ldquo;list today&rsquo;s FieldInsight jobs for technician X&rdquo; and get a real answer, live, via MCP — with no FieldInsight credentials ever leaving the token service.
+      <strong>Definition of Done for CORE (Phases 1&ndash;3):</strong> From Cursor or Claude Desktop, I can ask <em>&ldquo;list today&rsquo;s jobs for tech X&rdquo;</em>, <em>&ldquo;show overdue invoices&rdquo;</em>, <em>&ldquo;what defects are open on asset ABC?&rdquo;</em>, or <em>&ldquo;list POs sent this week&rdquo;</em> and get a real answer via MCP &mdash; with no FieldInsight credentials ever leaving the token service.
     </div>
   </div>
 
@@ -303,10 +370,10 @@ footer a:hover{color:var(--text)}
         <div class="phase-num p3">3</div>
         <div class="phase-body">
           <span class="phase-tag core">Core</span>
-          <div class="phase-title">MCP Server — Read-Only Tools</div>
-          <div class="phase-desc">Expose six read-only tools to any MCP client: jobs, customers, timesheets, technicians. Ship as a standalone <code>fi-mcp</code> binary/package with a manifest. After this phase, Claude Desktop and Cursor can answer real FieldInsight questions.</div>
+          <div class="phase-title">MCP Server — 14 Read-Only Tools</div>
+          <div class="phase-desc">Expose <strong>14 read-only tools</strong> covering FieldInsight&rsquo;s full surface: jobs, customers, technicians, timesheets, assets, defects, quotes, invoices, supplier invoices, purchase orders, products, service items. Ship as standalone <code>fi-mcp</code> package. After this phase, agents can answer almost any operational question.</div>
           <div class="phase-effort">
-            <span class="ef">Effort: <strong>~1–1.5 days</strong></span>
+            <span class="ef">Effort: <strong>~2–3 days</strong></span>
             <span class="ef">Risk: <strong>Low</strong></span>
             <span class="ef">Unlocks: <strong>DoD — live answers from agents</strong></span>
           </div>
@@ -444,20 +511,41 @@ grant_type=authorization_code
   <div id="phase-3">
     <div class="sec-label">Phase 3 · CORE</div>
     <div class="sec-title">MCP Server — Read-Only Tools</div>
-    <div class="sec-desc">A standalone MCP server exposing six read-only tools. Ships as <code>fi-mcp</code> — users install it, point it at their token store, and it&rsquo;s available in Claude Desktop, Cursor, Alfred, etc.</div>
+    <div class="sec-desc">A standalone MCP server exposing <strong>14 read-only tools</strong> spanning FieldInsight&rsquo;s full operational surface — jobs, customers, technicians, timesheets, assets, defects, quotes, invoices, supplier invoices, purchase orders, products, and service items. Ships as <code>fi-mcp</code> &mdash; install, point at the token store, and it&rsquo;s available in Claude Desktop, Cursor, Alfred, and any other MCP-aware agent.</div>
 
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Jobs &amp; Customers</div>
     <div class="tool-grid">
-      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_jobs</div><div class="tool-desc">List jobs with filters: <code>status</code>, <code>date_from</code>, <code>date_to</code>, <code>technician_id</code>, <code>site_id</code>. Returns paginated typed results.</div></div>
-      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_job</div><div class="tool-desc">Fetch a single job by ID with full detail — line items, technician, status history, attached notes.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_jobs</div><div class="tool-desc">List jobs with filters: <code>status</code>, <code>date_from</code>, <code>date_to</code>, <code>technician_id</code>, <code>site_id</code>. Paginated typed results.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_job</div><div class="tool-desc">Full job by ID &mdash; line items, technician, status history, notes, linked quote/invoice/PO references.</div></div>
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_customers</div><div class="tool-desc">Search customers by name, email, phone. Returns core contact + billing fields.</div></div>
-      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_customer</div><div class="tool-desc">Full customer record including sites, contacts, assets, and recent job history.</div></div>
-      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_timesheets</div><div class="tool-desc">Timesheets filtered by technician + date range. Returns total hours, job linkage, and billing status.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_customer</div><div class="tool-desc">Full customer record &mdash; sites, contacts, assets, recent job history.</div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:18px">Operations</div>
+    <div class="tool-grid">
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_technicians</div><div class="tool-desc">Active technicians with role, skills, and current assignment count.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_timesheets</div><div class="tool-desc">Timesheets filtered by technician + date range. Total hours, job linkage, billing status.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_assets</div><div class="tool-desc">Customer assets (HVAC units, pumps, equipment) with site, model/serial, install date, warranty status, service history.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_defects</div><div class="tool-desc">Defects logged against jobs/assets &mdash; description, severity, photos, status, outstanding vs resolved, linked quote reference.</div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:18px">Financial</div>
+    <div class="tool-grid">
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_quotes</div><div class="tool-desc">Quotes filtered by status, customer, date range. Totals, linked job/defect, approval state.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_invoices</div><div class="tool-desc">Customer invoices with status (draft/sent/paid/overdue), amount, due date, linked job, payment history.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_supplier_invoices</div><div class="tool-desc">Bills received from suppliers &mdash; supplier, amount, linked PO, reconciliation status, Xero/MYOB sync state.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_purchase_orders</div><div class="tool-desc">POs with supplier, line items, status (draft/sent/received/closed), match status against supplier invoices.</div></div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:18px">Catalogue</div>
+    <div class="tool-grid">
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_products</div><div class="tool-desc">Product catalogue &mdash; parts, equipment, stock items with supplier codes, price books, margin data.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_service_items</div><div class="tool-desc">Billable service items &mdash; labour rates, callout fees, maintenance contract items with tax treatment.</div></div>
     </div>
 
     <ul class="phase-items" style="margin-top:20px">
       <li><span class="check">✓</span> MCP manifest <code>fi-mcp.json</code> — name, description, tool schemas</li>
-      <li><span class="check">✓</span> Six tool handlers wiring MCP args → Phase 2 client calls</li>
+      <li><span class="check">✓</span> 14 tool handlers wiring MCP args → Phase 2 client calls (grouped: jobs &amp; customers · operations · financial · catalogue)</li>
       <li><span class="check">✓</span> Input validation + friendly error messages for agents</li>
       <li><span class="check">✓</span> <code>stdio</code> transport for Claude Desktop / Cursor</li>
       <li><span class="check">✓</span> <code>README.md</code> with install + config steps</li>
@@ -505,7 +593,7 @@ grant_type=authorization_code
       <tbody>
         <tr><td>Phase 1 — OAuth</td><td>~1 day</td><td>1d</td><td>Can fetch tokens — nothing visible yet</td></tr>
         <tr><td>Phase 2 — API Client</td><td>~0.5–1 day</td><td>~1.5–2d</td><td>Scripts can read FI data from code</td></tr>
-        <tr><td>Phase 3 — MCP Read</td><td>~1–1.5 days</td><td><strong style="color:var(--green)">~2.5–3d (CORE DONE)</strong></td><td><strong>Cursor + Claude Desktop answer FI questions live</strong></td></tr>
+        <tr><td>Phase 3 — MCP Read (14 tools)</td><td>~2–3 days</td><td><strong style="color:var(--green)">~3.5–5d (CORE DONE)</strong></td><td><strong>Agents answer any FI operational question live</strong></td></tr>
         <tr><td>Phase 4 — Nice to Have</td><td>~2–3 days</td><td>~5–6d</td><td>Write ops, Alfred, hardening</td></tr>
       </tbody>
     </table>
@@ -536,7 +624,7 @@ grant_type=authorization_code
 </div>
 
 <footer>
-  FieldInsight Public API + OAuth + MCP Spec — FI-022 · v0.1 &nbsp;·&nbsp;
+  FieldInsight Public API + OAuth + MCP Spec — FI-022 · v0.2 &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
   <a href="https://rezzxstrv0.apidog.io/" target="_blank">FieldInsight API Docs →</a> &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/fi-02-pdf-parsing-spec.html">PDF Parsing Spec</a>
