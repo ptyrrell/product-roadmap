@@ -1,0 +1,19 @@
+---
+description: Locks the FieldInsight build standard to this repo. Applied on every edit. See AGENTS.md + fieldinsight-build-standard skill for details.
+alwaysApply: true
+---
+
+# FieldInsight — repo-locked rules
+
+Always-on. See `AGENTS.md` for rationale. Enforced on every edit:
+
+1. **Version triple must agree** — package.json version (or APP_VERSION for Python) AND server-side constant AND any UI badge / meta tag.
+2. **Run the `deploy-fieldinsight-app` skill for shipping.** Do not invent a new deploy sequence.
+3. **Run tests before commit** — `npm test` / `pytest` green.
+4. **HEREDOC commit messages** — multi-line, explain _why_.
+5. **Never commit `.env`** or raw API keys.
+6. **Update `Paul's Brain/02 Projects/Open Claw/Specs/`** when adding non-trivial features.
+7. **Voice work** — consult the `voice-stack-standard` skill first.
+8. **Never force-push** to a Heroku branch that has diverged from origin.
+
+Paul does not want to remember any of this. Do it automatically.
