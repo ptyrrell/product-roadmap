@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alfred Monitor</title>
   <link rel="icon" type="image/svg+xml" href="alfred-favicon.svg" />
-  <meta name="version" content="v1.1.0" />
+  <meta name="version" content="v1.2.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -245,16 +245,48 @@
   <!-- Dashboards -->
   <div class="card">
     <div class="card-header">
-      <span class="card-title">Dashboards</span>
+      <span class="card-title">Business apps</span>
+      <span id="personal-gate-label" style="font-size:10px;color:var(--muted)">Team visible</span>
     </div>
     <div class="dash-links">
+      <a class="dash-link" href="https://fi-two-way-comms-5c8b7580a98c.herokuapp.com/" target="_blank">🚐 Two-Way Comms (CRM)</a>
       <a class="dash-link" href="https://fi-ops-dashboard-1bc371289ab8.herokuapp.com/" target="_blank">📊 Ops Dashboard</a>
       <a class="dash-link" href="https://fi-financial-forecast-5c442469c4be.herokuapp.com/" target="_blank">💰 Financial Forecast</a>
       <a class="dash-link" href="https://fi-gmail-inbox-08bff4b3a7ed.herokuapp.com/" target="_blank">📧 Gmail Inbox</a>
-      <a class="dash-link" href="https://fi-personal-budget-4a478f2361b9.herokuapp.com/" target="_blank">💳 Personal Budget</a>
       <a class="dash-link" href="https://ptyrrell.github.io/product-roadmap/" target="_blank">🗺 Roadmap</a>
       <a class="dash-link" id="candidate-audit-link" href="#" target="_blank" style="display:none">👤 Candidate Audit (Owner)</a>
     </div>
+  </div>
+
+  <!-- Personal apps — gated by email sign-in -->
+  <div class="card" id="personal-card" style="display:none">
+    <div class="card-header">
+      <span class="card-title">🔒 Personal apps</span>
+      <button id="personal-signout" style="font-size:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:2px 8px;cursor:pointer">Sign out</button>
+    </div>
+    <div class="dash-links">
+      <a class="dash-link" href="https://fi-personal-budget-4a478f2361b9.herokuapp.com/" target="_blank">💳 Personal Budget</a>
+      <a class="dash-link" href="https://fi-ben-tracker-d64bd9f8b0a0.herokuapp.com/" target="_blank">🌱 Ben's Projects</a>
+    </div>
+  </div>
+
+  <!-- Sign-in card — visible only when personal apps are locked -->
+  <div class="card" id="personal-signin-card">
+    <div class="card-header">
+      <span class="card-title">🔒 Personal apps</span>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+      Sign in as the owner to see personal apps (Personal Budget, Ben's Projects).
+    </div>
+    <div style="display:flex;gap:6px">
+      <input id="personal-signin-email" type="email" placeholder="paul@fieldinsight.com"
+             style="flex:1;background:#0b0d14;color:#e5e7eb;border:1px solid #334155;border-radius:6px;padding:6px 10px;font-family:inherit;font-size:12px">
+      <button id="personal-signin-btn"
+              style="background:#1e293b;color:#e5e7eb;border:1px solid #334155;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer">
+        Sign in
+      </button>
+    </div>
+    <div id="personal-signin-err" style="font-size:11px;color:#f87171;margin-top:6px;display:none"></div>
     <div style="font-size:10px;color:var(--muted);margin-top:8px;padding-left:4px">
       Candidate Audit link requires your owner passphrase — enter once to unlock.
       <button id="unlock-candidate-audit" style="margin-left:8px;background:#1e293b;color:#e5e7eb;border:1px solid #334155;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer">Unlock</button>
@@ -262,6 +294,7 @@
   </div>
   <script>
     (function(){
+      // ── Candidate Audit passphrase unlock (unchanged) ──
       var key = 'paul_secret';
       var stored = localStorage.getItem(key) || '';
       function applyKey(paul){
@@ -274,6 +307,51 @@
       document.getElementById('unlock-candidate-audit').addEventListener('click', function(){
         var p = prompt('Enter owner passphrase to unlock Candidate Audit:');
         if (p) { localStorage.setItem(key, p); applyKey(p); }
+      });
+
+      // ── Personal apps — email-gated ──
+      // Not a security boundary (static site, localStorage visible to user).
+      // It's a personalisation filter — keeps personal apps out of the default
+      // view for team members / demos. Real auth comes with Phase 3 (Clerk).
+      var OWNER_EMAIL = 'paul@fieldinsight.com';
+      var EMAIL_KEY   = 'personal_signin_email';
+      var cardOn   = document.getElementById('personal-card');
+      var cardOff  = document.getElementById('personal-signin-card');
+      var label    = document.getElementById('personal-gate-label');
+      var emailInp = document.getElementById('personal-signin-email');
+      var errEl    = document.getElementById('personal-signin-err');
+
+      function showSignedIn(){
+        cardOn.style.display  = '';
+        cardOff.style.display = 'none';
+        if (label) label.textContent = 'Signed in as ' + OWNER_EMAIL;
+      }
+      function showSignedOut(){
+        cardOn.style.display  = 'none';
+        cardOff.style.display = '';
+        if (label) label.textContent = 'Team visible';
+      }
+
+      var saved = (localStorage.getItem(EMAIL_KEY) || '').toLowerCase();
+      if (saved === OWNER_EMAIL) showSignedIn(); else showSignedOut();
+
+      document.getElementById('personal-signin-btn').addEventListener('click', function(){
+        var v = (emailInp.value || '').trim().toLowerCase();
+        if (v === OWNER_EMAIL) {
+          localStorage.setItem(EMAIL_KEY, v);
+          errEl.style.display = 'none';
+          showSignedIn();
+        } else {
+          errEl.textContent = 'Only the owner can view personal apps.';
+          errEl.style.display = '';
+        }
+      });
+      emailInp.addEventListener('keydown', function(e){
+        if (e.key === 'Enter') document.getElementById('personal-signin-btn').click();
+      });
+      document.getElementById('personal-signout').addEventListener('click', function(){
+        localStorage.removeItem(EMAIL_KEY);
+        showSignedOut();
       });
     })();
   </script>
