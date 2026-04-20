@@ -20,6 +20,13 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.9.7 — 2026-04-20
+
+### Changed
+- **All site versions synced to v0.9.7** — nav badge, footer, and every "Last updated" hero stamp across `index.html` and `apps.html` now display the same version string. Previous inconsistencies: footer drifted to v0.9.9 at one point, Personal hero was stuck at v0.9.4, FieldInsight/Strategic/Inspiration heroes stamped v1.0.4. All aligned so any visible version number confirms you're looking at the latest deploy.
+
+---
+
 ## v0.9.5 — 2026-04-20
 
 ### Added
