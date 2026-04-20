@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Roadmap</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
   <style>
     :root {
       --bg: #0f1117;
@@ -45,6 +47,7 @@
     .spacer { flex: 1; }
     .tab-bar { display: flex; gap: 4px; }
     .tab { padding: 6px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
+    .tab-link { text-decoration: none; display: inline-flex; align-items: center; }
     .tab:hover { color: var(--text); background: var(--surface2); }
     .tab.active { background: var(--accent); color: #fff; }
 
@@ -305,13 +308,14 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.9.4</span>
+    <span class="version">v0.9.5</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
     <button class="tab" onclick="switchView('personal', event)">Personal</button>
     <button class="tab" onclick="switchView('strategy', event)">🎯 Strategic Targets</button>
     <button class="tab" onclick="switchView('inspiration', event)">💡 Inspiration</button>
+    <a class="tab tab-link" href="apps.html">🚀 All Apps</a>
   </div>
 </nav>
 
@@ -334,7 +338,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
+    <div class="updated">Last updated: 20 April 2026 &nbsp;·&nbsp; v1.0.4</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -833,6 +837,31 @@
           <li>Twilio Conversations API — thread-per-booking</li>
         </ul></div>
       </div>
+
+      <div class="card" data-cat="product infra alfred">
+        <div class="ticket-id">FI-022</div>
+        <div class="card-title">🔌 FieldInsight Public API + OAuth + MCP Server</div>
+        <div class="card-desc">Bridge the FieldInsight Public API into Alfred, Claude Desktop, Cursor, and any MCP-aware agent. Standard OAuth 2.0 Authorization Code Grant → encrypted token store → typed API client → MCP tool layer. Staged in four phases — Phases 1–3 are CORE, Phase 4 is Nice to Have. ~2.5-day MVP to first live agent query.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge" style="background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.35)">🔌 MCP</span>
+          <span class="badge" style="background:rgba(251,146,60,0.1);color:#fb923c;border:1px solid rgba(251,146,60,0.3)">🔐 OAuth 2.0</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Why now:</strong> Alfred, Cursor, and Claude Desktop can't read FieldInsight data today — no jobs, customers, or timesheets. One clean OAuth + MCP bridge unlocks every agent we own.</li>
+          <li><strong>API shape (confirmed):</strong> REST over HTTPS · base <code>https://app.fieldinsight.com/public-api/</code> · OAuth 2.0 Authorization Code Grant · 10-hour access tokens · refresh tokens supported · <a href="https://rezzxstrv0.apidog.io/" target="_blank" style="color:#00e5b0">apidog docs →</a></li>
+          <li><strong>Phase 1 · CORE — OAuth Foundation (~1 day):</strong> register app · <code>/oauth/authorize</code> redirect · <code>/oauth/token/</code> exchange · encrypted multi-tenant token store · auto-refresh within 5min of expiry</li>
+          <li><strong>Phase 2 · CORE — Typed API Client (~0.5–1 day):</strong> wraps public-api · auto-refresh on 401 · exponential backoff on 429 · typed models for Job / Customer / Timesheet / Site / Technician · pagination helper</li>
+          <li><strong>Phase 3 · CORE — MCP Read Tools (~1–1.5 days):</strong> <code>list_jobs</code> · <code>get_job</code> · <code>list_customers</code> · <code>get_customer</code> · <code>list_timesheets</code> · <code>list_technicians</code> — shipped as a standalone <code>fi-mcp</code> package with manifest + README</li>
+          <li><strong>🟢 Definition of Done (end of Phase 3):</strong> From Cursor or Claude Desktop, ask <em>"list today's FieldInsight jobs for technician X"</em> and get a real answer via MCP — no credentials leave the token service.</li>
+          <li><strong>Phase 4 · Nice to Have (~2–3 days):</strong> write-capable tools (create / update / complete job, guarded by <code>confirm=true</code>) · Alfred WhatsApp integration · production hardening · OPTIONAL items: reverse-engineered OpenAPI spec, webhook ingestion, photo-attach tool, Prometheus metrics, one-line installer</li>
+          <li><strong>Known risks:</strong> no OpenAPI spec · no sandbox (use throwaway tenant) · undocumented rate limits · app approval may slip schedule · webhook support unknown</li>
+          <li>📐 <a href="fi-22-fieldinsight-api-mcp-spec.html" style="color:#a5b4fc"><strong>Full Spec — FI-022 OAuth + MCP →</strong></a> &nbsp;·&nbsp; <a href="https://rezzxstrv0.apidog.io/" target="_blank" style="color:#a5b4fc">FieldInsight API Docs →</a> &nbsp;·&nbsp; <a href="https://help.fieldinsight.com/en/articles/5507528-job-api" target="_blank" style="color:#a5b4fc">Help Center — Job API →</a></li>
+        </ul></div>
+      </div>
     </div>
 
     <!-- DONE -->
@@ -854,7 +883,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
+    <div class="updated">Last updated: 20 April 2026 &nbsp;·&nbsp; v1.0.4</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1219,7 +1248,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.9.9 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.9.5 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 25 March 2026
   &nbsp;·&nbsp;
@@ -1441,7 +1470,7 @@
     </div>
   </div>
 
-  <div class="updated" style="text-align:right">Last updated: 24 March 2026 &nbsp;·&nbsp; v1.0.2</div>
+  <div class="updated" style="text-align:right">Last updated: 20 April 2026 &nbsp;·&nbsp; v1.0.4</div>
 </div>
 </div>
 

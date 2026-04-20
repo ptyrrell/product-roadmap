@@ -5,23 +5,154 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
-## v1.0.3 — 2026-03-24
+## v0.9.5 — 2026-04-20
 
 ### Added
-- FI-004: CSV Batch Invoice Import spec page (`fi-04-csv-batch-invoice-import-spec.html`) — covers the two supplier CSV formats (Selected-Invoices header-based, SMARTBIZ positional), 3-layer detection sniff, supplier ABN memory (localStorage), 9-state queue lifecycle, edge-case table, live smoke-test against real Benash files, and build phases
-- Bill Importer card: now lists all three specs (FI-002 PDF Parsing, FI-003 Batch Bill, FI-004 CSV Import) plus Live Prototype link, and shows v1.4.0 prototype version badge
+- **All Apps page** (`apps.html`) — single landing page linking every live FieldInsight prototype, dashboard, and personal tool. Grouped: FieldInsight (Two-Way Comms, Supplier PO, Gmail Inbox, AI Job Prompter, Smart Scheduler, Voice Logger, Financial Forecast), Dashboards (Meridian Ops, SDR+AE Scorecard, Business Metrics, Cashflow Growth, Alfred Monitor, Customer Ideas), Personal (Budget, Meridian sign-in, Alfred). Filter chips: All / FieldInsight / Dashboards / Personal / Live Only.
+- **🚀 All Apps** tab in the main nav, linking to `apps.html`
+- **Favicon** — redesigned `favicon.svg`: dashed roadmap path with three milestone dots (green start, orange waypoint, red destination) and a flag marker. Linked in `<head>` on both `index.html` and `apps.html`.
+- `Cache-Control: no-cache` meta tag so users always see the latest version without hard refresh
 
-### Previous (same version)
-- FI-003: Batch Bill Import spec page (`fi-03-multi-bill-import-spec.html`)
-- FI-003 card: 📐 Batch Bill Import Spec link
+### Changed
+- Nav version badge bumped to v0.9.5 (from v0.9.4)
+- Footer version aligned to v0.9.5 (from v0.9.9 — footer was out of sync with nav; now aligned downwards for a single truth)
 
 ---
 
-## v1.0.2 — 2026-03-24
+## v0.8.9 — 2026-04-20
 
 ### Added
-- FI-002: PDF Parsing Spec page (`fi-02-pdf-parsing-spec.html`) — full visual HTML spec covering Claude Vision architecture, invoice + statement parsers, tiered matching logic, cost model, error handling, security, and roadmap
-- FI-002 card: added 📐 PDF Parsing Spec link alongside Live Prototype + GitHub
+- **FI-033: FieldInsight Public API + OAuth + MCP Server** — new ticket in the Next column plus a full staged spec page at `fi-33-fieldinsight-api-mcp-spec.html`
+  - Four-phase delivery plan: Phases 1–3 are **CORE** (OAuth foundation, typed API client, MCP read-only tools), Phase 4 is **Nice to Have** (write tools, Alfred integration, hardening)
+  - Individual items tagged **OPTIONAL** where appropriate
+  - Based on FieldInsight's public OAuth 2.0 Authorization Code Grant flow (apidog docs) — 10-hour access tokens, refresh tokens supported, base URL `https://app.fieldinsight.com/public-api/`
+  - ~2.5-day MVP estimate to first live agent query from Cursor / Claude Desktop / Alfred
+  - Risk register covers missing OpenAPI spec, no sandbox, undocumented rate limits
+
+---
+
+## v0.8.8 — 2026-04-12
+
+### Added
+- Hero market stats bar: $6.21B FSM market · 93% AI adoption · 34% productivity gain · TTAN -57.9%
+- FI-032: AI Labour Replacement Index — per-agent headcount replacement table, 20-tech TCO comparison, ROI Guarantee pilot framework, SDR calculator concept
+- FI-023: Major pricing rewrite — full 2026 market pricing comparison (TTAN / Fieldproxy / Jobber / FieldCommerce / Service Fusion / FieldInsight), FI-Token cost-per-action breakdown, TCO head-to-head, 2026 hybrid pricing research citations
+
+### Changed
+- FI-013: Expanded from stub to full AI Dispatch spec — 20+ dispatch variables, route optimisation, ANZ-specific routing, FI-Token cost, headcount replacement case
+- FI-023: Title updated to reflect pricing innovation leadership; expanded with competitor data, token economics, TCO numbers
+
+---
+
+## v0.8.7 — 2026-04-12
+
+### Added
+- `meridian-auth.js`: Shared authentication guard for all pages — session check, redirect to login, Meridian nav bar injection
+- `meridian-login.html`: The Meridian branded login page — dark theme, Google OAuth, animated grid background, platform chip list
+- All 10 pages now protected: index, ai-conquest, sdr-dashboard, business-dashboard, cashflow-growth, fi-advantage, voice-spec, fi-02-pdf-parsing-spec, fi-03-multi-bill-import-spec, customer-ideas
+- Sign-in once → access all pages; session shared via `localStorage`; auto-redirect back after login
+- Meridian nav bar injected into every page (Roadmap · AI Conquest · SDR Board · Business · Cashflow)
+
+### Changed
+- `ai-conquest.html`: Removed per-page Google GSI login gate; now uses shared Meridian session; topbar sign-out wired to `meridianSignOut()`; topbar and sidebar offsets updated for Meridian nav bar
+
+---
+
+## v0.8.6 — 2026-04-12
+
+### Added
+- `ai-conquest.html`: Internal AI Conquest strategy hub — Google OAuth gate (@fieldinsight.com only)
+  - 7-priority migration conquest table with effort/impact ratings
+  - Platform extraction matrix: simPRO (API), ServiceM8 (API), Tradify (CSV), AroFlo, Fergus, Generic
+  - AI Expansion vs Fieldproxy 10-row comparison table with FI-Token pricing
+  - Auto Job Request Processing: Email / SMS / Web Form / VOIP flows
+  - Gemini Local: offline AI client — online + offline mode comparison
+  - CRM Phone Reception + NEC PBX SIP integration
+  - PPM Scheduling: visual monthly calendar mock with 4 techs
+  - Allocation Engine: Auto Allocate AI + visual drag-and-drop PPM planner
+  - Sidebar navigation + sticky topbar + scrollspy active states
+  - Session persistence via localStorage with JWT expiry check
+- FI-026: AI Conquest Hub card (live, auth-gated)
+- FI-027: Gemini Local offline AI client for field techs
+- FI-028: CRM Phone Reception + NEC PBX integration
+- FI-029: PPM Scheduling + visual monthly calendar
+- FI-030: Allocation Engine (Auto Allocate + Visual PPM Planner)
+- FI-031: Migration Conquest (simPRO/ServiceM8/Tradify/AroFlo/Fergus)
+- Nav: "⚔️ AI Conquest" button added to roadmap header
+
+---
+
+## v0.8.5 — 2026-04-12
+
+### Added
+- `fi-advantage.html` — FieldInsight "Why FieldInsight" competitive marketing page (live at /fi-advantage.html)
+  - Hero with AU $500 flat pricing headline, proof stats, CTAs
+  - Pain points: Per-User Fees, Six-Month Onboarding, Rigid Workflows, Growth Penalties
+  - 8 AI Agents with status badges (Scheduler, Booking, Voice, Dispatch, Document, Inbox, Knowledge, Insights)
+  - 16-item solutions grid covering full FSM lifecycle
+  - ANZ competitive advantage section: data moat, stitched intelligence, compounding accuracy
+  - Head-to-head comparison table: FieldInsight vs TTAN vs simPRO vs Fieldproxy
+  - 14 industries inc. Electrical (primary)
+  - Pricing: AU $299 Starter / AU $500 Growth (unlimited users) / Enterprise custom
+  - FI-Tokens model explained with per-action token costs
+- `fieldinsight_thesis.pdf` + `fieldinsight_thesis.md` added to docs (links from FI-020)
+- FI-025: FieldInsight AI Positioning Page card
+- FI-023: Updated with full FI-Tokens pricing model (AU $500 flat + consumption-based AI tokens)
+- FI-020: Fieldproxy confirmed full profile (solutions, AI agents, industries, "Ditch the Dinosaurs" tagline)
+- Nav: "Why FieldInsight" button added to roadmap nav
+
+---
+
+## v0.8.4 — 2026-04-12
+
+### Added
+- FI-020: Replaced with full 10-page Competitive Threat & Opportunity Thesis (Perplexity Computer, April 2026)
+  - TTAN deep dive: financial metrics, Atlas AI moat, structural vulnerabilities, stock analysis (-57.9% from ATH)
+  - simPRO deep dive: ANZ incumbent, commercial-project bias, reactive maintenance weakness, AI gap
+  - Fieldproxy deep dive: YC W2022, $649/mo flat, $1M USD funded, ANZ compliance gaps, threat level assessment
+  - AI disruption wave: organises labour vs replaces labour, per-tech pricing liability, implementation tax
+  - Capital markets signal: HUBS -64%, CRM -33%, PLTR +36% — workflow SaaS vs data+AI re-rating
+  - Palantir analogy: system of record + proprietary data = compounding AI moat
+  - Full threat matrix (7 threats with probability/impact/timeframe)
+  - Full opportunity matrix (8 opportunities with urgency/potential)
+- FI-021: simPRO Refugee Campaign — reactive/maintenance operator beachhead, migration tooling, comparison SEO
+- FI-022: ANZ Compliance Layer — AS/NZS 3000, CCEW, WHS, licensing verification — no competitor owns this
+- FI-023: Pricing Innovation — flat-fee tiers ($499/20 techs, $899/40 techs), outcome-linked pilots
+- FI-024: Data Moat Infrastructure — ANZ electrical benchmarking, anonymised industry reports, AI training data
+
+---
+
+## v0.8.3 — 2026-04-12
+
+### Updated
+- FI-020: Expanded with full competitive analysis
+  - Added "complexity liability" problem — TTAN depth becoming a liability, 30% feature usage, 1–2 week vs 2–3 month onboarding
+  - Added SMB budget squeeze — same segment as HubSpot, ROI case for $250–350k/year weakens with AI tools
+  - Added TTAN counter-moat section — Atlas AI, Pro Products (Contact Center Pro, Dispatch Pro, Field Pro), industry data argument
+  - Added verdict: structural and accelerating threat, 58% TTAN drawdown, execution speed is the question
+
+---
+
+## v0.8.2 — 2026-04-12
+
+### Added
+- FI-020: The AI Threat — Greenfield Disruption (competitive intel card)
+  - Documents AI-native competitor model (Fieldproxy) and threat to traditional FSM software
+  - Fieldproxy claims: 34% more jobs/tech, 60% fewer missed calls, 40–60% lower operational cost vs TTAN
+  - Maps FieldInsight's current in-flight work (FI-001, FI-009, FI-016, FI-017, FI-018) against the threat
+  - Identifies gaps: AI dispatching/auto-assign engine, zero-touch invoicing, AI pricing suggestions
+  - Strategic read: speed is the risk — greenfield SMB customers may default to AI-native tools
+- Added Meridian Dashboard nav button + FI-007 Meridian link (from v1.0.4 merge)
+
+---
+
+## v1.0.4 — 2026-04-09
+
+### Changed
+- FI-019: Renamed to "Email Threaded Conversations — Job Management" — reflects the true scope of this feature (not just a Gmail inbox, but full job-linked thread management)
+- FI-019: Updated description to reflect Gmail OAuth live, RFC 2822 invisible threading approach, and next build steps
+- FI-019: Outcomes updated with ✅ completed, 🔨 in-progress, and ⏳ upcoming milestones
+- FieldInsight roadmap date updated to 9 April 2026, v1.0.4
 
 ---
 
@@ -87,4 +218,3 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 ---
 
 <!-- New entries go at the top -->
-
