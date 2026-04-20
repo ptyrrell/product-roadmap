@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FieldInsight Public API + OAuth + MCP — FI-022</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta http-equiv="Cache-Control" content="no-cache">
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--surface3:#191d2a;
+  --border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --blue:#6366f1;--blue-light:#a5b4fc;--blue-glow:rgba(99,102,241,.18);
+  --green:#10d990;--green-bg:rgba(16,217,144,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --teal:#06b6d4;--purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+  --font:'Inter var',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+.spec-header{background:linear-gradient(160deg,#0b0d1a 0%,#0f1128 60%,#13102a 100%);border-bottom:1px solid var(--border);padding:48px 40px 40px;position:relative;overflow:hidden}
+.spec-header::before{content:'';position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(99,102,241,.12) 0%,transparent 70%);pointer-events:none}
+.spec-header::after{content:'';position:absolute;bottom:-80px;left:20%;width:500px;height:300px;background:radial-gradient(ellipse,rgba(16,217,144,.05) 0%,transparent 70%);pointer-events:none}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.spec-breadcrumb a{color:var(--blue-light);text-decoration:none}
+.spec-breadcrumb a:hover{text-decoration:underline}
+.spec-title{font-size:32px;font-weight:800;letter-spacing:-.8px;color:#fff;line-height:1.2;position:relative;z-index:1}
+.spec-title span{color:var(--blue-light)}
+.spec-subtitle{font-size:15px;color:var(--muted);margin-top:8px;position:relative;z-index:1;max-width:720px}
+.spec-meta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.blue{background:var(--blue-glow);border-color:rgba(99,102,241,.35);color:var(--blue-light)}
+.meta-pill.green{background:var(--green-bg);border-color:rgba(16,217,144,.25);color:var(--green)}
+.meta-pill.amber{background:var(--amber-bg);border-color:rgba(245,158,11,.3);color:var(--amber)}
+.meta-pill.purple{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#d8b4fe}
+
+nav.spec-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100}
+nav.spec-nav a{display:block;padding:14px 16px;font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
+nav.spec-nav a:hover{color:var(--text);border-bottom-color:var(--border2)}
+nav.spec-nav a.active{color:var(--blue-light);border-bottom-color:var(--blue)}
+
+.spec-body{max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:56px}
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--blue-light);margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.4px;color:#fff;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);max-width:760px;line-height:1.7;margin-bottom:24px}
+
+.callout{border-radius:var(--r);padding:16px 18px;border-left:3px solid;margin:16px 0;font-size:13px}
+.callout.blue{background:var(--blue-glow);border-color:var(--blue);color:var(--blue-light)}
+.callout.green{background:var(--green-bg);border-color:var(--green);color:#6ee7b7}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout strong{color:inherit;font-weight:700}
+
+.arch-diagram{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:32px;overflow-x:auto}
+.arch-flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;min-width:720px}
+.arch-node{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:14px 18px;text-align:center;min-width:110px;flex-shrink:0}
+.arch-node.client{background:rgba(6,182,212,.08);border-color:rgba(6,182,212,.3)}
+.arch-node.oauth{background:rgba(251,146,60,.08);border-color:rgba(251,146,60,.3)}
+.arch-node.mcp{background:var(--blue-glow);border-color:rgba(99,102,241,.4)}
+.arch-node.fi{background:rgba(16,217,144,.08);border-color:rgba(16,217,144,.3)}
+.arch-node.ai{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.35)}
+.arch-icon{font-size:22px;display:block;margin-bottom:4px}
+.arch-name{font-size:11px;font-weight:700;color:var(--text)}
+.arch-role{font-size:9px;color:var(--muted);margin-top:2px}
+.arch-arrow{font-size:18px;color:var(--border2);padding:0 6px;flex-shrink:0}
+.arch-arrow.fwd::before{content:'→'}
+
+.call-flow{display:flex;flex-direction:column;gap:0}
+.cf-step{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-left:2px solid var(--border);padding-left:20px;margin-left:16px;position:relative}
+.cf-step:last-child{border-left-color:transparent}
+.cf-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;position:absolute;left:-15px;top:16px}
+.cf-dot.blue{background:var(--blue);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.green{background:var(--green);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.purple{background:var(--purple);color:#fff;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.amber{background:var(--amber);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-dot.teal{background:var(--teal);color:#000;box-shadow:0 0 0 4px var(--bg)}
+.cf-body{padding-left:4px;flex:1}
+.cf-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.cf-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.cf-code{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11px;color:#93c5fd;margin-top:8px;overflow-x:auto;line-height:1.5;white-space:pre}
+
+.api-table{width:100%;border-collapse:collapse}
+.api-table thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+.api-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.api-table tbody tr{border-bottom:1px solid var(--border)}
+.api-table tbody tr:last-child{border-bottom:none}
+.api-table tbody tr:hover{background:var(--surface2)}
+.api-table td{padding:10px 14px;font-size:12px;vertical-align:top;color:var(--muted)}
+.api-table td:first-child{color:var(--text)}
+.endpoint{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#93c5fd}
+
+.phase-grid{display:flex;flex-direction:column;gap:14px}
+.phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;display:flex;gap:18px;position:relative;overflow:hidden}
+.phase::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.phase.core::after{background:linear-gradient(90deg,var(--blue),var(--teal))}
+.phase.nice::after{background:linear-gradient(90deg,var(--purple),var(--amber))}
+.phase-num{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0}
+.phase-num.p1{background:rgba(16,217,144,.15);color:var(--green)}
+.phase-num.p2{background:rgba(6,182,212,.15);color:var(--teal)}
+.phase-num.p3{background:rgba(99,102,241,.15);color:var(--blue-light)}
+.phase-num.p4{background:rgba(168,85,247,.15);color:#d8b4fe}
+.phase-body{flex:1;min-width:0}
+.phase-tag{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:2px 8px;border-radius:4px;margin-bottom:6px}
+.phase-tag.core{background:rgba(16,217,144,.12);color:var(--green);border:1px solid rgba(16,217,144,.3)}
+.phase-tag.nice{background:rgba(168,85,247,.12);color:#d8b4fe;border:1px solid rgba(168,85,247,.3)}
+.phase-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px}
+.phase-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.phase-effort{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:11px}
+.phase-effort .ef{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:3px 10px;color:var(--muted)}
+.phase-effort .ef strong{color:var(--text);font-weight:700}
+.phase-items{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.phase-items li{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--muted);display:flex;align-items:flex-start;gap:8px}
+.phase-items li .check{color:var(--green);flex-shrink:0;font-weight:800}
+.phase-items li.opt{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)}
+.phase-items li.opt .check{color:var(--amber)}
+.opt-tag{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;padding:1px 6px;border-radius:3px;margin-left:auto;flex-shrink:0;background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.tool-card.read{border-left:3px solid var(--blue)}
+.tool-card.write{border-left:3px solid var(--amber)}
+.tool-name{font-family:monospace;font-size:12px;font-weight:700;color:#93c5fd;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.tool-name .dot{width:6px;height:6px;border-radius:50%}
+.tool-name .dot.read{background:var(--blue)}
+.tool-name .dot.write{background:var(--amber)}
+.tool-desc{font-size:11.5px;color:var(--muted);line-height:1.55}
+
+pre.code-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;font-family:'SF Mono',Monaco,'Cascadia Code',monospace;font-size:11.5px;line-height:1.6;overflow-x:auto;color:#e2e8f0;white-space:pre}
+pre.code-block .comment{color:#4a5578}
+pre.code-block .key{color:#93c5fd}
+pre.code-block .val{color:#6ee7b7}
+pre.code-block .str{color:#fde68a}
+pre.code-block .kw{color:#c084fc}
+
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:800px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.sum-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.sum-num{font-size:22px;font-weight:900;letter-spacing:-.5px;margin:4px 0}
+.sum-num.p1{color:var(--green)}
+.sum-num.p2{color:var(--teal)}
+.sum-num.p3{color:var(--blue-light)}
+.sum-num.p4{color:#d8b4fe}
+.sum-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+.sum-sub{font-size:11px;color:var(--dim);margin-top:3px}
+
+footer{text-align:center;padding:32px 40px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+</style>
+  <script src="meridian-auth.js"></script>
+</head>
+<body>
+
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="https://rezzxstrv0.apidog.io/" target="_blank">FieldInsight Public API Docs</a>
+    <span>›</span>
+    <span>OAuth + MCP Spec</span>
+  </div>
+  <div class="spec-title">FI-022 — <span>FieldInsight Public API + OAuth + MCP Server</span></div>
+  <div class="spec-subtitle">Expose FieldInsight&rsquo;s REST API to Alfred, Claude Desktop, Cursor, and any other MCP-aware agent. Standard OAuth 2.0 Authorization Code Grant → secure token store → typed API client → MCP tool layer. Shipped in four phases: Phases 1–3 are CORE, Phase 4 is Nice to Have.</div>
+  <div class="spec-meta">
+    <span class="meta-pill blue">📘 Spec — v0.1</span>
+    <span class="meta-pill amber">⏳ Not Started</span>
+    <span class="meta-pill green">🟢 OAuth 2.0 Standard</span>
+    <span class="meta-pill">Effort: ~2.5 days MVP · ~5 days full</span>
+    <span class="meta-pill purple">🤖 MCP Ready</span>
+    <span class="meta-pill">Owner: Paul Tyrrell</span>
+  </div>
+</div>
+
+<nav class="spec-nav">
+  <a href="#overview" class="active">Overview</a>
+  <a href="#api-facts">API Facts</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#phases">Phases</a>
+  <a href="#phase-1">Phase 1 · OAuth</a>
+  <a href="#phase-2">Phase 2 · API Client</a>
+  <a href="#phase-3">Phase 3 · MCP</a>
+  <a href="#phase-4">Phase 4 · Nice to Have</a>
+  <a href="#effort">Effort</a>
+  <a href="#risks">Risks</a>
+</nav>
+
+<div class="spec-body">
+
+  <div id="overview">
+    <div class="sec-label">Section 01</div>
+    <div class="sec-title">Overview</div>
+    <div class="sec-desc">
+      FieldInsight exposes a RESTful Public API secured by OAuth 2.0. Today nothing at Open Claw consumes it — Alfred can&rsquo;t read jobs, Cursor can&rsquo;t touch customer records, Claude Desktop can&rsquo;t answer &ldquo;which jobs are on today?&rdquo;. This spec scopes a minimal, secure bridge: an OAuth token service, a typed API client, and an MCP server that exposes FieldInsight as callable tools to any MCP-aware agent.
+    </div>
+
+    <div class="summary-grid">
+      <div class="sum-card"><div class="sum-label">Phase 1 · CORE</div><div class="sum-num p1">OAuth</div><div class="sum-sub">~1 day</div></div>
+      <div class="sum-card"><div class="sum-label">Phase 2 · CORE</div><div class="sum-num p2">API Client</div><div class="sum-sub">~0.5–1 day</div></div>
+      <div class="sum-card"><div class="sum-label">Phase 3 · CORE</div><div class="sum-num p3">MCP Read</div><div class="sum-sub">~1–1.5 days</div></div>
+      <div class="sum-card"><div class="sum-label">Phase 4 · Nice</div><div class="sum-num p4">Extras</div><div class="sum-sub">~2–3 days</div></div>
+    </div>
+
+    <div class="callout blue">
+      <strong>Definition of Done for CORE (Phases 1–3):</strong> From Cursor or Claude Desktop, I can ask &ldquo;list today&rsquo;s FieldInsight jobs for technician X&rdquo; and get a real answer, live, via MCP — with no FieldInsight credentials ever leaving the token service.
+    </div>
+  </div>
+
+  <div id="api-facts">
+    <div class="sec-label">Section 02</div>
+    <div class="sec-title">FieldInsight API — The Facts</div>
+    <div class="sec-desc">Pulled from the Fieldinsight Public API documentation (apidog) and the Help Center &ldquo;Job API&rdquo; article.</div>
+
+    <table class="api-table">
+      <thead><tr><th>Property</th><th>Value</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Protocol</td><td>REST + HTTPS</td><td>JSON over HTTPS only</td></tr>
+        <tr><td>Base URL</td><td><span class="endpoint">https://app.fieldinsight.com/public-api/</span></td><td>All protected endpoints live here</td></tr>
+        <tr><td>Authorize URL</td><td><span class="endpoint">https://app.fieldinsight.com/oauth/authorize</span></td><td>User consent page</td></tr>
+        <tr><td>Token URL</td><td><span class="endpoint">https://app.fieldinsight.com/oauth/token/</span></td><td>Exchange code, refresh token</td></tr>
+        <tr><td>Grant Type</td><td>Authorization Code Grant</td><td>Confidential client · server-side only</td></tr>
+        <tr><td>Access Token TTL</td><td><strong style="color:var(--green)">10 hours</strong></td><td>Generous — most APIs give 1hr</td></tr>
+        <tr><td>Refresh Token</td><td>Yes</td><td>Long-lived, one per user/tenant</td></tr>
+        <tr><td>Auth Header</td><td><span class="endpoint">Authorization: Bearer &lt;token&gt;</span></td><td>On every API call</td></tr>
+        <tr><td>Sandbox</td><td>Not documented</td><td>Use a throwaway FieldInsight tenant for dev</td></tr>
+        <tr><td>Rate Limits</td><td>Not documented</td><td>Plan for exponential backoff on 429</td></tr>
+        <tr><td>OpenAPI / Swagger</td><td>No</td><td>Only apidog + a Postman collection</td></tr>
+        <tr><td>Webhooks</td><td>Unknown</td><td>Not mentioned publicly</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout amber" style="margin-top:20px">
+      <strong>Source links:</strong>
+      <a href="https://rezzxstrv0.apidog.io/" target="_blank" style="color:#fde68a;text-decoration:underline">apidog Public API docs</a> ·
+      <a href="https://rezzxstrv0.apidog.io/doc-667093" target="_blank" style="color:#fde68a;text-decoration:underline">Authorization</a> ·
+      <a href="https://help.fieldinsight.com/en/articles/5507528-job-api" target="_blank" style="color:#fde68a;text-decoration:underline">Help Center — Job API</a> ·
+      <a href="https://documenter.getpostman.com/view/14754452/TWDdjDgZ" target="_blank" style="color:#fde68a;text-decoration:underline">Postman collection</a>
+    </div>
+  </div>
+
+  <div id="architecture">
+    <div class="sec-label">Section 03</div>
+    <div class="sec-title">Architecture</div>
+    <div class="sec-desc">Three logical layers. Tokens never cross into the agent or browser. The agent talks MCP; MCP talks to an internal API client; the API client talks to FieldInsight with a bearer token fetched from an encrypted token store.</div>
+
+    <div class="arch-diagram">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:20px;text-align:center">Request Flow — Agent → FieldInsight</div>
+      <div class="arch-flow">
+        <div class="arch-node ai"><span class="arch-icon">🤖</span><div class="arch-name">Agent</div><div class="arch-role">Claude · Cursor · Alfred</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node mcp"><span class="arch-icon">🔌</span><div class="arch-name">MCP Server</div><div class="arch-role">fi-mcp · Phase 3</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node client"><span class="arch-icon">⚙️</span><div class="arch-name">API Client</div><div class="arch-role">Typed · Phase 2</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node oauth"><span class="arch-icon">🔐</span><div class="arch-name">Token Store</div><div class="arch-role">Encrypted · Phase 1</div></div>
+        <div class="arch-arrow fwd"></div>
+        <div class="arch-node fi"><span class="arch-icon">🟢</span><div class="arch-name">FieldInsight</div><div class="arch-role">public-api/</div></div>
+      </div>
+      <div style="margin-top:20px;font-size:11px;color:var(--muted);text-align:center">
+        Token store auto-refreshes on 401 · API client retries once · MCP tool returns clean JSON to the agent
+      </div>
+    </div>
+  </div>
+
+  <div id="phases">
+    <div class="sec-label">Section 04</div>
+    <div class="sec-title">Delivery Phases</div>
+    <div class="sec-desc">Phases 1–3 are the <strong style="color:var(--green)">CORE</strong> scope — nothing is demonstrable until all three ship. Phase 4 is <strong style="color:#d8b4fe">Nice to Have</strong>. Individual items can also be tagged <strong style="color:var(--amber)">OPTIONAL</strong> — they live inside a phase but can be dropped without breaking the definition of done.</div>
+
+    <div class="phase-grid">
+      <div class="phase core">
+        <div class="phase-num p1">1</div>
+        <div class="phase-body">
+          <span class="phase-tag core">Core</span>
+          <div class="phase-title">OAuth Foundation</div>
+          <div class="phase-desc">Register a confidential OAuth client, implement the Authorization Code Grant flow end-to-end, and persist encrypted tokens with automatic refresh. This is the single point of trust for everything above it.</div>
+          <div class="phase-effort">
+            <span class="ef">Effort: <strong>~1 day</strong></span>
+            <span class="ef">Risk: <strong>Low</strong></span>
+            <span class="ef">Blocks: <strong>Phase 2, 3</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase core">
+        <div class="phase-num p2">2</div>
+        <div class="phase-body">
+          <span class="phase-tag core">Core</span>
+          <div class="phase-title">Typed API Client Layer</div>
+          <div class="phase-desc">A thin, typed HTTP client wrapping <code>https://app.fieldinsight.com/public-api/</code>. Attaches the bearer token, refreshes on 401, implements exponential backoff, and returns typed models for Job, Customer, Timesheet, Site, and Technician.</div>
+          <div class="phase-effort">
+            <span class="ef">Effort: <strong>~0.5–1 day</strong></span>
+            <span class="ef">Risk: <strong>Low–Medium</strong></span>
+            <span class="ef">Blocks: <strong>Phase 3</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase core">
+        <div class="phase-num p3">3</div>
+        <div class="phase-body">
+          <span class="phase-tag core">Core</span>
+          <div class="phase-title">MCP Server — Read-Only Tools</div>
+          <div class="phase-desc">Expose six read-only tools to any MCP client: jobs, customers, timesheets, technicians. Ship as a standalone <code>fi-mcp</code> binary/package with a manifest. After this phase, Claude Desktop and Cursor can answer real FieldInsight questions.</div>
+          <div class="phase-effort">
+            <span class="ef">Effort: <strong>~1–1.5 days</strong></span>
+            <span class="ef">Risk: <strong>Low</strong></span>
+            <span class="ef">Unlocks: <strong>DoD — live answers from agents</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase nice">
+        <div class="phase-num p4">4</div>
+        <div class="phase-body">
+          <span class="phase-tag nice">Nice to Have</span>
+          <div class="phase-title">Write Tools, Alfred Integration, Hardening</div>
+          <div class="phase-desc">Write-capable MCP tools (create / update / complete jobs), Alfred WhatsApp integration, rate-limit metrics, reverse-engineered OpenAPI spec, and production hardening. Several items here are tagged <strong style="color:var(--amber)">OPTIONAL</strong> and can be dropped.</div>
+          <div class="phase-effort">
+            <span class="ef">Effort: <strong>~2–3 days</strong></span>
+            <span class="ef">Risk: <strong>Medium (write ops)</strong></span>
+            <span class="ef">Gate: <strong>Only after CORE lands</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="phase-1">
+    <div class="sec-label">Phase 1 · CORE</div>
+    <div class="sec-title">OAuth Foundation</div>
+    <div class="sec-desc">Implement the Authorization Code Grant flow against FieldInsight. No MCP, no API calls yet — just: get a token, store it, refresh it.</div>
+
+    <div class="call-flow" style="margin-bottom:24px">
+      <div class="cf-step">
+        <div class="cf-dot green">1</div>
+        <div class="cf-body">
+          <div class="cf-title">Register app at <code>app.fieldinsight.com/developer/signup</code></div>
+          <div class="cf-desc">Client type <strong>Confidential</strong>, grant type <strong>Authorization code</strong>. Register a stable <code>redirect_uri</code> — HTTPS only in production.</div>
+        </div>
+      </div>
+      <div class="cf-step">
+        <div class="cf-dot blue">2</div>
+        <div class="cf-body">
+          <div class="cf-title">Redirect user to authorize URL</div>
+          <div class="cf-desc">Include a random <code>state</code> for CSRF protection, persist it server-side, verify on callback.</div>
+          <div class="cf-code">GET https://app.fieldinsight.com/oauth/authorize
+  ?response_type=code
+  &amp;client_id=&lt;client_id&gt;
+  &amp;redirect_uri=https://openclaw.app/oauth/fi/callback
+  &amp;state=&lt;csrf_token&gt;</div>
+        </div>
+      </div>
+      <div class="cf-step">
+        <div class="cf-dot purple">3</div>
+        <div class="cf-body">
+          <div class="cf-title">Exchange code for tokens at <code>/oauth/token/</code></div>
+          <div class="cf-code">POST https://app.fieldinsight.com/oauth/token/
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code
+&amp;client_id=&lt;client_id&gt;
+&amp;client_secret=&lt;client_secret&gt;
+&amp;code=&lt;authorization_code&gt;
+&amp;redirect_uri=https://openclaw.app/oauth/fi/callback</div>
+        </div>
+      </div>
+      <div class="cf-step">
+        <div class="cf-dot amber">4</div>
+        <div class="cf-body">
+          <div class="cf-title">Persist tokens encrypted at rest</div>
+          <div class="cf-desc">Store <code>access_token</code>, <code>refresh_token</code>, <code>expires_at</code>, <code>tenant_id</code> keyed by FieldInsight account. Encrypt with a KMS-managed key — never plaintext in the DB or logs.</div>
+        </div>
+      </div>
+      <div class="cf-step">
+        <div class="cf-dot teal">5</div>
+        <div class="cf-body">
+          <div class="cf-title">Auto-refresh when <code>expires_at</code> is within 5 minutes</div>
+          <div class="cf-desc">Background job + on-demand refresh on 401. Access token lives 10 hours — refreshing is rare but must be bulletproof.</div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="phase-items">
+      <li><span class="check">✓</span> Register OAuth app + store <code>client_id</code> / <code>client_secret</code> as env vars</li>
+      <li><span class="check">✓</span> <code>GET /oauth/fi/authorize</code> route — generates state, redirects to FieldInsight</li>
+      <li><span class="check">✓</span> <code>GET /oauth/fi/callback</code> route — validates state, exchanges code</li>
+      <li><span class="check">✓</span> Token store schema: <code>fi_tokens(tenant_id, access_token_enc, refresh_token_enc, expires_at, scope)</code></li>
+      <li><span class="check">✓</span> Refresh helper: <code>getValidAccessToken(tenantId)</code> — refreshes if &lt;5min from expiry</li>
+      <li><span class="check">✓</span> Error paths: <code>invalid_grant</code> → force re-auth flow with clear UX</li>
+      <li><span class="check">✓</span> Unit tests: token encryption round-trip · refresh logic · state validation</li>
+      <li class="opt"><span class="check">✓</span> Multi-tenant console page to view connected FI accounts <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Revoke endpoint — explicit disconnect <span class="opt-tag">Optional</span></li>
+    </ul>
+  </div>
+
+  <div id="phase-2">
+    <div class="sec-label">Phase 2 · CORE</div>
+    <div class="sec-title">Typed API Client</div>
+    <div class="sec-desc">A thin wrapper that takes a <code>tenantId</code>, fetches a valid bearer token from Phase 1, and makes a typed request against <code>https://app.fieldinsight.com/public-api/</code>.</div>
+
+    <pre class="code-block"><span class="comment"># Python sketch — same pattern in TypeScript</span>
+<span class="kw">class</span> FieldInsightClient:
+    <span class="kw">def</span> <span class="key">__init__</span>(<span class="key">self</span>, tenant_id, tokens):
+        <span class="key">self</span>.tenant_id = tenant_id
+        <span class="key">self</span>.tokens    = tokens
+        <span class="key">self</span>.base      = <span class="str">"https://app.fieldinsight.com/public-api"</span>
+
+    <span class="kw">async def</span> <span class="key">_request</span>(<span class="key">self</span>, method, path, **kw):
+        token = <span class="kw">await</span> <span class="key">self</span>.tokens.get_valid_access_token(<span class="key">self</span>.tenant_id)
+        headers = {<span class="str">"Authorization"</span>: <span class="str">f"Bearer {token}"</span>}
+        r = <span class="kw">await</span> httpx.request(method, <span class="key">self</span>.base + path, headers=headers, **kw)
+        <span class="kw">if</span> r.status_code == <span class="val">401</span>:
+            <span class="kw">await</span> <span class="key">self</span>.tokens.force_refresh(<span class="key">self</span>.tenant_id)
+            token = <span class="kw">await</span> <span class="key">self</span>.tokens.get_valid_access_token(<span class="key">self</span>.tenant_id)
+            headers[<span class="str">"Authorization"</span>] = <span class="str">f"Bearer {token}"</span>
+            r = <span class="kw">await</span> httpx.request(method, <span class="key">self</span>.base + path, headers=headers, **kw)
+        <span class="kw">if</span> r.status_code == <span class="val">429</span>:
+            <span class="kw">await</span> backoff(r)
+        r.raise_for_status()
+        <span class="kw">return</span> r.json()
+
+    <span class="kw">async def</span> <span class="key">list_jobs</span>(<span class="key">self</span>, **filters): ...
+    <span class="kw">async def</span> <span class="key">get_job</span>(<span class="key">self</span>, job_id): ...
+    <span class="kw">async def</span> <span class="key">list_customers</span>(<span class="key">self</span>, **filters): ...
+    <span class="kw">async def</span> <span class="key">list_timesheets</span>(<span class="key">self</span>, **filters): ...
+    <span class="kw">async def</span> <span class="key">list_technicians</span>(<span class="key">self</span>): ...</pre>
+
+    <ul class="phase-items" style="margin-top:20px">
+      <li><span class="check">✓</span> Typed models: <code>Job</code>, <code>Customer</code>, <code>Timesheet</code>, <code>Site</code>, <code>Technician</code></li>
+      <li><span class="check">✓</span> Auto-refresh on 401, single retry</li>
+      <li><span class="check">✓</span> Exponential backoff on 429 (2s → 4s → 8s, max 3 retries)</li>
+      <li><span class="check">✓</span> Structured logging — redact tokens, log <code>tenant_id</code>, latency, status</li>
+      <li><span class="check">✓</span> Pagination helper — transparent iteration across pages</li>
+      <li><span class="check">✓</span> Integration tests against a dev FieldInsight tenant</li>
+      <li class="opt"><span class="check">✓</span> Response caching (60s TTL for list endpoints) <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Metrics — latency histogram, error rate by endpoint <span class="opt-tag">Optional</span></li>
+    </ul>
+  </div>
+
+  <div id="phase-3">
+    <div class="sec-label">Phase 3 · CORE</div>
+    <div class="sec-title">MCP Server — Read-Only Tools</div>
+    <div class="sec-desc">A standalone MCP server exposing six read-only tools. Ships as <code>fi-mcp</code> — users install it, point it at their token store, and it&rsquo;s available in Claude Desktop, Cursor, Alfred, etc.</div>
+
+    <div class="tool-grid">
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_jobs</div><div class="tool-desc">List jobs with filters: <code>status</code>, <code>date_from</code>, <code>date_to</code>, <code>technician_id</code>, <code>site_id</code>. Returns paginated typed results.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_job</div><div class="tool-desc">Fetch a single job by ID with full detail — line items, technician, status history, attached notes.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_customers</div><div class="tool-desc">Search customers by name, email, phone. Returns core contact + billing fields.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_get_customer</div><div class="tool-desc">Full customer record including sites, contacts, assets, and recent job history.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_timesheets</div><div class="tool-desc">Timesheets filtered by technician + date range. Returns total hours, job linkage, and billing status.</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>fieldinsight_list_technicians</div><div class="tool-desc">Active technicians with role, skills, and current assignment count.</div></div>
+    </div>
+
+    <ul class="phase-items" style="margin-top:20px">
+      <li><span class="check">✓</span> MCP manifest <code>fi-mcp.json</code> — name, description, tool schemas</li>
+      <li><span class="check">✓</span> Six tool handlers wiring MCP args → Phase 2 client calls</li>
+      <li><span class="check">✓</span> Input validation + friendly error messages for agents</li>
+      <li><span class="check">✓</span> <code>stdio</code> transport for Claude Desktop / Cursor</li>
+      <li><span class="check">✓</span> <code>README.md</code> with install + config steps</li>
+      <li><span class="check">✓</span> End-to-end test: from Cursor, ask &ldquo;what jobs are open for tech X this week?&rdquo; and verify real data</li>
+      <li class="opt"><span class="check">✓</span> HTTP transport variant for remote deployment <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Publish to MCP registry <span class="opt-tag">Optional</span></li>
+    </ul>
+  </div>
+
+  <div id="phase-4">
+    <div class="sec-label">Phase 4 · Nice to Have</div>
+    <div class="sec-title">Write Tools, Alfred, Hardening</div>
+    <div class="sec-desc">Do not start until CORE is merged and in use. Individual items tagged <strong style="color:var(--amber)">OPTIONAL</strong> can be dropped entirely.</div>
+
+    <div style="margin-bottom:20px">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Write-Capable MCP Tools</div>
+      <div class="tool-grid">
+        <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>fieldinsight_create_job</div><div class="tool-desc">Create a new job from structured args. Guarded by explicit user confirmation prompt in the agent layer.</div></div>
+        <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>fieldinsight_update_job</div><div class="tool-desc">Patch a job&rsquo;s status, notes, technician assignment, or scheduled time.</div></div>
+        <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>fieldinsight_complete_job</div><div class="tool-desc">Mark job complete with final notes + time. Triggers downstream invoicing workflow.</div></div>
+        <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>fieldinsight_create_customer</div><div class="tool-desc">New customer creation — used for inbound lead capture flows.</div></div>
+      </div>
+    </div>
+
+    <ul class="phase-items">
+      <li><span class="check">✓</span> Write-tool safety: every mutating call requires a <code>confirm=true</code> arg</li>
+      <li><span class="check">✓</span> Alfred → WhatsApp integration: &ldquo;What jobs are on today?&rdquo; hits MCP read tools</li>
+      <li><span class="check">✓</span> Production hardening: structured error envelope, Sentry, rate-limit dashboards</li>
+      <li class="opt"><span class="check">✓</span> Reverse-engineered OpenAPI spec from Postman collection <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Webhook ingestion → MCP notification channel (if FI exposes webhooks) <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> <code>fieldinsight_attach_photo_to_job</code> — multipart upload tool <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Batch pagination streaming for very large customer lists <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Prometheus metrics endpoint <span class="opt-tag">Optional</span></li>
+      <li class="opt"><span class="check">✓</span> Cursor / Claude Desktop one-line installer <span class="opt-tag">Optional</span></li>
+    </ul>
+  </div>
+
+  <div id="effort">
+    <div class="sec-label">Section 09</div>
+    <div class="sec-title">Effort &amp; Timeline</div>
+    <div class="sec-desc">Rolled-up estimate. CORE lands as a 2.5-day MVP; Phase 4 extends opportunistically.</div>
+
+    <table class="api-table">
+      <thead><tr><th>Scope</th><th>Effort</th><th>Cumulative</th><th>Value Delivered</th></tr></thead>
+      <tbody>
+        <tr><td>Phase 1 — OAuth</td><td>~1 day</td><td>1d</td><td>Can fetch tokens — nothing visible yet</td></tr>
+        <tr><td>Phase 2 — API Client</td><td>~0.5–1 day</td><td>~1.5–2d</td><td>Scripts can read FI data from code</td></tr>
+        <tr><td>Phase 3 — MCP Read</td><td>~1–1.5 days</td><td><strong style="color:var(--green)">~2.5–3d (CORE DONE)</strong></td><td><strong>Cursor + Claude Desktop answer FI questions live</strong></td></tr>
+        <tr><td>Phase 4 — Nice to Have</td><td>~2–3 days</td><td>~5–6d</td><td>Write ops, Alfred, hardening</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="risks">
+    <div class="sec-label">Section 10</div>
+    <div class="sec-title">Risks &amp; Unknowns</div>
+    <div class="sec-desc">Known gaps in FieldInsight&rsquo;s public API documentation that may inflate effort or require mitigation.</div>
+
+    <table class="api-table">
+      <thead><tr><th>Risk</th><th>Impact</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>No OpenAPI spec</td><td>Each endpoint learned by hand from Postman</td><td>Generate types from Postman; cross-check against help articles</td></tr>
+        <tr><td>No sandbox environment</td><td>Testing against live data is risky for write ops</td><td>Spin a throwaway FI tenant for dev · gate write tools behind <code>confirm=true</code></td></tr>
+        <tr><td>Undocumented rate limits</td><td>Discovered only in production</td><td>Conservative backoff; add metrics to observe in prod</td></tr>
+        <tr><td>API app approval required</td><td>Schedule slip waiting on FI to approve the app</td><td>Submit registration early, before coding starts</td></tr>
+        <tr><td>Webhook support unknown</td><td>Push notifications impossible — must poll</td><td>Poll on a low cadence for Phase 4 · degrade gracefully</td></tr>
+        <tr><td>No PKCE mentioned</td><td>Server-side only — no SPA or mobile without a backend proxy</td><td>Accept the constraint — OAuth service is a backend component by design</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout green" style="margin-top:24px">
+      <strong>The good news:</strong> FieldInsight uses stock OAuth 2.0 Authorization Code Grant — identical shape to the Xero integration in <code>fi-financial-forecast</code>. The token exchange code can be lifted and re-pointed at new URLs, which is why Phase 1 lands in a day.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  FieldInsight Public API + OAuth + MCP Spec — FI-022 · v0.1 &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
+  <a href="https://rezzxstrv0.apidog.io/" target="_blank">FieldInsight API Docs →</a> &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/fi-02-pdf-parsing-spec.html">PDF Parsing Spec</a>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('.spec-body > div[id]');
+const navLinks = document.querySelectorAll('nav.spec-nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`nav.spec-nav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

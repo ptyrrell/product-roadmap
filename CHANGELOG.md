@@ -5,6 +5,21 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.9.6 — 2026-04-20
+
+### Added
+- **`docs/fi-22-fieldinsight-api-mcp-spec.html`** — full staged spec page for FI-022 (FieldInsight Public API + OAuth + MCP Server). The FI-022 ticket card in `index.html` already linked here — this commit creates the target page so the link resolves.
+  - Four-phase delivery plan: Phases 1–3 are **CORE** (OAuth foundation, typed API client, MCP read-only tools), Phase 4 is **Nice to Have** (write tools, Alfred integration, hardening)
+  - Individual items tagged **OPTIONAL** where appropriate
+  - Based on FieldInsight's public OAuth 2.0 Authorization Code Grant flow (apidog docs) — 10-hour access tokens, refresh tokens supported, base URL `https://app.fieldinsight.com/public-api/`
+  - ~2.5-day MVP estimate (Phases 1–3 CORE) to first live agent query from Cursor / Claude Desktop / Alfred
+  - Risk register covers missing OpenAPI spec, no sandbox, undocumented rate limits, API app approval gating
+
+### Changed
+- Nav version v0.9.5 → v0.9.6 · footer aligned to v0.9.6
+
+---
+
 ## v0.9.5 — 2026-04-20
 
 ### Added
