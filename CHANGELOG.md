@@ -5,6 +5,14 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.9.8 — 2026-04-22
+
+### Added
+- **FI-023 — FieldInsight AI Agent Stack** card added to the FieldInsight roadmap Next column. Documents the full 25-agent "Holy Hierarchy" org chart, tech stack decisions (Claude / Grok / Gemma 4 / Neo4j / LangGraph), and links to live prototypes.
+- **fi-agent-stack** — new Heroku app deployed at `https://fi-agent-stack-2f03aca0bbc3.herokuapp.com/`. A beautiful standalone reference page for the entire AI agent layer: hierarchy diagram, 25 agent cards grouped by department, tech stack breakdown, architecture overview, and live prototype links.
+
+---
+
 ## v0.9.7 — 2026-04-20
 
 ### Added
