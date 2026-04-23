@@ -5,6 +5,16 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.10.0 — 2026-04-24
+
+### Added
+- **DS-001 — AI Styling Guide** card on the FieldInsight roadmap. The canonical visual pattern for every AI feature across FieldInsight &amp; Open Claw — one sparkle icon, one brand purple (`#39006B`), three placements (inline / circular badge / CTA pill), approved CTA labels (Ask AI, Re-read, Re-generate, Scan bill, Post to Xero →), and the "AI parsed…" provenance rule.
+- **fi-ai-styling-guide** — new Heroku app deployed at `https://fi-ai-styling-guide-3413f27b698e.herokuapp.com`. Hosts the rendered mockup, the pattern doc (markdown rendered via marked.js), and the raw `pattern.md` source-of-truth. Referenced from the always-applied Cursor rule so every agent is auto-pointed at the pattern when building AI UI.
+- **"✨ AI Styling" nav link** added to the roadmap top-bar, opens the guide in a new tab alongside "🚀 All Apps".
+- **AI Styling Guide card** added to `apps.html` under Dashboards &amp; Ops with Mockup / Pattern / GitHub quick-links.
+
+---
+
 ## v0.9.8 — 2026-04-22
 
 ### Added
