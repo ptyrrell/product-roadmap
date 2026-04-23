@@ -5,6 +5,13 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.10.1 — 2026-04-24
+
+### Changed
+- **DS-001 AI Styling Guide card** updated to v0.2.0 — reflects the new **Workflow Example** page on `fi-ai-styling-guide`. Added a direct `Workflow` link to both the roadmap card (index.html) and the `apps.html` tile. The workflow page walks through a full Bill ↔ PO restyle with drop-parse flow and three AI decision modals (clean bill / bill has items / PO has items), plus a blended-styling design-notes panel.
+
+---
+
 ## v0.10.0 — 2026-04-24
 
 ### Added
