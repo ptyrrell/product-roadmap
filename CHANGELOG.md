@@ -5,6 +5,14 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
 
+## v0.10.2 — 2026-04-24
+
+### Added
+- **RD-001 — R&D Grant Designs — Requirement Spec Library** card on the FieldInsight roadmap, placed directly after DS-001 (AI Styling Guide). Central hub for every requirement spec that backs an R&D grant submission or a senior-developer handoff, hosted on `fi-ai-styling-guide` so each spec sits next to the visual design pattern it belongs to. Currently links **FI-022 — AI Bill Processing** (25 FRs, 7 NFRs, 7 use cases, 40+ ACs, algorithms, state machines, data models, 10 REST endpoints, 5-phase rollout) and **FI-023 — PO ↔ Bill Reconciliation** (20 FRs, 6 use cases, 18+ ACs, LineMatcher + VarianceDetector + approval transaction algorithms, 2 new tables, 8 REST endpoints, 5-phase rollout). Card disambiguates from the existing `FI-022` OAuth + MCP ticket via title + numbering note.
+- **"📐 R&D Grants" nav tab** added to the roadmap top-bar, alongside "🚀 All Apps" and "✨ AI Styling". Links to `fi-ai-styling-guide/spec.html` — the FI-022 spec page — which already cross-links to FI-023 and future specs via its own tab bar.
+
+---
+
 ## v0.10.1 — 2026-04-24
 
 ### Changed

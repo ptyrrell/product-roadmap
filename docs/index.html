@@ -308,7 +308,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.10.1</span>
+    <span class="version">v0.10.2</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -317,6 +317,7 @@
     <button class="tab" onclick="switchView('inspiration', event)">💡 Inspiration</button>
     <a class="tab tab-link" href="apps.html">🚀 All Apps</a>
     <a class="tab tab-link" href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com" target="_blank">✨ AI Styling</a>
+    <a class="tab tab-link" href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/spec.html" target="_blank">📐 R&amp;D Grants</a>
   </div>
 </nav>
 
@@ -339,7 +340,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.2</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -455,6 +456,26 @@
           <li>Provenance rule — every AI-populated value shows the sparkle + "AI parsed…" label</li>
           <li><strong>v0.2.0 Workflow Example:</strong> Bill + PO restyle with drop-parse flow + 3 AI decision modals (clean bill, bill has items, PO has items) + blended-styling design notes</li>
           <li>🔗 <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com" target="_blank" style="color:#00e5b0">Live Guide →</a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/workflow.html" target="_blank" style="color:#00e5b0">Workflow</a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/mockup.html" target="_blank" style="color:#00e5b0">Mockup</a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/pattern.html" target="_blank" style="color:#00e5b0">Pattern Doc</a>  ·  <a href="https://github.com/ptyrrell/fi-ai-styling-guide" target="_blank" style="color:#a5b4fc">GitHub</a></li>
+        </ul></div>
+      </div>
+
+      <div class="card" data-cat="design product infra">
+        <div class="ticket-id">RD-001</div>
+        <div class="card-title">📐 R&amp;D Grant Designs — Requirement Spec Library</div>
+        <div class="card-desc">Central hub for every requirement specification that backs an R&amp;D grant submission or a senior-developer handoff. Hosted on the AI Styling Guide app so each spec lives next to the visual design pattern it belongs to. Currently covers two shipped specs — AI Bill Processing and PO&nbsp;↔&nbsp;Bill Reconciliation — and every future spec lands here as it's written. Note: these specs use the <code>FI-022</code> / <code>FI-023</code> numbering from Paul's Brain (the Obsidian spec vault); they're distinct from the <code>FI-022</code> OAuth + MCP ticket on this roadmap.</div>
+        <div class="card-meta">
+          <span class="badge badge-version">v0.14.0</span>
+          <span class="badge" style="background:rgba(74,222,128,0.12);color:#4ade80;border:1px solid rgba(74,222,128,0.3)">🟢 Live</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>📐 FI-022 — AI Bill Processing</strong> · Python · Django · Claude Vision. 25 functional requirements, 7 non-functional targets, 7 use cases (empty Bill · Bill with items · PO drop · PO with items · PO partial · mixed provenance · multi-file), 40+ acceptance criteria, Bill + PO state machines, 9 data models, 10 REST endpoints, vendor-hint / parse-dispatch / line-item-persist / dedup algorithms, 5-phase rollout.</li>
+          <li><strong>📐 FI-023 — PO ↔ Bill Reconciliation</strong> · Python · Django. 20 functional requirements, 6 non-functional targets, 6 use cases (full reconcile · partial Bill · price variance · supplier mismatch · over-invoiced · close PO), 18+ acceptance criteria, side-by-side match layout, LineMatcher + VarianceDetector + approval transaction (atomic with PO auto-close) algorithms, new <code>ReconciliationMeta</code> + <code>ReconciliationAuditLog</code> tables, 8 REST endpoints, 5-phase rollout.</li>
+          <li><strong>Design-pattern alignment</strong> — every spec consumes the same AI Styling Pattern (Two-Star sparkle, brand purple <code>#39006B</code>, three placements, no per-row provenance chips). Visual + logical rules evolve together on the same site.</li>
+          <li><strong>Ready for grant submission</strong> — each spec has the full technical depth an R&amp;D tax incentive claim requires: novelty statement, hypothesis, systematic investigation (requirements + ACs), experimental activity (algorithms + state tables), and expected outcome. Ship-ready for a senior Python/Django developer or an external reviewer.</li>
+          <li>🔗 <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/spec.html" target="_blank" style="color:#00e5b0"><strong>📐 FI-022 Spec →</strong></a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/reconcile-spec.html" target="_blank" style="color:#00e5b0"><strong>📐 FI-023 Spec →</strong></a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/reconcile.html" target="_blank" style="color:#a5b4fc">Reconciliation mockup</a>  ·  <a href="https://fi-ai-styling-guide-3413f27b698e.herokuapp.com/workflow.html" target="_blank" style="color:#a5b4fc">Workflow mockup</a>  ·  <a href="https://github.com/ptyrrell/fi-ai-styling-guide" target="_blank" style="color:#a5b4fc">GitHub</a></li>
         </ul></div>
       </div>
 
@@ -926,7 +947,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.2</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1291,7 +1312,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.10.1 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.10.2 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 25 March 2026
   &nbsp;·&nbsp;
@@ -1513,7 +1534,7 @@
     </div>
   </div>
 
-  <div class="updated" style="text-align:right">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+  <div class="updated" style="text-align:right">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.2</div>
 </div>
 </div>
 
@@ -1522,7 +1543,7 @@
   <div class="hero">
     <h1>💡 Inspiration</h1>
     <p>Market ideas, signals, and thinking worth holding onto.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.2</div>
   </div>
 
   <div class="board">
