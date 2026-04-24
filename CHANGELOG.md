@@ -4,6 +4,13 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.10.3 — 2026-04-24
+
+### Changed
+- **RD-001 card copy** updated to reflect FI-022 spec refactor: removed references to "state machines" / "state tables" (that section was dropped from FI-022 §5), and updated "7 use cases" → "7 user interaction stories" / NFR count 7 → 3.
+
+---
+
 
 ## v0.10.2 — 2026-04-24
 
