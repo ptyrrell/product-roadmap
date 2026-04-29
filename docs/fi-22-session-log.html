@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FI-022 Session Log — OAuth + MCP Build Journal</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta http-equiv="Cache-Control" content="no-cache">
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--surface3:#191d2a;
+  --border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --blue:#6366f1;--blue-light:#a5b4fc;--blue-glow:rgba(99,102,241,.18);
+  --green:#10d990;--green-bg:rgba(16,217,144,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --teal:#06b6d4;--purple:#a855f7;--orange:#fb923c;
+  --r:10px;
+  --font:'Inter var',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+.spec-header{background:linear-gradient(160deg,#0b0d1a 0%,#0f1128 60%,#13102a 100%);border-bottom:1px solid var(--border);padding:48px 40px 40px;position:relative;overflow:hidden}
+.spec-header::before{content:'';position:absolute;top:-60px;right:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(168,85,247,.10) 0%,transparent 70%);pointer-events:none}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px;position:relative;z-index:1}
+.spec-breadcrumb a{color:var(--blue-light);text-decoration:none}
+.spec-breadcrumb a:hover{text-decoration:underline}
+.spec-title{font-size:32px;font-weight:800;letter-spacing:-.8px;color:#fff;line-height:1.2;position:relative;z-index:1}
+.spec-title span{color:#d8b4fe}
+.spec-subtitle{font-size:15px;color:var(--muted);margin-top:8px;position:relative;z-index:1;max-width:760px}
+.spec-meta{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;position:relative;z-index:1}
+.meta-pill{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.purple{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#d8b4fe}
+.meta-pill.green{background:var(--green-bg);border-color:rgba(16,217,144,.25);color:var(--green)}
+.meta-pill.blue{background:var(--blue-glow);border-color:rgba(99,102,241,.35);color:var(--blue-light)}
+
+nav.spec-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;display:flex;gap:0;overflow-x:auto;position:sticky;top:0;z-index:100}
+nav.spec-nav a{display:block;padding:14px 16px;font-size:12px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s}
+nav.spec-nav a:hover{color:var(--text);border-bottom-color:var(--border2)}
+nav.spec-nav a.active{color:#d8b4fe;border-bottom-color:var(--purple)}
+
+.spec-body{max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:48px}
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#d8b4fe;margin-bottom:6px}
+.sec-title{font-size:22px;font-weight:800;letter-spacing:-.4px;color:#fff;margin-bottom:6px}
+.sec-desc{font-size:13px;color:var(--muted);max-width:760px;line-height:1.7;margin-bottom:24px}
+
+.callout{border-radius:var(--r);padding:16px 18px;border-left:3px solid;margin:16px 0;font-size:13px}
+.callout.blue{background:var(--blue-glow);border-color:var(--blue);color:var(--blue-light)}
+.callout.green{background:var(--green-bg);border-color:var(--green);color:#6ee7b7}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout.purple{background:rgba(168,85,247,.08);border-color:var(--purple);color:#d8b4fe}
+.callout strong{color:inherit;font-weight:700}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-row{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-left:2px solid var(--border);padding-left:24px;margin-left:18px;position:relative}
+.tl-row:last-child{border-left-color:transparent;padding-bottom:8px}
+.tl-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;position:absolute;left:-17px;top:18px;box-shadow:0 0 0 4px var(--bg)}
+.tl-dot.s1{background:rgba(16,217,144,.2);color:var(--green);border:2px solid var(--green)}
+.tl-dot.s2{background:rgba(99,102,241,.2);color:var(--blue-light);border:2px solid var(--blue)}
+.tl-dot.s3{background:rgba(168,85,247,.2);color:#d8b4fe;border:2px solid var(--purple)}
+.tl-dot.s4{background:rgba(245,158,11,.2);color:var(--amber);border:2px solid var(--amber)}
+.tl-dot.s5{background:rgba(6,182,212,.2);color:var(--teal);border:2px solid var(--teal)}
+.tl-body{flex:1;min-width:0}
+.tl-meta{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.tl-date{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.tl-tag{font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:4px}
+.tl-tag.research{background:rgba(99,102,241,.15);color:var(--blue-light);border:1px solid rgba(99,102,241,.3)}
+.tl-tag.ship{background:rgba(16,217,144,.15);color:var(--green);border:1px solid rgba(16,217,144,.3)}
+.tl-tag.docs{background:rgba(168,85,247,.15);color:#d8b4fe;border:1px solid rgba(168,85,247,.3)}
+.tl-tag.fix{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.tl-tag.expand{background:rgba(6,182,212,.15);color:var(--teal);border:1px solid rgba(6,182,212,.3)}
+.tl-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.tl-question{font-size:12px;color:var(--blue-light);font-style:italic;margin-bottom:6px}
+.tl-desc{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:8px}
+.tl-outcome{font-size:11.5px;color:var(--green);background:var(--green-bg);border:1px solid rgba(16,217,144,.2);border-radius:6px;padding:6px 10px;margin-top:8px;display:inline-block}
+.tl-outcome::before{content:'✓ ';font-weight:800}
+.tl-version{font-size:10px;color:var(--muted);font-family:monospace;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px}
+
+/* TABLES */
+.api-table{width:100%;border-collapse:collapse}
+.api-table thead tr{background:var(--surface2);border-bottom:1px solid var(--border)}
+.api-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.api-table tbody tr{border-bottom:1px solid var(--border)}
+.api-table tbody tr:last-child{border-bottom:none}
+.api-table tbody tr:hover{background:var(--surface2)}
+.api-table td{padding:11px 14px;font-size:12px;vertical-align:top;color:var(--muted)}
+.api-table td:first-child{color:var(--text);font-weight:600}
+.api-table td a{color:var(--blue-light);text-decoration:none;word-break:break-word}
+.api-table td a:hover{text-decoration:underline}
+.endpoint{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#93c5fd}
+
+/* DECISION CARDS */
+.dec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.dec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;border-left:3px solid var(--purple)}
+.dec-q{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px}
+.dec-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px}
+.dec-answer{font-size:12px;color:var(--muted);line-height:1.6}
+.dec-answer strong{color:var(--text);font-weight:700}
+.dec-because{font-size:11px;color:var(--green);margin-top:8px;padding-top:8px;border-top:1px dashed var(--dim)}
+
+/* STATUS GRID */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;text-align:center}
+.stat-num{font-size:24px;font-weight:900;letter-spacing:-.5px;margin:4px 0}
+.stat-num.green{color:var(--green)}
+.stat-num.blue{color:var(--blue-light)}
+.stat-num.amber{color:var(--amber)}
+.stat-num.purple{color:#d8b4fe}
+.stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+
+/* CODE */
+code{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-family:'SF Mono',Monaco,monospace;font-size:11.5px;color:#93c5fd}
+
+footer{text-align:center;padding:32px 40px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--text)}
+</style>
+  <script src="meridian-auth.js"></script>
+</head>
+<body>
+
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="fi-22-fieldinsight-api-mcp-spec.html">FI-022 Spec</a>
+    <span>›</span>
+    <span>Session Log</span>
+  </div>
+  <div class="spec-title">FI-022 — <span>Session Log &amp; Build Journal</span></div>
+  <div class="spec-subtitle">Decision log and build narrative for the FieldInsight Public API + OAuth + MCP ticket. One section per session: what triggered it, what was researched, what shipped, and what changed about the spec as a result.</div>
+  <div class="spec-meta">
+    <span class="meta-pill purple">📓 Build Journal</span>
+    <span class="meta-pill blue">FI-022 · v0.2 spec</span>
+    <span class="meta-pill green">5 sessions logged</span>
+    <span class="meta-pill">First entry: 20 Apr 2026</span>
+    <span class="meta-pill">Last entry: 30 Apr 2026</span>
+  </div>
+</div>
+
+<nav class="spec-nav">
+  <a href="#summary" class="active">Summary</a>
+  <a href="#sessions">Sessions</a>
+  <a href="#decisions">Decisions</a>
+  <a href="#artefacts">Artefacts &amp; URLs</a>
+  <a href="#scope">Scope Evolution</a>
+  <a href="#open">Open Items</a>
+</nav>
+
+<div class="spec-body">
+
+  <!-- ── SUMMARY ── -->
+  <div id="summary">
+    <div class="sec-label">Section 01</div>
+    <div class="sec-title">Executive Summary</div>
+    <div class="sec-desc">FI-022 began as a single question — &ldquo;how much work to set up OAuth and MCP for FieldInsight?&rdquo; — and became a fully scoped 8-sub-ticket build plan with a 14-tool MCP read surface, a documented Obsidian process, and a live spec page. Five sessions, five clean deploys.</div>
+
+    <div class="status-grid">
+      <div class="stat-card"><div class="stat-label">Sessions</div><div class="stat-num purple">5</div></div>
+      <div class="stat-card"><div class="stat-label">Sub-Tickets</div><div class="stat-num blue">8</div></div>
+      <div class="stat-card"><div class="stat-label">MCP Read Tools</div><div class="stat-num green">14</div></div>
+      <div class="stat-card"><div class="stat-label">CORE MVP Effort</div><div class="stat-num amber">~3.5–5d</div></div>
+      <div class="stat-card"><div class="stat-label">Roadmap Versions</div><div class="stat-num">v0.9.4&nbsp;→&nbsp;v0.10.2</div></div>
+    </div>
+
+    <div class="callout purple" style="margin-top:24px">
+      <strong>The arc:</strong> research → ticket scaffolded → spec page broken (404) → spec page shipped → process doc in Obsidian → auth permissions confirmed for the FI Workspace → table-of-contents added with sub-tickets → MCP tool surface widened from 6 to 14 → this log written. Each step left an artefact behind (see <a href="#artefacts" style="color:#d8b4fe">Artefacts &amp; URLs</a>).
+    </div>
+  </div>
+
+  <!-- ── SESSIONS ── -->
+  <div id="sessions">
+    <div class="sec-label">Section 02</div>
+    <div class="sec-title">Sessions — Chronological</div>
+    <div class="sec-desc">Each row is a working session with its trigger, what was researched/built, and what shipped. Versions refer to the roadmap site (<code>github.com/ptyrrell/product-roadmap</code>).</div>
+
+    <div class="timeline">
+
+      <!-- Session 1 -->
+      <div class="tl-row">
+        <div class="tl-dot s1">1</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">20 Apr 2026 · Session 1</span>
+            <span class="tl-tag research">Research</span>
+          </div>
+          <div class="tl-title">FieldInsight API discovery + effort sizing</div>
+          <div class="tl-question">&ldquo;How much work to setup OAuth and MCP for FieldInsight? Find the FieldInsight API, it&rsquo;s on the web, and tell me.&rdquo;</div>
+          <div class="tl-desc">
+            Pulled the FieldInsight Public API docs (apidog), Help Center Job API article, and Postman collection. Confirmed standard <strong style="color:var(--text)">OAuth 2.0 Authorization Code Grant</strong>, 10-hour access tokens, refresh tokens supported, base URL <code>https://app.fieldinsight.com/public-api/</code>. No OpenAPI spec, no sandbox, rate limits undocumented. Sized the work into a tiered estimate: 1 day for OAuth, +1 day for typed client, +1.5 days for MCP read tools = <strong>~2.5-day MVP</strong>; Phase 4 adds ~2–3 days for write tools and hardening.
+          </div>
+          <div class="tl-outcome">Effort estimate delivered with sourced API facts and a clear MVP boundary.</div>
+        </div>
+      </div>
+
+      <!-- Session 2 -->
+      <div class="tl-row">
+        <div class="tl-dot s2">2</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">20 Apr 2026 · Session 2</span>
+            <span class="tl-tag ship">Ship</span>
+            <span class="tl-tag fix">Fix</span>
+            <span class="tl-version">v0.9.5 → v0.9.6</span>
+          </div>
+          <div class="tl-title">Spec page created + 404 closed on the live site</div>
+          <div class="tl-question">&ldquo;Can you give me an online spec plugged into a roadmap ticket on our roadmap site? I want a link to a spec page for this and staged into 4: 1, 2, 3 CORE; 4 Nice to Have. Other status we have is OPTIONAL.&rdquo;</div>
+          <div class="tl-desc">
+            Discovered that the FI-022 ticket card on the live roadmap already linked to <code>fi-22-fieldinsight-api-mcp-spec.html</code> &mdash; but the file did not exist (404). Wrote the full staged spec page from scratch: 10 sections, four-phase model (Phases 1&ndash;3 = CORE, Phase 4 = Nice to Have), individual line items tagged OPTIONAL where droppable. Bumped nav + footer v0.9.5 → v0.9.6 and added a CHANGELOG entry. Several rebase / cache fights along the way (StrReplace tool returned stale views; resolved by using Python for surgical edits).
+          </div>
+          <div class="tl-outcome">Spec page live (HTTP 200), 6 read tools defined, broken link fixed, version visible.</div>
+        </div>
+      </div>
+
+      <!-- Session 3 -->
+      <div class="tl-row">
+        <div class="tl-dot s3">3</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">20 Apr 2026 · Session 3</span>
+            <span class="tl-tag docs">Docs</span>
+          </div>
+          <div class="tl-title">Obsidian process doc written + linked from vault index</div>
+          <div class="tl-question">&ldquo;Also create an Obsidian description of how we log tickets into the roadmap, and the need for the spec.&rdquo;</div>
+          <div class="tl-desc">
+            Wrote <code>02 Projects/Open Claw/Roadmap Ticket Process.md</code> in <em>Paul&rsquo;s Brain</em> &mdash; YAML frontmatter, wikilinks, callouts, a Mermaid workflow diagram, and a worked FI-022 example. Codified the four-phase rule, the OPTIONAL tag, when a spec is required vs not, the ticket-ID monotonic rule, and the version-bump-on-every-edit discipline. Linked from <code>Specs/_INDEX.md</code> under the <strong>Roadmap</strong> heading.
+          </div>
+          <div class="tl-outcome">Process is now a vault citizen, discoverable from the spec index.</div>
+        </div>
+      </div>
+
+      <!-- Session 4 -->
+      <div class="tl-row">
+        <div class="tl-dot s4">4</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">20 Apr 2026 · Session 4</span>
+            <span class="tl-tag research">Research</span>
+          </div>
+          <div class="tl-title">Meridian auth confirmed for any @fieldinsight.com user</div>
+          <div class="tl-question">&ldquo;Can you authorise The Meridian to vadim@fieldinsight.com? Anyone at fieldinsight.com can access it.&rdquo;</div>
+          <div class="tl-desc">
+            Inspected <code>meridian-auth.js</code> and <code>meridian-login.html</code>: domain check is set to <code>ALLOWED_DOMAIN = 'fieldinsight.com'</code>, the Google Sign-In widget is configured with <code>data-hosted_domain="fieldinsight.com"</code>, and there is no per-user allowlist. Conclusion: <strong>Vadim already has access</strong>. The only edge case is if the OAuth app is in &ldquo;Testing&rdquo; mode in Google Cloud Console &mdash; in which case the fix is either adding him as a test user or flipping the app to &ldquo;Internal&rdquo; (recommended).
+          </div>
+          <div class="tl-outcome">No code change required. Sent Vadim the URL.</div>
+        </div>
+      </div>
+
+      <!-- Session 5 -->
+      <div class="tl-row">
+        <div class="tl-dot s5">5</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">20 Apr 2026 · Session 5</span>
+            <span class="tl-tag expand">Expand</span>
+            <span class="tl-tag ship">Ship</span>
+            <span class="tl-version">v0.9.6 → v0.9.7</span>
+          </div>
+          <div class="tl-title">Spec gets a TOC + MCP read surface 6 → 14 tools</div>
+          <div class="tl-question">&ldquo;Update the spec so it has a table of contents &mdash; each Area of Work gets a Ticket # and a brief description at the top. Add to MCP: list of assets, defects, quotes, invoices, supplier invoices, purchase orders, products, service items, timesheets.&rdquo;</div>
+          <div class="tl-desc">
+            Inserted a <strong>Table of Contents</strong> at the top of the spec page: 8 sub-tickets (FI-022.1 through FI-022.8) each with a one-line brief, phase tag, and anchor link to the relevant phase detail. Expanded <strong>Phase 3 from 6 to 14 read tools</strong>, grouped: <em>Jobs &amp; Customers</em> (4), <em>Operations</em> (4), <em>Financial</em> (4), <em>Catalogue</em> (2). Recalibrated effort: Phase 3 ~1–1.5d → ~2–3d; CORE MVP ~2.5–3d → ~3.5–5d. Broadened the Definition of Done to include invoice / defect / PO queries. Spec version v0.1 → v0.2.
+          </div>
+          <div class="tl-outcome">Spec is now a Work-Breakdown Structure as well as a technical doc.</div>
+        </div>
+      </div>
+
+      <!-- Session 6 -->
+      <div class="tl-row">
+        <div class="tl-dot s3">6</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">30 Apr 2026 · Session 6</span>
+            <span class="tl-tag docs">Docs</span>
+            <span class="tl-version">v0.10.1 → v0.10.2</span>
+          </div>
+          <div class="tl-title">This page — thread summarised, URLs catalogued</div>
+          <div class="tl-question">&ldquo;Can you summarise this entire thread into a page on roadmap spec for this ticket and give me URLs?&rdquo;</div>
+          <div class="tl-desc">
+            Created <code>fi-22-session-log.html</code> &mdash; this page &mdash; and linked it from the FI-022 spec breadcrumb and the FI-022 ticket card. Catalogued every URL produced across the sessions, captured every key decision in the <a href="#decisions" style="color:#d8b4fe">Decisions</a> section, and traced the spec scope evolution. Bumped roadmap site v0.10.1 → v0.10.2.
+          </div>
+          <div class="tl-outcome">Build journal is now live alongside the spec.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── DECISIONS ── -->
+  <div id="decisions">
+    <div class="sec-label">Section 03</div>
+    <div class="sec-title">Key Decisions</div>
+    <div class="sec-desc">Decisions taken during the thread that change how this ticket is scoped or built. Recorded as Q → A → because, so future-me can reconstruct the reasoning.</div>
+
+    <div class="dec-grid">
+      <div class="dec-card">
+        <div class="dec-q">Decision 01 · Scope</div>
+        <div class="dec-title">Use four phases — Phases 1–3 CORE, Phase 4 Nice-to-Have</div>
+        <div class="dec-answer">Phases are <strong>not</strong> independently shippable until all three CORE phases land. Phase 4 starts only after CORE is in use.</div>
+        <div class="dec-because">Because: avoids the &ldquo;fake MVP&rdquo; trap where an early phase ships but no human can use the result.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 02 · Tagging</div>
+        <div class="dec-title">OPTIONAL items live <em>inside</em> a phase, not as their own phase</div>
+        <div class="dec-answer">If an item can be dropped without breaking the phase&rsquo;s Definition of Done, it gets the <strong>OPTIONAL</strong> tag. If it can&rsquo;t be dropped, it&rsquo;s CORE.</div>
+        <div class="dec-because">Because: keeps scope creep visible without turning every &ldquo;nice idea&rdquo; into a new phase.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 03 · Auth</div>
+        <div class="dec-title">Backend OAuth service only — no PKCE / no SPA flow</div>
+        <div class="dec-answer">FieldInsight&rsquo;s OAuth implementation is a confidential-client Authorization Code Grant. No mention of PKCE in the docs.</div>
+        <div class="dec-because">Because: server-side only is the documented happy path; SPA / mobile would have to proxy through our backend anyway.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 04 · Tokens</div>
+        <div class="dec-title">Encrypted multi-tenant token store, refresh ≥5 min before expiry</div>
+        <div class="dec-answer">10-hour access tokens stored encrypted at rest, keyed by <code>tenant_id</code>. A background refresher fires when <code>expires_at - now &lt; 300s</code>; on-demand refresh on 401.</div>
+        <div class="dec-because">Because: 10 hours is generous, but never let a token expire mid-call from an agent.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 05 · MCP surface</div>
+        <div class="dec-title">14 read tools across 4 categories — full operational coverage</div>
+        <div class="dec-answer">Jobs &amp; Customers (4) · Operations (4) · Financial (4) · Catalogue (2). Effort recalibrated to 2–3 days for Phase 3.</div>
+        <div class="dec-because">Because: a partial read surface forces the agent to fall back to web UI for half its questions &mdash; defeats the point.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 06 · Write safety</div>
+        <div class="dec-title">All write tools require <code>confirm=true</code> at the MCP layer</div>
+        <div class="dec-answer">No mutating call goes through without an explicit confirmation flag from the agent caller. Phase 4 only.</div>
+        <div class="dec-because">Because: agents hallucinate. A second-factor check at the tool boundary is cheaper than reversing a botched job creation.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 07 · Sub-tickets</div>
+        <div class="dec-title">FI-022 gets 8 sub-tickets (FI-022.1 … FI-022.8)</div>
+        <div class="dec-answer">Sub-tickets live in the spec, not on the roadmap. The roadmap card stays as the umbrella. Sub-tickets are picked up as standalone units when scheduled.</div>
+        <div class="dec-because">Because: keeps the roadmap board scannable while preserving the work-breakdown for execution.</div>
+      </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 08 · Auth perimeter</div>
+        <div class="dec-title">Anyone at <code>@fieldinsight.com</code> can access The Meridian — no per-user allowlist</div>
+        <div class="dec-answer">Confirmed in <code>meridian-auth.js</code>: domain check + Google <code>hosted_domain</code> hint. Vadim and any future Workspace user gain access automatically.</div>
+        <div class="dec-because">Because: per-user allowlists become stale; Workspace membership is the right perimeter.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ARTEFACTS ── -->
+  <div id="artefacts">
+    <div class="sec-label">Section 04</div>
+    <div class="sec-title">Artefacts &amp; URLs</div>
+    <div class="sec-desc">Everything produced during the thread, with a stable URL or file path. The site is hosted on GitHub Pages from <code>github.com/ptyrrell/product-roadmap</code> and auto-deploys on every push to <code>main</code>.</div>
+
+    <table class="api-table">
+      <thead>
+        <tr><th style="width:170px">Artefact</th><th style="width:90px">Type</th><th>URL / Path</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Roadmap (live)</td>
+          <td>HTML</td>
+          <td><a href="https://ptyrrell.github.io/product-roadmap/" target="_blank">https://ptyrrell.github.io/product-roadmap/</a></td>
+        </tr>
+        <tr>
+          <td>FI-022 spec page</td>
+          <td>HTML</td>
+          <td><a href="https://ptyrrell.github.io/product-roadmap/fi-22-fieldinsight-api-mcp-spec.html" target="_blank">https://ptyrrell.github.io/product-roadmap/fi-22-fieldinsight-api-mcp-spec.html</a></td>
+        </tr>
+        <tr>
+          <td>FI-022 session log <em>(this page)</em></td>
+          <td>HTML</td>
+          <td><a href="https://ptyrrell.github.io/product-roadmap/fi-22-session-log.html" target="_blank">https://ptyrrell.github.io/product-roadmap/fi-22-session-log.html</a></td>
+        </tr>
+        <tr>
+          <td>The Meridian login</td>
+          <td>HTML</td>
+          <td><a href="https://ptyrrell.github.io/product-roadmap/meridian-login.html" target="_blank">https://ptyrrell.github.io/product-roadmap/meridian-login.html</a></td>
+        </tr>
+        <tr>
+          <td>Meridian auth source</td>
+          <td>JS</td>
+          <td><a href="https://github.com/ptyrrell/product-roadmap/blob/main/docs/meridian-auth.js" target="_blank">github.com/ptyrrell/product-roadmap/blob/main/docs/meridian-auth.js</a></td>
+        </tr>
+        <tr>
+          <td>Roadmap repo</td>
+          <td>Git</td>
+          <td><a href="https://github.com/ptyrrell/product-roadmap" target="_blank">https://github.com/ptyrrell/product-roadmap</a></td>
+        </tr>
+        <tr>
+          <td>CHANGELOG</td>
+          <td>MD</td>
+          <td><a href="https://github.com/ptyrrell/product-roadmap/blob/main/CHANGELOG.md" target="_blank">github.com/ptyrrell/product-roadmap/blob/main/CHANGELOG.md</a></td>
+        </tr>
+        <tr>
+          <td>Obsidian process doc</td>
+          <td>MD</td>
+          <td><code>Paul&rsquo;s Brain/02 Projects/Open Claw/Roadmap Ticket Process.md</code></td>
+        </tr>
+        <tr>
+          <td>Obsidian Specs index</td>
+          <td>MD</td>
+          <td><code>Paul&rsquo;s Brain/02 Projects/Open Claw/Specs/_INDEX.md</code></td>
+        </tr>
+        <tr>
+          <td>FieldInsight API docs (apidog)</td>
+          <td>External</td>
+          <td><a href="https://rezzxstrv0.apidog.io/" target="_blank">https://rezzxstrv0.apidog.io/</a></td>
+        </tr>
+        <tr>
+          <td>FieldInsight API authorization</td>
+          <td>External</td>
+          <td><a href="https://rezzxstrv0.apidog.io/doc-667093" target="_blank">https://rezzxstrv0.apidog.io/doc-667093</a></td>
+        </tr>
+        <tr>
+          <td>FieldInsight Help Center · Job API</td>
+          <td>External</td>
+          <td><a href="https://help.fieldinsight.com/en/articles/5507528-job-api" target="_blank">help.fieldinsight.com/en/articles/5507528-job-api</a></td>
+        </tr>
+        <tr>
+          <td>FieldInsight Postman collection</td>
+          <td>External</td>
+          <td><a href="https://documenter.getpostman.com/view/14754452/TWDdjDgZ" target="_blank">documenter.getpostman.com/view/14754452/TWDdjDgZ</a></td>
+        </tr>
+        <tr>
+          <td>FieldInsight developer signup</td>
+          <td>External</td>
+          <td><a href="https://app.fieldinsight.com/developer/signup" target="_blank">app.fieldinsight.com/developer/signup</a></td>
+        </tr>
+        <tr>
+          <td>FieldInsight authorize endpoint</td>
+          <td>API</td>
+          <td><span class="endpoint">https://app.fieldinsight.com/oauth/authorize</span></td>
+        </tr>
+        <tr>
+          <td>FieldInsight token endpoint</td>
+          <td>API</td>
+          <td><span class="endpoint">https://app.fieldinsight.com/oauth/token/</span></td>
+        </tr>
+        <tr>
+          <td>FieldInsight public-api base</td>
+          <td>API</td>
+          <td><span class="endpoint">https://app.fieldinsight.com/public-api/</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SCOPE EVOLUTION ── -->
+  <div id="scope">
+    <div class="sec-label">Section 05</div>
+    <div class="sec-title">Scope Evolution</div>
+    <div class="sec-desc">How FI-022 grew across the thread. Each row is a deliberate scope change, not a discovery.</div>
+
+    <table class="api-table">
+      <thead>
+        <tr><th style="width:140px">Stage</th><th>MCP Read Tools</th><th>Sub-Tickets</th><th>CORE Effort</th><th>Spec Version</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Initial scoping</td>
+          <td>6 (jobs · get_job · customers · get_customer · timesheets · technicians)</td>
+          <td>Implicit (4 phases)</td>
+          <td>~2.5–3 days</td>
+          <td>v0.1</td>
+        </tr>
+        <tr>
+          <td>+ TOC &amp; sub-tickets</td>
+          <td>6 (unchanged)</td>
+          <td><strong>8 explicit</strong> (FI-022.1 … FI-022.8)</td>
+          <td>~2.5–3 days</td>
+          <td>v0.2 · partial</td>
+        </tr>
+        <tr>
+          <td><strong>+ Operational coverage</strong></td>
+          <td><strong>14</strong> (+ assets, defects, quotes, invoices, supplier invoices, POs, products, service items)</td>
+          <td>8</td>
+          <td><strong>~3.5–5 days</strong></td>
+          <td><strong>v0.2</strong> (current)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout green" style="margin-top:20px">
+      <strong>Net effect on the build:</strong> ticket grew ~40% in surface area (6 → 14 tools) but only ~50–67% in effort, because the marginal cost of each additional read tool is low once the OAuth + typed client foundation lands. The OAuth and client phases (Phase 1, Phase 2) didn&rsquo;t move &mdash; they were already fixed cost.
+    </div>
+  </div>
+
+  <!-- ── OPEN ITEMS ── -->
+  <div id="open">
+    <div class="sec-label">Section 06</div>
+    <div class="sec-title">Open Items &amp; What&rsquo;s Next</div>
+    <div class="sec-desc">Things still to resolve before code starts moving.</div>
+
+    <table class="api-table">
+      <thead>
+        <tr><th style="width:180px">Item</th><th>Owner</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Register OAuth app at FieldInsight</td>
+          <td>Paul</td>
+          <td>Submit early &mdash; approval may take time. <code>app.fieldinsight.com/developer/signup</code> → confidential client → register HTTPS redirect URI.</td>
+        </tr>
+        <tr>
+          <td>Throwaway dev tenant</td>
+          <td>Paul</td>
+          <td>Spin a non-production FieldInsight tenant for write-tool testing in Phase 4. Live data is too risky.</td>
+        </tr>
+        <tr>
+          <td>Confirm webhook availability</td>
+          <td>FI team</td>
+          <td>If FI exposes webhooks, FI-022.8 becomes feasible. If not, drop or move to polling.</td>
+        </tr>
+        <tr>
+          <td>Probe rate limits</td>
+          <td>Build</td>
+          <td>Not documented. First job of Phase 2 is to discover real limits with conservative backoff and log them.</td>
+        </tr>
+        <tr>
+          <td>Vadim onboarding to The Meridian</td>
+          <td>Paul</td>
+          <td>Code already permits any <code>@fieldinsight.com</code> user. Confirm Google Cloud OAuth app is in &ldquo;Internal&rdquo; mode (not &ldquo;Testing&rdquo;) so no per-user allowlist is needed.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  FI-022 Session Log · v1.0 &nbsp;·&nbsp;
+  <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
+  <a href="fi-22-fieldinsight-api-mcp-spec.html">Spec</a> &nbsp;·&nbsp;
+  <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">GitHub</a>
+</footer>
+
+<script>
+const sections = document.querySelectorAll('.spec-body > div[id]');
+const navLinks = document.querySelectorAll('nav.spec-nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`nav.spec-nav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

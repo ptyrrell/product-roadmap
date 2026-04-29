@@ -4,6 +4,17 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.10.2 — 2026-04-30
+
+### Added
+- **`docs/fi-22-session-log.html`** — new build journal page for FI-022. Summarises the entire conversation thread that produced the FI-022 spec: 6 sessions chronologically, 8 key decisions captured Q→A→because, full artefact + URL catalogue, scope-evolution table (6→14 tools, ~2.5d→~3.5–5d effort), open items list.
+- Linked from the FI-022 spec page (footer + meta pill) and the FI-022 ticket card on the roadmap.
+
+### Changed
+- Roadmap nav + footer bumped v0.10.1 → v0.10.2.
+
+---
+
 ## v0.10.3 — 2026-04-24
 
 ### Changed
