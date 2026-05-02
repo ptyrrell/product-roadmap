@@ -6,10 +6,11 @@
   "chat_url": "https://alfred.paultyrrell.dev/chat",
   "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
   "tunnel_type": "cloudflare-named",
-  "last_updated": "2026-05-02T08:15:17.671823",
+  "last_updated": "2026-05-02T08:21:48.783610",
   "messenger": "Twilio (SMS+WA+Voice) + iMessage",
   "imessage_polling": true,
   "local_llm_enabled": false,
-  "models": "claude-haiku-4-5 default; auto-routes to sonnet/opus on plan/synth keywords",
+  "local_llm_model": "",
+  "models": "claude-haiku-4-5 default \u00b7 auto-routes to sonnet/opus on plan/synth keywords",
   "version": "alfred-v3-named-tunnel"
 }
