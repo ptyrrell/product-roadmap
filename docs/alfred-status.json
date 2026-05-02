@@ -2,7 +2,7 @@
   "status": "running",
   "tunnel_url": "https://brush-ink-developments-return.trycloudflare.com",
   "diagnostic_url": "https://brush-ink-developments-return.trycloudflare.com/diagnostic",
-  "last_updated": "2026-05-02T17:15:00.801486",
+  "last_updated": "2026-05-02T17:34:30.901136",
   "messenger": "Twilio (SMS+WA+Voice) + iMessage",
   "imessage_polling": true,
   "local_llm_enabled": false,
