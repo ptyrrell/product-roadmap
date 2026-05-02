@@ -1,14 +1,15 @@
 {
   "status": "running",
-  "tunnel_url": "https://starting-frequent-sign-reach.trycloudflare.com",
-  "diagnostic_url": "https://starting-frequent-sign-reach.trycloudflare.com/diagnostic",
-  "capabilities_url": "https://starting-frequent-sign-reach.trycloudflare.com/capabilities",
-  "chat_url": "https://starting-frequent-sign-reach.trycloudflare.com/chat",
+  "tunnel_url": "https://alfred.paultyrrell.dev",
+  "diagnostic_url": "https://alfred.paultyrrell.dev/diagnostic",
+  "capabilities_url": "https://alfred.paultyrrell.dev/capabilities",
+  "chat_url": "https://alfred.paultyrrell.dev/chat",
   "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
-  "last_updated": "2026-05-02T07:58:48.792301",
+  "tunnel_type": "cloudflare-named",
+  "last_updated": "2026-05-02T08:15:17.671823",
   "messenger": "Twilio (SMS+WA+Voice) + iMessage",
   "imessage_polling": true,
   "local_llm_enabled": false,
-  "models": "claude-haiku-4-5 default",
-  "version": "alfred-v3"
+  "models": "claude-haiku-4-5 default; auto-routes to sonnet/opus on plan/synth keywords",
+  "version": "alfred-v3-named-tunnel"
 }
