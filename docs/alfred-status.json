@@ -2,13 +2,11 @@
   "status": "running",
   "tunnel_url": "https://brush-ink-developments-return.trycloudflare.com",
   "diagnostic_url": "https://brush-ink-developments-return.trycloudflare.com/diagnostic",
-  "capabilities_url": "https://brush-ink-developments-return.trycloudflare.com/capabilities",
-  "chat_url": "https://brush-ink-developments-return.trycloudflare.com/chat",
-  "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
-  "last_updated": "2026-05-02T07:14:30.158136",
+  "last_updated": "2026-05-02T17:14:50.162853",
   "messenger": "Twilio (SMS+WA+Voice) + iMessage",
   "imessage_polling": true,
   "local_llm_enabled": false,
-  "models": "claude-haiku-4-5 default; auto-routes to sonnet/opus on plan/synth keywords",
+  "local_llm_model": "",
+  "models": "claude-haiku-4-5 default \u00b7 auto-routes to sonnet/opus on plan/synth keywords",
   "version": "alfred-v3"
 }
