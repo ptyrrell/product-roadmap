@@ -4,6 +4,15 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.11.2 — 2026-05-12
+
+### Added
+- **FI-08 Fiona Scheduler Panel ticket card** in the Active column at the top. Customer-facing surface for FONT (FI-04). A ✨ Fiona icon at the bottom of the scheduling page's left rail opens a slide-in left panel with the AI chat thread. Action cards inline. File + photo upload via composer or drag-and-drop. Role-gated (Owner / Scheduler / Tech). Persistent sessions across devices. Includes an interactive self-contained HTML mockup that demonstrates the public-holiday reschedule flow end-to-end.
+
+### Changed
+- Roadmap nav + footer bumped v0.11.1 → v0.11.2 to reflect FI-08 addition.
+
+---
 ## v0.11.1 — 2026-05-12
 
 ### Added

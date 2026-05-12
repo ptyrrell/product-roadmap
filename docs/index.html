@@ -309,7 +309,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.11.1</span>
+    <span class="version">v0.11.2</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -341,7 +341,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.2</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -372,6 +372,29 @@
     <!-- ACTIVE -->
     <div class="col-active">
       <div class="col-header"><span class="dot"></span><span class="col-label">Active</span></div>
+
+      <div class="card" data-cat="design product infra">
+        <div class="ticket-id">FI-08 · Fiona Panel</div>
+        <div class="card-title">✨ Fiona AI Scheduler Panel — Customer surface for FONT</div>
+        <div class="card-desc">A left-side AI assistant panel on the FieldInsight scheduling page. Click the ✨ Fiona icon at the bottom of the left rail → 380px panel slides in beside the schedule grid → ask in plain English ("Move 18 May jobs to 19 May — it's a public holiday"), Fiona drafts a single action card listing every affected job with conflicts auto-flagged, one Approve click applies the lot. PDFs and photos drag-and-drop. Persistent sessions across devices. Role-gated: Owner = full drafts, Scheduler = schedule-domain drafts, Tech = read-only.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-version">mockup v0.1.0</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Interactive Mockup Live</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Single entry point</strong> — one ✨ Fiona icon on the existing left rail (bottom position, gold-on-purple gradient). Pulsing first-time tip auto-dismisses after click or 8s.</li>
+          <li><strong>Action cards</strong> — every state-changing reply renders a purple-bordered card with title, line items, yellow warning panel with auto-resolution suggestions, and three buttons: Approve &amp; Apply · Edit · Discard. Schedule grid updates instantly on Approve with a 1.4s amber pulse on changed jobs.</li>
+          <li><strong>File + photo upload</strong> — composer 📎 / 📷 icons, drag-and-drop anywhere on the panel, paste from clipboard. PDFs/CSVs → structured proposal as action card · photos → OCR + asset register match.</li>
+          <li><strong>Persistent sessions</strong> — thread, attachments, pending action cards, and unsent composer text survive across sessions and devices. Open it on your phone, see your laptop's conversation.</li>
+          <li><strong>Role-gated</strong> — server-side tool filter per FI-04 amendment A1. Owner = full draft tools · Scheduler = schedule-domain drafts · Technician = read-only on own jobs + asset history + KB. A Tech who asks "move JOB-2451" gets a graceful "I can't from your account — want me to ping Sam?"</li>
+          <li><strong>JTBD spec</strong> — 7 sub-jobs (public-holiday reschedule · sort tomorrow · upload asset PDF · identify asset from photo · draft client SMS batch · resume across devices · tech-variant interface), 22 ACs, 11 FRs, 9 new API endpoints, ActionCard payload schema, 3 new tables (FionaSession · FionaMessage · Attachment).</li>
+          <li>🔗 <a href="https://github.com/ptyrrell/font" target="_blank" style="color:#a5b4fc">FONT (FI-04) backend</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/yabbiebot/blob/main/specs/FI-08-fiona-scheduler-panel.md" target="_blank" style="color:#a5b4fc">📐 FI-08 Spec</a> &nbsp;·&nbsp; <a href="https://github.com/ptyrrell/yabbiebot/blob/main/docs/fi-08-fiona-scheduler-mockup.html" target="_blank" style="color:#a5b4fc">Mockup HTML (open in browser)</a></li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="product infra design">
         <div class="ticket-id">FI-04 · FONT</div>
@@ -1017,7 +1040,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.2</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1382,7 +1405,7 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.11.1 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.11.2 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
   &nbsp;·&nbsp; Updated 12 May 2026
   &nbsp;·&nbsp;
@@ -1604,7 +1627,7 @@
     </div>
   </div>
 
-  <div class="updated" style="text-align:right">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
+  <div class="updated" style="text-align:right">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.2</div>
 </div>
 </div>
 
@@ -1613,7 +1636,7 @@
   <div class="hero">
     <h1>💡 Inspiration</h1>
     <p>Market ideas, signals, and thinking worth holding onto.</p>
-    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.2</div>
   </div>
 
   <div class="board">
