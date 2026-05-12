@@ -4,6 +4,16 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.11.1 — 2026-05-12
+
+### Added
+- **FONT ticket card** (FI-04) on the FieldInsight roadmap in the **Active** column — Palantir-style ontology + role-gated AI agent over FieldInsight. Phase 1 ships role-gated agents (Owner / Scheduler / Tech) with draft-then-approve writes. Phase 2 adds Outlook email threading (HubSpot model) and Knowledge Base RAG. Phase 3 pilot with 3 friendly customers. Phase 5 migrates Neo4j Aura → self-hosted Neo4j Community on Fly.io Sydney for margin protection. Scaffold live at `https://fi-font-2a0587e29c64.herokuapp.com/` v0.1.1.
+- **FI-07 ticket card** in the **Pending** column — Scheduling page filter bar redesign. Single-row filter chip strip with `+ Add Filter` and `+ N more ▾` overflow. Named saved filter presets (server-side, per-user). Month picker moves down one row. Mobile chips horizontally scroll, never wrap. JTBD spec with 16 ACs ready for FI dev team.
+
+### Changed
+- Roadmap nav + footer bumped v0.11.0 → v0.11.1 to reflect FONT + FI-07 additions.
+
+---
 ## v0.11.0 — 2026-05-12
 
 ### Added

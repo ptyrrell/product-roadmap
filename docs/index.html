@@ -309,7 +309,7 @@
 <!-- ── Nav ── -->
 <nav>
   <span class="logo">Roadmap</span>
-    <span class="version">v0.10.2</span>
+    <span class="version">v0.11.1</span>
   <div class="spacer"></div>
   <div class="tab-bar">
     <button class="tab active" onclick="switchView('fi', event)">FieldInsight</button>
@@ -341,7 +341,7 @@
   <div class="hero">
     <h1>FieldInsight Product Roadmap</h1>
     <p>Features in flight, planned, and shipped — updated with every build.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
   </div>
 
   <!-- ── One Ring ── -->
@@ -372,6 +372,29 @@
     <!-- ACTIVE -->
     <div class="col-active">
       <div class="col-header"><span class="dot"></span><span class="col-label">Active</span></div>
+
+      <div class="card" data-cat="product infra design">
+        <div class="ticket-id">FI-04 · FONT</div>
+        <div class="card-title">✨ FONT — FieldInsight Ontology + AI Agent (Palantir-style)</div>
+        <div class="card-desc">A typed knowledge graph + role-gated AI agent over every FieldInsight tenant. Reads via the public API into a Neo4j ontology (Company → Site → Asset → Job → Technician), then exposes a LangGraph + Claude agent that answers questions and drafts mutating actions for human approval. Owner / Scheduler / Tech each get their own tool set. Premium "FieldInsight AI" add-on tier.</div>
+        <div class="card-meta">
+          <span class="badge badge-active">🔥 Active</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-infra">⚙️ Infra</span>
+          <span class="badge badge-version">v0.1.1</span>
+          <span class="badge" style="background:rgba(74,222,128,0.15);color:#4ade80">🟢 Scaffold Live</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>Phase 1 — role-gated agent</strong> · Owner = full read + drafts (jobs, quotes, replies, reassignments) · Scheduler = drafts (jobs, schedules, replies) · Tech = read-only on own jobs + asset history. Every mutation requires a one-click Approve in the chat UI before any FI API write fires.</li>
+          <li><strong>Phase 2 — Outlook email threading</strong> · Microsoft Graph integration · pulls email threads that mention a known Site / Job / Company / Asset into the ontology as <code>EmailThread</code> nodes (HubSpot model — threads stay in Outlook, FONT becomes the single timeline view per job).</li>
+          <li><strong>Phase 2 — Knowledge Base RAG</strong> · ingests FI in-app help, training docs, template library, and customer SOPs into pgvector · agent gets a <code>kb_search</code> tool that returns cited snippets · powers "how do I…?" questions and reduces FI support load.</li>
+          <li><strong>Phase 3 — pilot + multi-tenant</strong> · single Neo4j cluster with tenantId on every node · 3 friendly customers · pricing tiers ($15 Search / $35 Ontology / $65 Agents per user/mo).</li>
+          <li><strong>Phase 5 — AU data residency</strong> · migrate Neo4j AuraDB → self-hosted Neo4j Community on Fly.io Sydney before customer #1 · margin-protected production stack (no per-tenant SaaS fees in the critical path).</li>
+          <li><strong>Margin protection rule</strong> · every production dependency is Apache 2.0 / MIT / GPLv3-network-use OR usage-priced with a swap-out alternative · target ≥ 70% gross margin after infra.</li>
+          <li>🔗 <a href="https://fi-font-2a0587e29c64.herokuapp.com/" target="_blank" style="color:#00e5b0">Live Scaffold →</a>  ·  <a href="https://github.com/ptyrrell/font" target="_blank" style="color:#a5b4fc">GitHub (private)</a>  ·  <a href="https://github.com/ptyrrell/product-roadmap/blob/main/content/fieldinisght-roadmap.md" target="_blank" style="color:#a5b4fc">📐 FI-04 Spec</a></li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="design product">
         <div class="ticket-id">FI-001</div>
@@ -506,6 +529,28 @@
     <!-- PENDING -->
     <div class="col-pending">
       <div class="col-header"><span class="dot"></span><span class="col-label">Pending</span></div>
+
+      <div class="card" data-cat="design product">
+        <div class="ticket-id">FI-07</div>
+        <div class="card-title">📐 Scheduling Page Filter Bar — One-row Chip Strip</div>
+        <div class="card-desc">Redesign the FieldInsight scheduling page filter bar. Today: two stacked rows of nine filter inputs consuming ~280px before the schedule grid begins. Proposed: one row of removable filter chips with <code>+ Add Filter</code> + <code>+ N more ▾</code> overflow, Month picker moved down a row, global controls (search / clock / notifications) on the very top row only. First-class named saved filter presets ("Brad's emergencies").</div>
+        <div class="card-meta">
+          <span class="badge badge-pending">⏳ Pending</span>
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-design">🎨 Design</span>
+          <span class="badge badge-product">🏗 Product</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li>One row of filter chips, never two — overflow into <code>+ N more ▾</code> popover</li>
+          <li>Active filters render as removable chips: <code>field: value [+N more] ×</code></li>
+          <li>Month picker moves to its own row below global controls</li>
+          <li><code>Save</code> + <code>Saved (N) ▾</code> dropdown for named filter sets — server-side, persists per user across devices</li>
+          <li>Mobile: chips become horizontally scrollable, never wrap to a second row</li>
+          <li>Schedule grid starts ~90px higher than today on a 13" MacBook</li>
+          <li>JTBD spec with before/after screenshots, 16 acceptance criteria, 10 functional requirements, suggested data model (<code>SchedulerFilterPreset</code> table)</li>
+          <li>🔗 <a href="https://github.com/ptyrrell/product-roadmap/blob/main/content/fieldinisght-roadmap.md" target="_blank" style="color:#a5b4fc">📐 FI-07 Spec</a> &nbsp;·&nbsp; <a href="https://app.fieldinsight.com" target="_blank" style="color:#a5b4fc">Affects: Schedule page</a></li>
+        </ul></div>
+      </div>
 
       <div class="card" data-cat="salesops product">
         <div class="ticket-id">FI-004</div>
@@ -972,7 +1017,7 @@
   <div class="hero">
     <h1>Personal Roadmap</h1>
     <p>Paul Tyrrell — Alfred, Sales Ops, CEO tools, and infrastructure.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
   </div>
 
   <!-- ── Personal One Ring ── -->
@@ -1337,9 +1382,9 @@
 </div>
 
 <footer>
-  Roadmap &nbsp;·&nbsp; v0.10.2 &nbsp;·&nbsp;
+  Roadmap &nbsp;·&nbsp; v0.11.1 &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">ptyrrell/product-roadmap</a>
-  &nbsp;·&nbsp; Updated 25 March 2026
+  &nbsp;·&nbsp; Updated 12 May 2026
   &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/customer-ideas.html" target="_blank">💡 Share an Idea</a>
 </footer>
@@ -1559,7 +1604,7 @@
     </div>
   </div>
 
-  <div class="updated" style="text-align:right">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+  <div class="updated" style="text-align:right">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
 </div>
 </div>
 
@@ -1568,7 +1613,7 @@
   <div class="hero">
     <h1>💡 Inspiration</h1>
     <p>Market ideas, signals, and thinking worth holding onto.</p>
-    <div class="updated">Last updated: 24 April 2026 &nbsp;·&nbsp; v0.10.1</div>
+    <div class="updated">Last updated: 12 May 2026 &nbsp;·&nbsp; v0.11.1</div>
   </div>
 
   <div class="board">
