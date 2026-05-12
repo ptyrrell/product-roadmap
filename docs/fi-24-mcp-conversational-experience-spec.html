@@ -136,7 +136,7 @@ footer a:hover{color:var(--text)}
   <div class="spec-title">FI-024 — <span>FieldInsight MCP Server: Conversational Experience</span></div>
   <div class="spec-subtitle">Layer the AI assistant experience on top of FI-022's MCP server. Defines the conversational use cases, full tool catalogue, proactive nudge rules, job data shape, and 4-phase rollout that lets a user (Ceri) query, schedule, optimise, and analyse her field-service operation through natural language with Claude / Alfred / any MCP-aware client.</div>
   <div class="spec-meta">
-    <span class="meta-pill blue">📘 Spec — Draft v0.1</span>
+    <span class="meta-pill blue">📘 Spec — Draft v0.2</span>
     <span class="meta-pill purple">🤖 MCP Conversational Layer</span>
     <span class="meta-pill amber">⏳ Not Started — depends on FI-022</span>
     <span class="meta-pill">Audience: Ceri</span>
@@ -158,6 +158,11 @@ footer a:hover{color:var(--text)}
 </nav>
 
 <div class="spec-body">
+
+  <div id="changelog" style="background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(168,85,247,.06));border:1px solid rgba(245,158,11,.25);border-radius:var(--r);padding:14px 18px;font-size:12.5px;color:var(--muted)">
+    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--amber);margin-bottom:6px">What changed in v0.2 · 2026-05-12</div>
+    <strong style="color:var(--text)">v1 ordering decision:</strong> default sort within a tech's day is now <strong style="color:var(--text)">by job type</strong> (Service → Install → Quote → Callback). Walk-order / run-order isn't a primary use case yet — FieldInsight isn't using sequenced run-order in production. The <code style="background:var(--surface3);padding:1px 5px;border-radius:4px;color:#93c5fd">run_order_position</code> field stays exposed and editable via <code style="background:var(--surface3);padding:1px 5px;border-radius:4px;color:#93c5fd">reorder_run</code> for ad-hoc manual overrides. Auto route-optimisation moves firmly to <strong style="color:var(--text)">Phase 4</strong>, where drive-time metrics make it real.
+  </div>
 
   <div id="why">
     <div class="sec-label">1 · Why</div>
@@ -201,7 +206,7 @@ footer a:hover{color:var(--text)}
     </div>
 
     <div class="example">
-      <div class="ex-label">2.2 — Run order optimisation</div>
+      <div class="ex-label">2.2 — Run order optimisation <span style="color:var(--amber);font-weight:700">· Phase 4 (future)</span></div>
       <div class="turn">
         <span class="speaker user">User</span>
         <span class="text">Here's tomorrow's run for Jake — can you assess it?</span>
@@ -209,6 +214,9 @@ footer a:hover{color:var(--text)}
       <div class="turn">
         <span class="speaker ai">AI</span>
         <span class="text">Looks like jobs 3 and 4 backtrack across the same suburb you visited in job 1. Reordering to <strong>1 → 4 → 3 → 2 → 5</strong> saves ~22km and ~35 min of drive time. Want me to apply it?</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:8px;padding-top:10px;border-top:1px dashed var(--border)">
+        <strong style="color:var(--amber)">Note:</strong> Walk-order / run-order optimisation isn't a v1 use case. <strong>v1 default sort is by job type</strong> (Service → Install → Quote → Callback). The <code>run_order_position</code> field stays accessible &amp; editable for manual overrides, but FieldInsight isn't yet using sequenced run-order in production. Route optimisation (this example) lands in Phase 4 once drive-time data and route metrics are exposed.
       </div>
     </div>
 
@@ -287,7 +295,7 @@ footer a:hover{color:var(--text)}
     <div class="tool-grid">
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>list_jobs</div><div class="tool-desc">Filter by date range, tech, status, type, customer, region.</div></div>
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>get_job</div><div class="tool-desc">Full detail for one job including line items, status history, attachments.</div></div>
-      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>get_run</div><div class="tool-desc">Ordered sequence of jobs for a tech on a date — the "run order".</div></div>
+      <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>get_run</div><div class="tool-desc">Sequence of jobs for a tech on a date. <strong>v1 default sort: by job type</strong> (Service → Install → Quote → Callback). If <code>run_order_position</code> is set on a job, it overrides the type-based order. Walk/run-order optimisation is on the roadmap (Phase 4) but not the v1 default.</div></div>
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>get_run_metrics</div><div class="tool-desc">Drive time, distance, total $ value, slack time for a run.</div></div>
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>list_job_history</div><div class="tool-desc">Past jobs for analytics, with status-change timestamps.</div></div>
       <div class="tool-card read"><div class="tool-name"><span class="dot read"></span>search_jobs</div><div class="tool-desc">Free-text search across descriptions, customers, notes.</div></div>
@@ -305,7 +313,7 @@ footer a:hover{color:var(--text)}
     <div style="font-size:13px;font-weight:700;color:var(--text);margin:24px 0 12px;display:flex;align-items:center;gap:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--amber)"></span>4.3 Write — Actions</div>
     <div class="tool-grid">
       <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>reschedule_job</div><div class="tool-desc">Move a job to a new date/time (and optionally tech).</div></div>
-      <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>reorder_run</div><div class="tool-desc">Set a new sequence for a tech's day.</div></div>
+      <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>reorder_run</div><div class="tool-desc">Set a manual sequence for a tech's day by writing <code>run_order_position</code> on each job. Field stays editable for ad-hoc overrides; <strong>not the v1 default</strong> — primary v1 ordering is by job type.</div></div>
       <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>reassign_job</div><div class="tool-desc">Change the tech on a job.</div></div>
       <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>bulk_reschedule</div><div class="tool-desc">Move N jobs at once (e.g. "move Monday's jobs to Tuesday").</div></div>
       <div class="tool-card write"><div class="tool-name"><span class="dot write"></span>update_notification_rule</div><div class="tool-desc">Create / edit / disable a rule.</div></div>
@@ -334,12 +342,16 @@ footer a:hover{color:var(--text)}
 ├── units                       ← e.g. number of items / sqm / hrs
 ├── amount                      ← total $ value
 ├── line_items[] { description, qty, unit_price, total }
-├── run_order_position          ← position in tech's day
+├── run_order_position          ← editable manual override; NOT the v1 default sort
 ├── notes, attachments
 └── flags { conflicts_with_holiday, on_sla_risk, ... }</pre>
 
     <div class="callout green">
       <strong>Why <code>status_history</code> matters:</strong> "Median on-site time" = median(<code>Completed.ts</code> &minus; <code>Arrived.ts</code>) across N jobs. Without timestamped status changes, none of the analytics in Example 2.4 are answerable. Confirm with FieldInsight that every status change writes a timestamped row.
+    </div>
+
+    <div class="callout amber">
+      <strong>v1 ordering decision (2026-05-12):</strong> The default sort within a tech's day is <strong>by job type</strong> (Service → Install → Quote → Callback → other). FieldInsight isn't yet using sequenced walk/run-order in production, so we deliberately keep the surface simple in v1: jobs of the same type cluster together so Ceri can batch-think. The <code>run_order_position</code> field <strong>remains exposed and editable</strong> via <code>reorder_run</code> for ad-hoc manual overrides — when set, it wins over the type-based order. Once route metrics (drive time, distance) land in Phase 4, walk-order optimisation becomes a primary use case and this default may flip.
     </div>
   </div>
 
@@ -357,7 +369,9 @@ footer a:hover{color:var(--text)}
       <tbody>
         <tr><td>"What's on Monday and is anything clashing?"</td><td><code>list_jobs(date=Mon)</code> · <code>list_public_holidays</code> · <code>get_pending_nudges</code></td></tr>
         <tr><td>"Reschedule Monday's jobs to Tuesday."</td><td><code>list_jobs(date=Mon)</code> → <code>bulk_reschedule</code></td></tr>
-        <tr><td>"Optimise Jake's run for tomorrow."</td><td><code>get_run(tech=jake, date=tomorrow)</code> → <code>get_run_metrics</code> → propose → <code>reorder_run</code></td></tr>
+        <tr><td>"What's on for Jake tomorrow, in the order he'll do them?"</td><td><code>get_run(tech=jake, date=tomorrow)</code> — returned <strong>sorted by job type</strong> (v1 default), with any <code>run_order_position</code> overrides honoured</td></tr>
+        <tr><td>"Move job #4732 to be Jake's first stop tomorrow."</td><td><code>reorder_run(tech=jake, date=tomorrow, job=4732, position=1)</code> — manual override of the type-based default</td></tr>
+        <tr><td>"Optimise Jake's run for tomorrow." <span style="color:var(--amber);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-left:6px">Phase 4</span></td><td><code>get_run(tech=jake, date=tomorrow)</code> → <code>get_run_metrics</code> → propose → <code>reorder_run</code> (drive-time minimisation; not in v1)</td></tr>
         <tr><td>"What's the value of this run?"</td><td><code>get_run_metrics</code> (returns total $)</td></tr>
         <tr><td>"Average time Jake spends per service job?"</td><td><code>list_job_history(tech=jake, type=Service, last=90d)</code> then compute from <code>status_history</code></td></tr>
         <tr><td>"Show me jobs conflicting with public holidays in the next month."</td><td><code>list_public_holidays</code> · <code>list_jobs(date_range)</code></td></tr>
@@ -374,7 +388,7 @@ footer a:hover{color:var(--text)}
     </div>
 
     <ul class="q-list">
-      <li><strong>Q1 · Walk plans</strong>The notes mention "can you view this walk plan." Is that a distinct FieldInsight entity (multi-day route across a site), or another view of a run? Needs a <code>get_walk_plan</code> tool if it's its own thing.</li>
+      <li><strong>Q1 · Walk plans</strong> <span style="color:var(--muted);font-weight:600;font-size:11px">— deferred (not v1)</span><br><span style="color:var(--muted)">Originally: is "walk plan" a distinct entity (multi-day route across a site) or another view of a run?</span> <strong>Resolved for v1 (2026-05-12):</strong> walk-order / run-sequence is <em>not</em> a primary use case yet — FieldInsight isn't using sequenced walk-order in production. v1 sorts by job type; the <code>run_order_position</code> field stays editable for manual overrides via <code>reorder_run</code>. Revisit (and design <code>get_walk_plan</code>) in Phase 4 when route metrics are exposed.</li>
       <li><strong>Q2 · Job history depth</strong>How far back should analytics queries reach? 12 months? All-time? Affects performance and pagination design (and informs how aggressively we cache).</li>
       <li><strong>Q3 · Skill / seniority data</strong>For the year-on-year staffing comparison to work, we need tech tenure and skill ratings exposed. Are these already in FieldInsight or do they need to be added?</li>
       <li><strong>Q4 · Multi-tenant auth</strong>OAuth per user, scoped to their FieldInsight account. Confirm token model — likely inherited from FI-022's encrypted token store.</li>
@@ -411,7 +425,7 @@ footer a:hover{color:var(--text)}
           <div class="phase-desc">Unlocks "yes, move them" follow-throughs. Now the AI can both answer and act.</div>
           <ul class="phase-items">
             <li><span class="check">✓</span><code>reschedule_job</code></li>
-            <li><span class="check">✓</span><code>reorder_run</code></li>
+            <li><span class="check">✓</span><code>reorder_run</code> <span style="color:var(--muted);font-size:10.5px">— manual override of the v1 type-based sort; auto-optimisation lands in Phase 4</span></li>
             <li><span class="check">✓</span><code>reassign_job</code></li>
             <li><span class="check">✓</span><code>bulk_reschedule</code></li>
           </ul>
@@ -434,11 +448,13 @@ footer a:hover{color:var(--text)}
       <div class="phase p4">
         <div class="phase-num p4">4</div>
         <div class="phase-body">
-          <div class="phase-title">Optimisation</div>
-          <div class="phase-desc">Drive-time and distance maths land here, plus route-optimisation suggestions ("save 22km by reordering").</div>
+          <div class="phase-title">Optimisation <span style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:0">— walk-order becomes primary here</span></div>
+          <div class="phase-desc">Drive-time and distance maths land here, plus route-optimisation suggestions ("save 22km by reordering"). This is where the v1 default sort (by job type) is reconsidered and walk-order optimisation can become the default once metrics back it up.</div>
           <ul class="phase-items">
             <li><span class="check">✓</span><code>get_run_metrics</code> with drive-time / distance</li>
             <li><span class="check">✓</span>Route optimisation suggestions (proposal layer over <code>reorder_run</code>)</li>
+            <li><span class="check">✓</span>Optional <code>get_walk_plan</code> (see Q1) if multi-day site walks turn out to be a distinct entity</li>
+            <li><span class="check">✓</span>Re-evaluate v1 default sort: should walk-order beat job-type once metrics exist?</li>
           </ul>
         </div>
       </div>
