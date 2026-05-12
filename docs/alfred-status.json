@@ -1,5 +1,8 @@
 {
   "status": "running",
+  "platform": "Open Claw",
+  "agent": "Alfred",
+  "tagline": "Your Open Claw assistant",
   "tunnel_url": "https://alfred.paultyrrell.dev",
   "diagnostic_url": "https://alfred.paultyrrell.dev/diagnostic",
   "capabilities_url": "https://alfred.paultyrrell.dev/capabilities",
