@@ -905,6 +905,30 @@
         </ul></div>
       </div>
 
+      <div class="card" data-cat="product alfred">
+        <div class="ticket-id">FI-024</div>
+        <div class="card-title">🤖 FieldInsight MCP Server — Conversational Experience</div>
+        <div class="card-desc">The AI-experience layer on top of FI-022's MCP infrastructure. Defines the conversational use cases (drafted for Ceri), the full tool catalogue (read · write · nudge), proactive notification rules (public-holiday clash, capacity overload, SLA risk), the per-job data shape that powers analytics, and a 4-phase rollout. Lets a user query, schedule, optimise, and analyse her field-service operation through natural language with Claude / Alfred / any MCP-aware client.</div>
+        <div class="card-meta">
+          <span class="badge badge-high">High</span>
+          <span class="badge badge-product">🏗 Product</span>
+          <span class="badge badge-alfred">🎩 Alfred</span>
+          <span class="badge" style="background:rgba(168,85,247,0.15);color:#d8b4fe;border:1px solid rgba(168,85,247,0.35)">🤖 MCP</span>
+          <span class="badge" style="background:rgba(99,102,241,0.15);color:#a5b4fc;border:1px solid rgba(99,102,241,0.35)">🗣 Conversational</span>
+          <span class="badge" style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)">⏳ Depends on FI-022</span>
+        </div>
+        <div class="outcomes"><ul>
+          <li><strong>For Ceri (audience):</strong> ask "what's on next week and is anything clashing?" — get a useful answer in one turn. Ask "reschedule Monday's jobs to Tuesday" — AI proposes, you approve, done in &lt; 1 min.</li>
+          <li><strong>Phase 1 · Read-only MVP:</strong> <code>list_jobs</code> · <code>get_job</code> · <code>get_run</code> · <code>list_techs</code> · <code>list_public_holidays</code> · <code>list_job_history</code> — unlocks revenue questions, run inspection, basic analytics, conflict surfacing.</li>
+          <li><strong>Phase 2 · Actions:</strong> <code>reschedule_job</code> · <code>reorder_run</code> · <code>reassign_job</code> · <code>bulk_reschedule</code> — unlocks "yes, move them" follow-throughs (write-tool safety: AI proposes, user confirms before fire).</li>
+          <li><strong>Phase 3 · Proactive nudges:</strong> <code>list_notification_rules</code> · <code>get_pending_nudges</code> · <code>update_notification_rule</code> — unlocks the "Hi Ceri, Monday's a public holiday…" experience. AI starts the conversation.</li>
+          <li><strong>Phase 4 · Optimisation:</strong> <code>get_run_metrics</code> with drive-time / distance · route-optimisation suggestions ("save 22km by reordering").</li>
+          <li><strong>Critical data dependency:</strong> every job's <code>status_history</code> must carry a timestamp per status change (Booked → Dispatched → Arrived → Completed). Without it, none of the analytics in Example 2.4 are answerable.</li>
+          <li><strong>Why now:</strong> FieldInsight gets to be an early MCP adopter — chance to shape how field-service tools integrate with AI assistants while the standard is still hardening.</li>
+          <li>📐 <a href="fi-24-mcp-conversational-experience-spec.html" style="color:#a5b4fc"><strong>Full Spec — FI-024 Conversational Experience →</strong></a> &nbsp;·&nbsp; 📐 <a href="fi-22-fieldinsight-api-mcp-spec.html" style="color:#a5b4fc"><strong>FI-022 Underlying Infra →</strong></a></li>
+        </ul></div>
+      </div>
+
       <div class="card" data-cat="product alfred infra">
         <div class="ticket-id">FI-023</div>
         <div class="card-title">✦ FieldInsight AI Agent Stack</div>

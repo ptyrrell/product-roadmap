@@ -4,6 +4,16 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.11.0 — 2026-05-12
+
+### Added
+- **`docs/fi-24-mcp-conversational-experience-spec.html`** — new spec page for **FI-024 FieldInsight MCP Server: Conversational Experience**. The AI-experience layer on top of FI-022's MCP infrastructure. Defines the conversational use cases (drafted for Ceri), full tool catalogue (read · write · nudge), proactive notification rule shapes (public-holiday clash, capacity overload, SLA risk), per-job data shape with `status_history` for analytics, sample question→tool mapping, 6 open questions, 4-phase rollout (read-only MVP → actions → nudges → optimisation), and 4 success criteria. Mirrors the FI-022 spec's visual design (purple accent for the MCP/conversational layer vs FI-022's blue for infra).
+- **FI-024 ticket card** on the FieldInsight roadmap, placed immediately after FI-022 to make the dependency relationship visible. Card cross-links FI-024 ↔ FI-022.
+
+### Changed
+- Roadmap version line: bumped to v0.11.0 to reflect the new feature ticket and spec page.
+
+---
 ## v0.10.2 — 2026-04-30
 
 ### Added
