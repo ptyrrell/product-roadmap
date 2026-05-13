@@ -9,7 +9,7 @@
   "chat_url": "https://alfred.paultyrrell.dev/chat",
   "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
   "tunnel_type": "cloudflare-named",
-  "last_updated": "2026-05-13T09:31:20.491994",
+  "last_updated": "2026-05-13T09:32:31.206593",
   "messenger": "Twilio (SMS+WA+Voice)",
   "imessage_polling": false,
   "local_llm_enabled": false,
