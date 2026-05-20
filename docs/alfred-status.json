@@ -9,14 +9,14 @@
   "chat_url": "https://alfred.paultyrrell.dev/chat",
   "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
   "tunnel_type": "cloudflare-named",
-  "last_updated": "2026-05-13T11:07:40.742242",
+  "last_updated": "2026-05-20T10:16:17.017323",
   "messenger": "Twilio (SMS+WA+Voice)",
   "imessage_polling": false,
   "local_llm_enabled": false,
   "local_llm_model": "",
   "models": "claude-haiku-4-5 default \u00b7 auto-routes to sonnet/opus on plan/synth keywords",
   "version": "alfred-v5-critical-meetings",
-  "tools_total": 99,
+  "tools_total": 104,
   "tool_categories": {
     "freshness": [
       "get_data_freshness",
@@ -48,5 +48,5 @@
       "trigger_critical_meeting_test_call"
     ]
   },
-  "freshness_summary": "Data freshness: zoom fresh (1h), fathom fresh (12m), hubspot fresh (18h), aircall_sdr fresh (19h). Grain is live-only."
+  "freshness_summary": "Data freshness: zoom fresh (10m), fathom fresh (13m), hubspot fresh (17h), aircall_sdr fresh (18h). Grain is live-only."
 }
