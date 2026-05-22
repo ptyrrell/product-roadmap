@@ -1,15 +1,15 @@
 {
   "status": "running",
-  "platform": "Open Claw",
+  "platform": "Hermes",
   "agent": "Alfred",
-  "tagline": "Your Open Claw assistant",
+  "tagline": "Your Hermes assistant",
   "tunnel_url": "https://alfred.paultyrrell.dev",
   "diagnostic_url": "https://alfred.paultyrrell.dev/diagnostic",
   "capabilities_url": "https://alfred.paultyrrell.dev/capabilities",
   "chat_url": "https://alfred.paultyrrell.dev/chat",
   "portal_url": "https://fi-alfred-chat-cbf0c5043d1a.herokuapp.com/",
   "tunnel_type": "cloudflare-named",
-  "last_updated": "2026-05-20T10:16:17.017323",
+  "last_updated": "2026-05-22T22:27:02.911430",
   "messenger": "Twilio (SMS+WA+Voice)",
   "imessage_polling": false,
   "local_llm_enabled": false,
@@ -23,7 +23,7 @@
       "restart_cron",
       "heal_stale_crons"
     ],
-    "open_claw": [
+    "hermes": [
       "read_ops_dashboard",
       "list_open_claw_agents",
       "list_fiona_calls",
@@ -48,5 +48,5 @@
       "trigger_critical_meeting_test_call"
     ]
   },
-  "freshness_summary": "Data freshness: zoom fresh (10m), fathom fresh (13m), hubspot fresh (17h), aircall_sdr fresh (18h). Grain is live-only."
+  "freshness_summary": "Data freshness: zoom fresh (19m), fathom fresh (0m), hubspot fresh (5h), aircall_sdr fresh (7h). Grain is live-only."
 }
