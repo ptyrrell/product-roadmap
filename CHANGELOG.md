@@ -4,6 +4,17 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.11.3 — 2026-05-28
+
+### Added
+- **DS-002 — 🎨 Prototypes Hub** card added to the FieldInsight roadmap, placed directly after DS-001 (AI Styling Guide). Long-running Heroku hub (`fi-prototypes`) for lightweight FieldInsight styling prototypes — Settings screens, modals, micro-interactions — that live somewhere persistent and shareable before being promoted into a real app. Manifest-driven (`public/prototypes.json`) so adding a new prototype is one HTML file + one JSON entry. Sibling to the AI Styling Guide — Styling Guide owns the canonical AI pattern, the Prototypes Hub owns the rest of the FieldInsight surface area as it's being designed. First prototype shipped: **Settings → Workflows — Scheduled**, demonstrating the new card / form / colour-swatch pattern for the Settings area.
+- **Prototypes Hub tile** added to `apps.html` under Dashboards & Ops (Design System group) with Open · Workflows — Scheduled · GitHub quick-links.
+
+### Changed
+- Roadmap nav + 4× "Last updated" + footer in `index.html` bumped v0.11.2 → v0.11.3. Date refreshed to 28 May 2026.
+- `apps.html` nav badge + footer caught up from drifted v0.10.1 → v0.11.3.
+
+---
 ## v0.11.2 — 2026-05-12
 
 ### Added
