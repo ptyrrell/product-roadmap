@@ -4,6 +4,23 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.11.4 — 2026-05-31
+
+### Changed
+- **`ai-conquest.html` restyled** to the new FieldInsight house style documented at [fi-prototypes/build.html](https://fi-prototypes-b488d180d67d.herokuapp.com/build.html). Specifically:
+  - Display font swapped from Syne → **Bricolage Grotesque**; body from Inter → **Plus Jakarta Sans**; mono font (JetBrains Mono) unchanged. Now matches the canonical type stack used in the Refined FI palette.
+  - **Removed** the giant `AI CONQUEST` ghost watermark behind the headline (`.conquest-hero::after`). At 8 rem with -4 px tracking and intersecting the headline vertically, it was fighting readability instead of supporting it. Replaced with an off-axis aurora gradient that sets mood without overlapping any text.
+  - Added the **canonical Two-Star AI sparkle** (the byte-identical SVG path used across fi-ai-styling-guide / fi-webinars) into the hero eyebrow. Rendered in `--ai-glow` (lavender) for dark-surface visibility; `--ai: #39006B` kept as the canonical token for any light-surface AI element added later.
+  - Refined hero spacing: stats row now sits below a divider with proper breathing room; headline letter-spacing tightened (`-0.04em`); stat numerals bumped from 1.6 → 1.9 rem.
+  - All hardcoded font-family declarations replaced with `var(--font-display)` / `var(--font-body)` / `var(--font-mono)` tokens for future swap-ability.
+- Repo-wide version badges + "Last updated" dates bumped v0.11.3 → v0.11.4, 28 May → 31 May 2026 across `index.html` (5 occurrences).
+- Added `<meta name="version" content="v0.11.4">` to `ai-conquest.html` per the FieldInsight build standard.
+
+### Why
+- The previous Conquest watermark made the headline look broken at most viewport widths — text intersecting decorative type at low opacity reads as a rendering glitch, not a design flourish.
+- The new style guide ([fi-prototypes/build.html](https://fi-prototypes-b488d180d67d.herokuapp.com/build.html)) standardises typography and AI-surface treatment across every FieldInsight prototype. Internal strategy pages should embody the same rules so the brand reads as one product, not several.
+
+---
 ## v0.11.3 — 2026-05-28
 
 ### Added
