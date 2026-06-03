@@ -4,6 +4,16 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.12.0 — 2026-06-03
+
+### Added
+- **`docs/fi-05-large-quote-ai-processing-spec.html`** — new dev-team handover spec page for **FI-005 Large Quote &amp; Invoice AI Processing**. Documents the parsing failure on large multi-page supplier quotes/invoices (50+ line items) and its fix. Root cause: two compounding ceilings — Heroku's 30s H12 router timeout, and `max_tokens: 4096` truncating Claude's JSON mid-stream. Fix (all in `proto-multi-supplier-po/server.js`): heartbeat streaming to defeat H12, `max_tokens` → 16384, minified-JSON prompts (~40% more headroom), a four-strategy JSON extractor with truncation recovery, and defensive MIME/extension file-type detection — plus a client-side `data.code` check since errors now arrive inside a 200 response. Includes acceptance criteria and a real production verification run (8-page / 65-line Terex quote → 200, all 65 lines, exact totals, `truncated:false`). Page is ungated (like FI-002/FI-003) so external devs can read it. Cross-links the working live prototype and the GitHub source.
+- **FI-005 ticket card** on the FieldInsight roadmap, placed immediately after the Bill Importer (FI-002/003/004) card. Links the working reconcile-page prototype, the FI-005 spec, and the GitHub source. FI-005 spec link also appended to the Bill Importer card's spec list.
+
+### Changed
+- Roadmap version line, footer and all four "Last updated" stamps bumped to v0.12.0 / 3 June 2026.
+
+---
 ## v0.11.4 — 2026-05-31
 
 ### Changed
