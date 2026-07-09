@@ -4,6 +4,12 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.12.1 — 2026-07-09
+
+### Added
+- **Live-dashboard redirect banner** on `sdr-dashboard.html` — the SDR + AE Daily Scorecard here is a static localStorage prototype; the banner points to the live Team Scorecard on Meridian (`fi-ops-dashboard` v2.22.x, `/#scorecard`) which pulls real data from HubSpot, NocoDB (Alfred syncs) and the 509 sheet.
+
+---
 ## v0.12.0 — 2026-06-03
 
 ### Added
