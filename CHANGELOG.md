@@ -4,6 +4,19 @@ All notable changes to the roadmap are documented here.
 Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ---
+## v0.12.2 — 2026-08-10
+
+### Added
+- **`docs/fi-22-photo-upload-capability.html`** — live capability matrix for asset/job/defect + photo (job photo proven; asset photo + defects blocked).
+- **`docs/fi-22-vadim-photo-ask.md`** — copy-paste ask for Vadim (MCP-wrap files, asset image_list, defects API, Apidog sync).
+- **`lib/fi-files.js`** + **`scripts/fi-upload-job-photo.mjs`** — reusable REST helper for the proven job photo flow (`POST /files/` → S3 PUT → job attachments).
+- FI-022 session log Session 7 + Decision 09 (hosted MCP + REST for photos).
+- Obsidian: `Specs/fieldinsight-api-photo-upload.md`.
+
+### Changed
+- Roadmap nav version v0.12.1 → v0.12.2; FI-022 ticket card links photo capability page.
+
+---
 ## v0.12.1 — 2026-07-09
 
 ### Added
@@ -75,7 +88,6 @@ Format: `v{major}.{minor}.{patch} — YYYY-MM-DD`
 
 ### Changed
 - Roadmap version line: bumped to v0.11.0 to reflect the new feature ticket and spec page.
-
 ---
 ## v0.10.2 — 2026-04-30
 

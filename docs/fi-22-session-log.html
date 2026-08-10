@@ -136,9 +136,9 @@ footer a:hover{color:var(--text)}
   <div class="spec-meta">
     <span class="meta-pill purple">📓 Build Journal</span>
     <span class="meta-pill blue">FI-022 · v0.2 spec</span>
-    <span class="meta-pill green">5 sessions logged</span>
+    <span class="meta-pill green">7 sessions logged</span>
     <span class="meta-pill">First entry: 20 Apr 2026</span>
-    <span class="meta-pill">Last entry: 30 Apr 2026</span>
+    <span class="meta-pill">Last entry: 10 Aug 2026</span>
   </div>
 </div>
 
@@ -160,11 +160,11 @@ footer a:hover{color:var(--text)}
     <div class="sec-desc">FI-022 began as a single question — &ldquo;how much work to set up OAuth and MCP for FieldInsight?&rdquo; — and became a fully scoped 8-sub-ticket build plan with a 14-tool MCP read surface, a documented Obsidian process, and a live spec page. Five sessions, five clean deploys.</div>
 
     <div class="status-grid">
-      <div class="stat-card"><div class="stat-label">Sessions</div><div class="stat-num purple">5</div></div>
+      <div class="stat-card"><div class="stat-label">Sessions</div><div class="stat-num purple">7</div></div>
       <div class="stat-card"><div class="stat-label">Sub-Tickets</div><div class="stat-num blue">8</div></div>
       <div class="stat-card"><div class="stat-label">MCP Read Tools</div><div class="stat-num green">14</div></div>
       <div class="stat-card"><div class="stat-label">CORE MVP Effort</div><div class="stat-num amber">~3.5–5d</div></div>
-      <div class="stat-card"><div class="stat-label">Roadmap Versions</div><div class="stat-num">v0.9.4&nbsp;→&nbsp;v0.10.2</div></div>
+      <div class="stat-card"><div class="stat-label">Roadmap Versions</div><div class="stat-num">v0.9.4&nbsp;→&nbsp;v0.12.2</div></div>
     </div>
 
     <div class="callout purple" style="margin-top:24px">
@@ -287,6 +287,25 @@ footer a:hover{color:var(--text)}
         </div>
       </div>
 
+      <!-- Session 7 -->
+      <div class="tl-row">
+        <div class="tl-dot s1">7</div>
+        <div class="tl-body">
+          <div class="tl-meta">
+            <span class="tl-date">Jul–Aug 2026 · Session 7</span>
+            <span class="tl-tag research">Research</span>
+            <span class="tl-tag ship">Ship</span>
+            <span class="tl-version">v0.12.1 → v0.12.2</span>
+          </div>
+          <div class="tl-title">Photo capability — job ✓ · asset photo ✗ · defect ✗</div>
+          <div class="tl-question">&ldquo;Looking at Apidog — can we upload an asset and photo? a job and photo? a defect and a photo?&rdquo;</div>
+          <div class="tl-desc">
+            Probed live Public API + MCP. <strong>Job create + photo attach proven</strong> via undocumented <code>POST /files/</code> → S3 PUT → <code>POST /jobs/{id}/attachments/</code> (form <code>file=</code>). Asset create works; <code>image_list</code> Custom Photo does not stick. Defects endpoint missing entirely. Apidog incomplete vs live. Shipped capability page, Vadim ask note, Obsidian spec, and <code>lib/fi-files.js</code> + CLI helper. Reality shift: FI now hosts MCP with Personal API Keys — consume it; wrap photos via REST until Vadim MCP-wraps files.
+          </div>
+          <div class="tl-outcome">Capability page + REST helper live; Vadim ask ready to send.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -345,6 +364,12 @@ footer a:hover{color:var(--text)}
         <div class="dec-answer">Confirmed in <code>meridian-auth.js</code>: domain check + Google <code>hosted_domain</code> hint. Vadim and any future Workspace user gain access automatically.</div>
         <div class="dec-because">Because: per-user allowlists become stale; Workspace membership is the right perimeter.</div>
       </div>
+      <div class="dec-card">
+        <div class="dec-q">Decision 09 · Hosted MCP</div>
+        <div class="dec-title">Consume FieldInsight-hosted MCP + Personal API Keys; photos via REST until MCP catches up</div>
+        <div class="dec-answer">Production MCP at <code>https://app.fieldinsight.com/mcp/</code> (~69 tools). Job photos use undocumented REST <code>/files/</code> + job attachments. Asset photos + defects escalate to Vadim.</div>
+        <div class="dec-because">Because: building a parallel OAuth/MCP stack duplicates what FI already ships; Apidog is not the capability ceiling.</div>
+      </div>
     </div>
   </div>
 
@@ -373,6 +398,31 @@ footer a:hover{color:var(--text)}
           <td>FI-022 session log <em>(this page)</em></td>
           <td>HTML</td>
           <td><a href="https://ptyrrell.github.io/product-roadmap/fi-22-session-log.html" target="_blank">https://ptyrrell.github.io/product-roadmap/fi-22-session-log.html</a></td>
+        </tr>
+        <tr>
+          <td>Photo upload capability</td>
+          <td>HTML</td>
+          <td><a href="https://ptyrrell.github.io/product-roadmap/fi-22-photo-upload-capability.html" target="_blank">https://ptyrrell.github.io/product-roadmap/fi-22-photo-upload-capability.html</a></td>
+        </tr>
+        <tr>
+          <td>Vadim photo ask</td>
+          <td>MD</td>
+          <td><a href="https://github.com/ptyrrell/product-roadmap/blob/main/docs/fi-22-vadim-photo-ask.md" target="_blank">docs/fi-22-vadim-photo-ask.md</a></td>
+        </tr>
+        <tr>
+          <td>Job photo REST helper</td>
+          <td>JS</td>
+          <td><a href="https://github.com/ptyrrell/product-roadmap/blob/main/lib/fi-files.js" target="_blank">lib/fi-files.js</a> · <code>scripts/fi-upload-job-photo.mjs</code></td>
+        </tr>
+        <tr>
+          <td>Obsidian photo capability</td>
+          <td>MD</td>
+          <td><code>Paul&rsquo;s Brain/…/Specs/fieldinsight-api-photo-upload.md</code></td>
+        </tr>
+        <tr>
+          <td>FieldInsight hosted MCP</td>
+          <td>API</td>
+          <td><span class="endpoint">https://app.fieldinsight.com/mcp/</span></td>
         </tr>
         <tr>
           <td>The Meridian login</td>
@@ -524,6 +574,21 @@ footer a:hover{color:var(--text)}
           <td>Paul</td>
           <td>Code already permits any <code>@fieldinsight.com</code> user. Confirm Google Cloud OAuth app is in &ldquo;Internal&rdquo; mode (not &ldquo;Testing&rdquo;) so no per-user allowlist is needed.</td>
         </tr>
+        <tr>
+          <td>MCP-wrap job file upload</td>
+          <td>Vadim / FI</td>
+          <td>Document + expose <code>POST /files/</code> and job attachments as MCP tools. REST helper exists meanwhile.</td>
+        </tr>
+        <tr>
+          <td>Asset photo attach recipe</td>
+          <td>Vadim / FI</td>
+          <td><code>image_list</code> Custom Photo does not accept file IDs via PATCH today.</td>
+        </tr>
+        <tr>
+          <td>Defects Public API</td>
+          <td>Vadim / FI</td>
+          <td>Create / list / attach — missing from API + MCP. Blocks rich demo seeding.</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -531,7 +596,7 @@ footer a:hover{color:var(--text)}
 </div>
 
 <footer>
-  FI-022 Session Log · v1.0 &nbsp;·&nbsp;
+  FI-022 Session Log · v1.1 &nbsp;·&nbsp;
   <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a> &nbsp;·&nbsp;
   <a href="fi-22-fieldinsight-api-mcp-spec.html">Spec</a> &nbsp;·&nbsp;
   <a href="https://github.com/ptyrrell/product-roadmap" target="_blank">GitHub</a>

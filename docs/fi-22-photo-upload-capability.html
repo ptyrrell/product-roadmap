@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FI-022 — Asset / Job / Defect + Photo Capability</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta http-equiv="Cache-Control" content="no-cache">
+<style>
+:root {
+  --bg:#07080f;--surface:#0e1018;--surface2:#13161f;--border:#1f2336;--border2:#2a3050;
+  --text:#dde1f5;--muted:#5c667a;--dim:#2a2f45;
+  --blue:#6366f1;--blue-light:#a5b4fc;--blue-glow:rgba(99,102,241,.18);
+  --green:#10d990;--green-bg:rgba(16,217,144,.08);
+  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.08);
+  --red:#f43f5e;--red-bg:rgba(244,63,94,.08);
+  --purple:#a855f7;--r:10px;
+  --font:system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+.spec-header{background:linear-gradient(160deg,#0b0d1a 0%,#0f1128 60%,#13102a 100%);border-bottom:1px solid var(--border);padding:48px 40px 40px}
+.spec-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.spec-breadcrumb a{color:var(--blue-light);text-decoration:none}
+.spec-title{font-size:28px;font-weight:800;letter-spacing:-.6px;color:#fff}
+.spec-title span{color:#d8b4fe}
+.spec-subtitle{font-size:14px;color:var(--muted);margin-top:8px;max-width:760px}
+.spec-meta{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.meta-pill{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--muted)}
+.meta-pill.green{background:var(--green-bg);border-color:rgba(16,217,144,.25);color:var(--green)}
+.meta-pill.amber{background:var(--amber-bg);border-color:rgba(245,158,11,.25);color:var(--amber)}
+.meta-pill.red{background:var(--red-bg);border-color:rgba(244,63,94,.25);color:var(--red)}
+.meta-pill.purple{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.35);color:#d8b4fe}
+.spec-body{max-width:960px;margin:0 auto;padding:40px;display:flex;flex-direction:column;gap:36px}
+.sec-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#d8b4fe;margin-bottom:6px}
+.sec-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.sec-desc{font-size:13px;color:var(--muted);margin-bottom:16px;max-width:720px}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);background:var(--surface2);border-bottom:1px solid var(--border)}
+td{padding:12px 14px;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--border);vertical-align:top}
+td:first-child{color:var(--text);font-weight:600}
+tr:last-child td{border-bottom:none}
+.ok{color:var(--green);font-weight:700}
+.no{color:var(--red);font-weight:700}
+.partial{color:var(--amber);font-weight:700}
+.callout{border-radius:var(--r);padding:14px 16px;border-left:3px solid;font-size:13px;margin-top:12px}
+.callout.green{background:var(--green-bg);border-color:var(--green);color:#6ee7b7}
+.callout.amber{background:var(--amber-bg);border-color:var(--amber);color:#fde68a}
+.callout.purple{background:rgba(168,85,247,.08);border-color:var(--purple);color:#d8b4fe}
+pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:12px;line-height:1.55;color:#93c5fd}
+code{font-family:'SF Mono',Monaco,monospace;font-size:11.5px}
+ol.ask{padding-left:20px;color:var(--muted);font-size:13px}
+ol.ask li{margin-bottom:10px}
+ol.ask strong{color:var(--text)}
+a{color:var(--blue-light)}
+footer{text-align:center;padding:28px;font-size:11px;color:var(--dim);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="spec-header">
+  <div class="spec-breadcrumb">
+    <a href="https://ptyrrell.github.io/product-roadmap/">← Roadmap</a>
+    <span>›</span>
+    <a href="fi-22-fieldinsight-api-mcp-spec.html">FI-022 Spec</a>
+    <span>›</span>
+    <span>Photo upload capability</span>
+  </div>
+  <div class="spec-title">Can we upload <span>asset / job / defect + photo</span>?</div>
+  <div class="spec-subtitle">Live Public API vs Apidog vs MCP. Job photos are proven. Asset photos and defects are not. Includes the exact REST recipe and the ask for Vadim.</div>
+  <div class="spec-meta">
+    <span class="meta-pill purple">Capability note</span>
+    <span class="meta-pill green">Job + photo ✓</span>
+    <span class="meta-pill amber">Asset create ✓ · photo ✗</span>
+    <span class="meta-pill red">Defect ✗</span>
+    <span class="meta-pill">Probed Jul 2026</span>
+  </div>
+</div>
+
+<div class="spec-body">
+  <section>
+    <div class="sec-label">01 · Verdict</div>
+    <div class="sec-title">Capability matrix</div>
+    <div class="sec-desc">Apidog (<a href="https://rezzxstrv0.apidog.io/" target="_blank">rezzxstrv0.apidog.io</a>) is incomplete — Jobs are list-only in the TOC; Files / Assets / Defects are undocumented. Live API and MCP diverge from the docs.</div>
+    <table>
+      <thead><tr><th>Entity</th><th>Create</th><th>Attach photo</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Job</td>
+          <td class="ok">Yes</td>
+          <td class="ok">Yes — proven</td>
+          <td>REST <code>POST /jobs/</code> or MCP <code>create_job</code>. Photo via file flow below.</td>
+        </tr>
+        <tr>
+          <td>Asset</td>
+          <td class="ok">Yes</td>
+          <td class="partial">Not yet</td>
+          <td><code>POST /assets/</code> needs <code>site</code>. <code>Custom Photo</code> image_list field exists; writing file IDs left <code>value: null</code>.</td>
+        </tr>
+        <tr>
+          <td>Defect</td>
+          <td class="no">No</td>
+          <td class="no">No</td>
+          <td><code>/defects/</code> → 404. Not in Apidog. Not in MCP.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout amber">MCP (~69 tools at <code>/mcp/</code>) has job create/patch and asset <em>catalog</em> tools only — no photo/file tools, no asset instance create, no defects.</div>
+  </section>
+
+  <section>
+    <div class="sec-label">02 · Proven recipe</div>
+    <div class="sec-title">Job photo upload (undocumented, live)</div>
+    <pre>1. POST /public-api/files/
+     Content-Type: application/x-www-form-urlencoded
+     body: name=leak.png&amp;size=12345
+     → { file_id, upload_url }
+
+2. PUT {upload_url}
+     Content-Type: application/octet-stream
+     body: &lt;raw bytes&gt;
+     → 200
+
+3. POST /public-api/jobs/{id}/attachments/
+     Content-Type: application/x-www-form-urlencoded
+     body: file={file_id}
+     → 200</pre>
+    <div class="callout green">
+      <strong>Helper shipped.</strong> <code>lib/fi-files.js</code> + CLI:<br>
+      <code>FIELDINSIGHT_API_KEY=… node scripts/fi-upload-job-photo.mjs &lt;jobId&gt; ./photo.png</code>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">03 · Ask Vadim</div>
+    <div class="sec-title">Close the gaps</div>
+    <ol class="ask">
+      <li><strong>Document + MCP-wrap</strong> <code>POST /files/</code> and <code>POST /jobs/{id}/attachments/</code> so agents can attach job photos without raw REST.</li>
+      <li><strong>Asset photos</strong> — official way to set <code>image_list</code> custom fields (or an attach endpoint) after <code>/files/</code> upload. PATCH with file IDs currently no-ops.</li>
+      <li><strong>Defects API</strong> — create / list / attach photos. Missing entirely from Public API + MCP.</li>
+      <li><strong>Refresh Apidog</strong> so it matches live (job create/patch, assets, files, timesheets, quotes, POs…).</li>
+    </ol>
+    <div class="callout purple">Copy-paste ask lives in Obsidian: <code>Specs/fieldinsight-api-photo-upload.md</code> § Ask Vadim. Also <a href="fi-22-vadim-photo-ask.md">fi-22-vadim-photo-ask.md</a> in this repo.</div>
+  </section>
+
+  <section>
+    <div class="sec-label">04 · Demo / ops implication</div>
+    <div class="sec-title">What we can seed today</div>
+    <table>
+      <thead><tr><th>Goal</th><th>Feasible?</th></tr></thead>
+      <tbody>
+        <tr><td>Ops dashboard on live FI (jobs, timesheets, invoices…)</td><td class="ok">Yes — REST (+ MCP for scheduling)</td></tr>
+        <tr><td>Demo seed: customers / sites / jobs + job photos</td><td class="ok">Yes</td></tr>
+        <tr><td>Demo seed: assets</td><td class="partial">Create yes · photos blocked</td></tr>
+        <tr><td>Demo seed: defects + photos</td><td class="no">Blocked — no API</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<footer>
+  product-roadmap · FI-022 · <a href="fi-22-session-log.html">Session log</a> ·
+  <a href="fi-22-fieldinsight-api-mcp-spec.html">Spec</a> ·
+  Obsidian: fieldinsight-api-photo-upload.md
+</footer>
+</body>
+</html>
